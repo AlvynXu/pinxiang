@@ -3,7 +3,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "优象"
+				"navigationBarTitleText": "优象",
+				"backgroundColor":"#f3f3f3"
 			}
 		}
 	],

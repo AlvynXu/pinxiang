@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "优象",
+  "backgroundColor": "#f3f3f3",
+  "usingComponents": {
+    "uni-rate": "/components/uni-rate/uni-rate"
+  }
+}
