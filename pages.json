@@ -7,7 +7,23 @@
 				"backgroundColor":"#f3f3f3"
 			}
 		}
-	],
+        ,{
+            "path" : "pages/user/user",
+            "style" : {
+					"navigationBarTitleText": "我的"
+			}
+        },{
+            "path" : "pages/user/car",
+            "style" : {
+					"navigationBarTitleText": "我的"
+					}
+        },{
+            "path" : "pages/user/credit",
+            "style" : {
+					"navigationBarTitleText": "优享信用"
+					}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "优象",
@@ -28,7 +44,7 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/index/index",
+				"pagePath": "pages/user/user",
 				"iconPath": "static/img/footerBar/mine.png",
 				"selectedIconPath": "static/img/footerBar/mineSelect.png",
 				"text": "我的"

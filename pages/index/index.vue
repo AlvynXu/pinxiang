@@ -1,5 +1,38 @@
 <template>
 	<view class="store-box">
+		<view class="store-swiper">
+			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration">
+				<swiper-item v-for="(val,key) in swiperList" :key="key">
+					<image :src="val.src" mode="aspectFit"></image>
+				</swiper-item>
+			</swiper>
+			<view class="store-search">
+				<view class="store-search-input">
+					<view class="input">输入小区、写字楼或门店信息</view>
+				</view>
+				<view class="vant-icon">&#xe66b;</view>
+			</view>
+		</view>
+		<view class="store-vip">
+			<view class="vip-top">
+				<view class="vip-name">立即开卡</view>
+				<view class="vant-icon">&#xe67e;</view>
+			</view>
+			<view class="vip-bottom">
+				<view class="vip-name">全年免费保养，另送12次洗车服务</view>
+				<view class="vant-icon">&#xe67e;</view>
+			</view>
+		</view>
+		<view class="gray"></view>
+		<view class="store-nearby">
+			<view class="nearby-top">
+				附近商户
+			</view>
+			<view class="nearby-bot">
+				平安出行，优享生活
+			</view>
+		</view>
+		<view class="gray"></view>
 		<view class="store-list">
 			<image class="cover" :src="cover" mode="aspectFill"></image>
 			<view class="store-area">
@@ -16,8 +49,10 @@
 					<view class="tip">地铁周边</view>
 					<view class="tip">地铁周边</view>
 				</view>
-				<view class="store-buy">立即预约</view>
+				<view class="store-buy" v-if="vip===1">会员免费</view>
+				<view class="store-buy" v-if="vip===0">立即预约</view>
 			</view>
+			<view class="gray"></view>
 		</view>
 	</view>
 </template>
@@ -28,45 +63,154 @@
 		components: {uniRate},
 		data() {
 			return {
+				current:0,
+				swiperList:[
+					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg"},
+					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/shanghai.jpg"},
+					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/nanjing-2.jpg"},
+					],
+				autoplay: true,
+				interval: 2000,
+				duration: 500,
 				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
 				title: 'Hello',
 				area:'下城区 · 钱江世纪城',
 				storeName:'御驾汇汽车服务中心',
 				address:'秋涛北路72号杭州大厦501负2楼',
+				vip:1
 			}
 		},
 		onLoad() {
-
+			const num = this.swiperList.length
+			console.log(num)
 		},
 		methods: {
-
+			
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.gray{
+		width:750upx;
+		height:10upx;
+		background: #F3F3F3;
+	}
 	.store-box {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		margin-bottom:10upx;
-		background:#fff;
+		.store-swiper{
+			width:750upx;
+			height:413upx;
+			position: relative;
+			.swiper{
+				width:750upx;
+				height:413upx;
+				image{
+					width:750upx;
+					height:413upx;
+				}
+			}
+			.store-search{
+				width:667upx;
+				height:121upx;
+				background: #fff;
+				position: absolute;
+				top:353upx;
+				left:42upx;
+				border-radius:11upx;
+				border:2upx solid #A4A4A4;
+				display: flex;
+				justify-content: space-between;
+				.store-search-input{
+					margin-top: 45upx;
+					width:450upx;
+					margin-left:33upx;
+					.input{
+						font-size:25upx;
+						color:#A4A4A4;
+					}
+				}
+				.vant-icon{
+					margin-top: 45upx;
+					font-size:30upx;
+					margin-right: 60upx;
+					color:#FE5100;
+				}
+			}
+		}
+		.store-vip{
+			width:667upx;
+			height:134upx;
+			border:2upx solid #A4A4A4;
+			margin-top: 100upx;
+			margin-bottom: 15upx;
+			border-radius:11upx;
+			.vip-top{
+				width:580upx;
+				font-size:29upx;
+				color:#FE5100;
+				display: flex;
+				height:65upx;
+				line-height:65upx;
+				margin-left:33upx;
+				justify-content: space-between;
+				border-bottom:2upx solid #F3F3F3;
+				.vant-icon{
+					font-size:40upx;
+					margin-right: 0;
+				}
+			}
+			.vip-bottom{
+				width:580upx;
+				font-size:22upx;
+				display: flex;
+				height:65upx;
+				line-height:65upx;
+				margin-left:33upx;
+				justify-content: space-between;
+				border-bottom:2upx solid #F3F3F3;
+				.vip-name{
+					color:#A4A4A4;
+				}
+				.vant-icon{
+					font-size:40upx;
+					margin-right: 0;
+				}
+			}
+		}
+		.store-nearby{
+			width:667upx;
+			height:107upx;
+			.nearby-top{
+				font-size:29upx;
+				margin-top: 22upx;
+			}
+			.nearby-bot{
+				font-size:21upx;
+				color:#A4A4A4;
+			}
+		}
 		.store-list{
 			position: relative;
 			.cover {
-				height: 457upx;
 				width: 667upx;
+				height: 457upx;
 				margin-top: 20upx;
-				margin-left: auto;
+				margin-left: 33upx;
 				margin-right: auto;
 			}
 			
 			.store-area{
+				width: 667upx;
 				position: absolute;
 				display: flex;
 				justify-content: flex-start;
 				font-size:25upx;
+				margin-left: 33upx;
 				top:410upx;
 				left:20upx;
 				.vant-icon{
@@ -78,10 +222,14 @@
 			}
 			
 			.store-name{
+				width: 667upx;
 				font-size:36upx;
+				margin-left: 33upx;
 				margin-top: 24upx;
 			}
 			.store-address{
+				width: 667upx;
+				margin-left: 33upx;
 				font-size:29upx;
 				color:#A4A4A4;
 				margin-top:18upx;
@@ -92,9 +240,12 @@
 				}
 			}
 			.store-tips{
+				width: 667upx;
+				margin-left: 33upx;
 				margin-top: 17upx;
 				display: flex;
 				justify-content:space-between;
+				padding-bottom:20upx;
 				.tips{
 					margin-top: 10upx;	
 					display: flex;
