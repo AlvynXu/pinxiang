@@ -10,17 +10,16 @@
 				<view class="store-search-input">
 					<view class="input">输入小区、写字楼或门店信息</view>
 				</view>
-				<view class="vant-icon">&#xe66b;</view>
+				<view class="vant-icon">&#xe692;</view>
 			</view>
 		</view>
 		<view class="store-vip">
 			<view class="vip-top">
 				<view class="vip-name">立即开卡</view>
-				<view class="vant-icon">&#xe67e;</view>
+				<view class="vant-icon">&#xe65c;</view>
 			</view>
 			<view class="vip-bottom">
 				<view class="vip-name">全年免费保养，另送12次洗车服务</view>
-				<view class="vant-icon">&#xe67e;</view>
 			</view>
 		</view>
 		<view class="gray"></view>
@@ -33,10 +32,10 @@
 			</view>
 		</view>
 		<view class="gray"></view>
-		<view class="store-list">
+		<view class="store-list" @click="goStore">
 			<image class="cover" :src="cover" mode="aspectFill"></image>
 			<view class="store-area">
-				<view class="vant-icon">&#xe66b;</view>
+				<view class="vant-icon">&#xe68f;</view>
 				<view class="area-name">{{area}}</view>
 			</view>
 			<view class="store-name">{{storeName}}</view>
@@ -81,11 +80,14 @@
 			}
 		},
 		onLoad() {
-			const num = this.swiperList.length
-			console.log(num)
+			
 		},
 		methods: {
-			
+			goStore(){
+				uni.navigateTo({
+				    url: '../store/store'
+				});
+			}
 		}
 	}
 </script>
@@ -214,6 +216,7 @@
 				top:410upx;
 				left:20upx;
 				.vant-icon{
+					color:#FE5100;
 					font-size:30upx;
 				}
 				.area-name{

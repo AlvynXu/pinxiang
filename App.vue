@@ -25,14 +25,13 @@
 	/*每个页面公共css */
 	
 	@font-face {
-	    font-family: 'vant-icon';  /* project id 1314172 */
-	    src: url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.eot');
-	    src: url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.eot?#iefix') format('embedded-opentype'),
-	    url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.woff2') format('woff2'),
-	    url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.woff') format('woff'),
-	    url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.ttf') format('truetype'),
-	    url('https://at.alicdn.com/t/font_1314172_mulnlt4wnpo.svg#vant-icon') format('svg');
-		
+	  font-family: 'vant-icon';  /* project id 1314172 */
+		src: url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.eot');
+		src: url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.eot?#iefix') format('embedded-opentype'),
+		url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.woff2') format('woff2'),
+		url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.woff') format('woff'),
+		url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.ttf') format('truetype'),
+		url('https://at.alicdn.com/t/font_1363505_w2nexhak31d.svg#iconfont') format('svg');
 	}
 	.vant-icon {
 		font-family:'vant-icon' !important;

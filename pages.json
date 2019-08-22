@@ -23,6 +23,10 @@
 					"navigationBarTitleText": "优享信用"
 					}
         }
+        ,{
+            "path" : "pages/store/store",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
