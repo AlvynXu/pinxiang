@@ -3,7 +3,7 @@ import uniRequest from 'uni-request';
 // import { Toast,Notify,Dialog  } from 'vant';
 // import UserAgent from '@/libs/user-agent'
 
-uniRequest.defaults.baseURL = 'https://yourapi.domain.com';
+// uniRequest.defaults.baseURL = 'https://yourapi.domain.com';
 uniRequest.defaults.headers.common['Authorization'] = uni.getStorageInfoSync('api_token');
 uniRequest.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -41,9 +41,7 @@ uniRequest.interceptors.response.use(
 export function fetch(options) {
 	return new Promise((resolve, reject) => {
 		if (options.method == 'get') {
-			uniRequest.get(options.url, {
-				data: options.params
-			}).then(function(response) {
+			uniRequest.get(options.url, options.params).then(function(response) {
 				console.log(response)
 				resolve(response);
 			}).catch(function(error) {
@@ -51,18 +49,14 @@ export function fetch(options) {
 			});
 		}
 		if (options.method == 'post') {
-			uniRequest.post(options.url, {
-				data: options.params
-			}).then(function(response) {
+			uniRequest.post(options.url, options.data).then(function(response) {
 				resolve(response);
 			}).catch(function(error) {
 				console.log(error);
 			});
 		}
 		if (options.method == 'put') {
-			uniRequest.put(options.url, {
-				data: options.params
-			}).then(function(response) {
+			uniRequest.put(options.url, options.data).then(function(response) {
 				resolve(response);
 			}).catch(function(error) {
 				console.log(error);

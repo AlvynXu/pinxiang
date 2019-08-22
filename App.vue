@@ -1,24 +1,44 @@
 <script>
-	export default {
-		onLaunch: function() {
-			console.log('App Launch')
-			wx.checkSession({
-			  success () {
-			    //session_key 未过期，并且在本生命周期一直有效
-			  },
-			  fail () {
-			    // session_key 已经失效，需要重新执行登录流程
-			    wx.login() //重新登录
-			  }
-			})
-		},
-		onShow: function() {
-			console.log('App Show')
-		},
-		onHide: function() {
-			console.log('App Hide')
-		}
+import { getOpenID, login } from '@/api/index.js';
+export default {
+	onLaunch: function() {
+		uni.checkSession({
+			success() {
+				//session_key 未过期，并且在本生命周期一直有效
+				let openID = uni.getStorageSync('wxOpenID');
+				if (openID == null || openID.length === 0) {
+					uni.login({
+						success(res) {
+							getOpenID({ Code: res.code }).then(result => {
+								if (result.Code === 200) {
+									uni.setStorageSync('wxOpenID', result.Data.openid);
+								}
+							});
+						}
+					});
+				}
+			},
+			fail() {
+				uni.login({
+					success(res) {
+						getOpenID({ Code: res.code }).then(result => {
+							if (result.Code === 200) {
+								uni.setStorageSync('wxOpenID', result.Data.openid);
+							}
+						});
+					}
+				});
+				// session_key 已经失效，需要重新执行登录流程
+			}
+		});
+	},
+	onShow: function() {
+		console.log('App Show');
+	},
+	onHide: function() {
+		console.log('App Hide');
 	}
+};
 </script>
 
 <style>
@@ -44,4 +64,5 @@
 	.icon-dingwei:before{
 		content:"&#xe66b";
 	}
+
 </style>

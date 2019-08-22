@@ -124,7 +124,7 @@
 				top:353upx;
 				left:42upx;
 				border-radius:11upx;
-				border:2upx solid #A4A4A4;
+				box-shadow:0upx 1upx 1upx 2upx rgba(4,4,4,0.1);
 				display: flex;
 				justify-content: space-between;
 				.store-search-input{
@@ -147,7 +147,7 @@
 		.store-vip{
 			width:667upx;
 			height:134upx;
-			border:2upx solid #A4A4A4;
+			box-shadow:0upx 0upx 0upx 2upx rgba(4,4,4,0.1);
 			margin-top: 100upx;
 			margin-bottom: 15upx;
 			border-radius:11upx;
@@ -160,7 +160,7 @@
 				line-height:65upx;
 				margin-left:33upx;
 				justify-content: space-between;
-				border-bottom:2upx solid #F3F3F3;
+				border-bottom:1upx solid rgba(254,81,0,0.1);
 				.vant-icon{
 					font-size:40upx;
 					margin-right: 0;
@@ -174,7 +174,6 @@
 				line-height:65upx;
 				margin-left:33upx;
 				justify-content: space-between;
-				border-bottom:2upx solid #F3F3F3;
 				.vip-name{
 					color:#A4A4A4;
 				}

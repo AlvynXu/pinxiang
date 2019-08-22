@@ -3,7 +3,9 @@
 		<view class="user-login" v-if="isLogin===0">
 			<view class="login-white">
 				<image class="login-avatar" :src="avatar" mode="aspectFill"></image>
-				<view class="login">立即登录</view>
+				<view class="login">
+					<button class="login-button" plain="true" lang="zh_CN" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即登录</button>
+				</view>
 			</view>
 			<view class="user-join">
 				<view class="join-name">加入会员</view>
@@ -15,8 +17,8 @@
 			<view class="login-white">
 				<image class="login-avatar" :src="avatar" mode="aspectFill"></image>
 				<view class="login-msg">
-					<view class="vip">优象会员</view>
-					<view class="phone">152****4163</view>
+					<view class="vip">{{nickname}}</view>
+					<view class="phone" v-if="phone">{{phone}}</view>
 				</view>
 			</view>
 			<view class="user-join">
@@ -29,33 +31,36 @@
 			<view class="prove-car list" @click="goCar">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">车辆认证</view>
-				<view class="vant-icon">&#xe659;</view>
+				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-vip list">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">我的会员</view>
-				<view class="vant-icon">&#xe659;</view>
+				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-credit list" @click="goCredit">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">优象信用</view>
-				<view class="vant-icon">&#xe659;</view>
+				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-center list">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">赠卡中心</view>
-				<view class="vant-icon">&#xe659;</view>
+				<view class="vant-icon">&#xe609;</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {login} from '@/api/index.js'
 	export default {
 		data() {
 			return {
-				isLogin:1,
-				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_09.png"
+				isLogin:0,
+				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
+				nickname:'优象会员',
+				phone:''
 			}
 		},
 		methods: {
@@ -68,6 +73,50 @@
 				uni.navigateTo({
 				    url: 'credit'
 				});
+			},
+			login(userData){
+				console.log(userData)
+				let that = this
+				let openID = uni.getStorageSync('wxOpenID')
+				login({
+					'Type':'WECHAT',
+					'OpenID': openID,
+					'Nickname': userData.userInfo.nickName,
+					'Avatar':userData.userInfo.avatarUrl,
+					'Sex': userData.userInfo.gender === 1 ? 0 : 1,
+					'Province': userData.userInfo.province,
+					'City':userData.userInfo.city,
+					'Referrer':0
+				}).then((res)=>{
+					if(res.Code === 200)
+					{
+						uni.setStorageSync('api_token',res.Data.access_token)
+						uni.setStorageSync('user_data',JSON.stringify(res.Data.user))
+						that.avatar = res.Data.user.Avatar,
+						that.nickname = res.Data.user.Nickname,
+						that.phone = res.Data.user.Phone
+						that.isLogin = 1
+					}
+				})
+				console.log(openID)
+			},
+			onGotUserInfo(e){
+				this.login(e.detail)
+			},
+			getPhoneNumber (e) {
+			    console.log(e.detail.errMsg)
+			    console.log(e.detail.iv)
+			    console.log(e.detail.encryptedData)
+			}
+		},
+		onLoad() {
+			let userData = uni.getStorageSync('user_data')
+			if(userData.length > 0){
+				userData = JSON.parse(userData)
+				this.avatar = userData.Avatar,
+				this.nickname = userData.Nickname,
+				this.phone = userData.Phone
+				this.isLogin = 1
 			}
 		}
 	}
@@ -105,7 +154,9 @@
 			}
 			.login-msg{
 				height:121upx;
-				margin-top:14upx;
+				display:flex;
+				align-items: center;
+				justify-content: center;
 				margin-left:51upx;
 				.vip{
 					font-size:33upx;
@@ -172,6 +223,18 @@
 				font-size:29upx;
 			}
 		}
+	}
+	.login-button{
+		backgroud-color:none;
+		border:none;
+		height:41upx;
+		margin-top:40upx;
+		padding:0;
+		line-height: 40rpx;
+	}
+	.button-hover{
+		backgroud-color:none;
+		border:none;
 	}
 }
 </style>

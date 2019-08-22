@@ -329,3 +329,11 @@ export function changeSchool(params = {}) {
   })
 }
 
+export function getOpenID(params = {}) {
+	return fetch({
+		url: `${api.mina}/code2Session`,
+		method: 'post',
+		data: params
+	})
+}
+
