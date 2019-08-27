@@ -7,7 +7,7 @@
 					<button class="login-button" plain="true" lang="zh_CN" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即登录</button>
 				</view>
 			</view>
-			<view class="user-join">
+			<view class="user-join" @click="goActive">
 				<view class="join-name">加入会员</view>
 				<view class="join-word">尊享全年免费保养特权</view>
 				<view class="join-button">立即领取特权</view>
@@ -21,7 +21,7 @@
 					<view class="phone" v-if="phone">{{phone}}</view>
 				</view>
 			</view>
-			<view class="user-join">
+			<view class="user-join" @click="goActive">
 				<view class="join-name">加入会员</view>
 				<view class="join-word">尊享全年免费保养特权</view>
 				<view class="join-button">立即领取特权</view>
@@ -33,7 +33,7 @@
 				<view class="vant-word">车辆认证</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
-			<view class="prove-vip list">
+			<view class="prove-vip list" @click="goVip">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">我的会员</view>
 				<view class="vant-icon">&#xe609;</view>
@@ -57,6 +57,7 @@
 	export default {
 		data() {
 			return {
+				bgc:"https://cdn.doudouxiongglobal.com/blog/1/0e18a361d1506bfb49d1b27afed60356.jpg",
 				isLogin:0,
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
@@ -64,6 +65,12 @@
 			}
 		},
 		methods: {
+			//打开弹出层
+			goActive(){
+				uni.navigateTo({
+				    url: 'active'
+				});
+			},
 			goCar(){
 				uni.navigateTo({
 				    url: 'car'
@@ -72,6 +79,11 @@
 			goCredit(){
 				uni.navigateTo({
 				    url: 'credit'
+				});
+			},
+			goVip(){
+				uni.navigateTo({
+				    url: 'vip/vip'
 				});
 			},
 			login(userData){
@@ -236,5 +248,6 @@
 		backgroud-color:none;
 		border:none;
 	}
+	
 }
 </style>

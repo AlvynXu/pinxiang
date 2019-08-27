@@ -1,6 +1,5 @@
 <template>
 	<view class="credit-box">
-		<cmd-progress type="dashboard" :percent="100"></cmd-progress>
 		<view class="credit-top">
 			<view class="credit-top-mark">
 				{{mark}}分

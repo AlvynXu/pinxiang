@@ -34,16 +34,20 @@
 		<view class="store-servince">
 			<wuc-tab :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
 			<view v-if="TabCur===0">
-				<view class="servince-list" v-for="(val,key) in storeList" :key="key">
-					<view class="servince-img">
-						<image :src="val.image" mode="aspectFill"></image>
+				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeList" :key="key">
+					<view class="servince-left" @click="openPopup(key)">
+						<view class="servince-img">
+							<image :src="val.image" mode="aspectFill"></image>
+						</view>
+						<view class="servince-left-one">
+							<view class="servince-name">{{val.name}}</view>
+							<view class="servince-price">
+								<view class="price-name">￥{{val.price}}</view>
+							</view>
+						</view>
 					</view>
 					<view class="servince-right">
-						<view class="servince-name">{{val.name}}</view>
-						<view class="servince-price">
-							<view class="price-name">￥{{val.price}}</view>
-							<view class="price-order">立即预约</view>
-						</view>
+						<view class="price-order">立即预约</view>
 					</view>
 					
 				</view>
@@ -106,37 +110,74 @@
 				</view>
 			</view>
 			<view class="servince-reply" v-if="TabCur===3">
-				<div class="ddx-reply-list" v-for="(val,key) in replyList" :key="key" v-show="key<num">
-				      <div class="ddx-reply-left">
+				<view class="ddx-reply-list" v-for="(val,key) in replyList" :key="key" v-show="key<num">
+				      <view class="ddx-reply-left">
 						  <image class="reply-avatar" :src="val.avatar" mode="aspectFill"></image>
-				      </div>
-				      <div class="ddx-reply-right">
-				        <div class="ddx-reply-name">{{val.name}}</div>
-				        <div class="ddx-reply-date">{{val.date}}</div>
-				        <div class="ddx-reply-reply">{{val.reply}}</div>
-				        <div class="ddx-reply-img">
-				          <div class="ddx-img-list" v-for="(v,k) in val.imgList" :key="k">
+				      </view>
+				      <view class="ddx-reply-right">
+				        <view class="ddx-reply-name">{{val.name}}</view>
+				        <view class="ddx-reply-date">{{val.date}}</view>
+				        <view class="ddx-reply-reply">{{val.reply}}</view>
+				        <view class="ddx-reply-img">
+				          <view class="ddx-img-list" v-for="(v,k) in val.imgList" :key="k">
 							<image class="reply-image" :src="v.img" mode="aspectFill"></image>
-				          </div>
-				        </div>
-				      </div>
-				    </div>
-				    <div class="ddx-shop-more"  @click="showMore">
-				      <div>{{txt}}</div>
+				          </view>
+				        </view>
+				      </view>
+				    </view>
+				    <view class="ddx-shop-more"  @click="showMore">
+				      <view>{{txt}}</view>
 					  <view class="vant-icon">&#xe60c;</view>
-				    </div>
+				    </view>
 			</view>
 		</view>
+		<uni-popup ref="popup" type="bottom">
+			<view class="popup-detail">
+				<view class="popup-title">
+					{{storeList[storeCur].name}}
+				</view>
+				<view class="tips">仅限5座及其以下车辆</view>
+				<image class="popup-img" :src="storeList[storeCur].img" mode="aspectFill"></image>
+				<view class="popup-servince">
+					<view class="servince-title">服务内容</view>
+					<view class="servince-box">
+						<view class="servince-lists" v-for="(val,key) in storeList[storeCur].list" :key="key">
+							<view class="servince-list">{{val.name}}</view>
+						</view>
+					</view>
+				</view>
+				<view class="oil-title" v-if="storeList[storeCur].type===1">机油品牌</view>
+				<view class="oil-box" v-for="(val,key) in storeList[storeCur].oilList" :key="key" v-if="storeList[storeCur].type===1">
+					<view class="oil-list">
+						<image class="oil-img" :src="val.img" mode="aspectFill"></image>
+						<view class="oil-content">
+							<view>机油品牌</view>
+							<view>{{val.brand}}</view>
+							<view>{{val.synthesis}}   {{val.capacity}}</view>
+							<view>适合{{val.distance}}km/{{val.time}}更换一次</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
+		</uni-popup>
+		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
 	</view>
 </template>
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
 	import WucTab from '@/components/wuc-tab/wuc-tab.vue'
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
 	export default {
-		components: {uniRate, WucTab},
+		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
+				showPicker: false,
+				datetime: '2019/01/01 15:00:12',
+				type: 'rangetime',
+				value: '',
 				distance:"1.3km",
 				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
 				title: 'Hello',
@@ -144,6 +185,7 @@
 				storeName:'御驾汇汽车服务中心',
 				address:'秋涛北路72号杭州大厦501负2楼',
 				TabCur: 0,
+				storeCur:0,
 				tabList: [
 					{ 
 						name: '服务介绍',
@@ -160,14 +202,57 @@
 				],
 				storeList:[
 					{
+						type:0,
 						name:"御驾汇特色洗车服务",
 						price:'35.0',
 						image:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
+						
+						img:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_03.png",
+						list:[
+							{name:"车身清洗"},
+							{name:"轮毂清洗"},
+							{name:"车内除尘"},
+							{name:"脚垫清洗"},
+							{name:"出风口清洁"},
+							{name:"局部打蜡"},
+							{name:"后视镜清洗"},
+							{name:"收纳槽清洁"},
+						]
 					},
 					{
-						name:"御驾汇特色洗车服务",
+						type:1,
+						name:"御驾汇特色保养服务",
 						price:'35.0',
 						image:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
+						img:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_10.png",
+						oilList:[
+							{
+								img:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg",
+								brand:"SN:5W-40",
+								synthesis:"半合成机油",
+								capacity:"4L",
+								distance:"5000",
+								time:"半年"
+							},
+							{
+								img:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg",
+								brand:"SN:5W-40",
+								synthesis:"全合成机油",
+								capacity:"4L",
+								distance:"10000",
+								time:"全年"
+							}
+						],
+						list:[
+							{name:"换机油"},
+							{name:"换机滤"},
+							{name:"防冻液养护"},
+							{name:"雨刮器养护"},
+							{name:"四轮气压检测"},
+							{name:"轮胎检测"},
+							{name:"四轮定位"},
+							{name:"电瓶检测"},
+						]
 					},
 				],
 				basicsList:[
@@ -206,7 +291,6 @@
 
 					},
 				],
-				
 				replyList:[
 				  {
 					avatar : 'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg' ,
@@ -256,7 +340,7 @@
 				more:'arrow',
 				isShow: true,
 				txt: '查看更多精彩评论',
-				num: 3
+				num: 3,
 			};
 		},
 		methods:{
@@ -269,6 +353,41 @@
 				this.num = this.isShow? 3: this.replyList.length;
 				this.txt = this.isShow?  '查看更多精彩评论':'收起'
 			},
+			openPopup(key){
+				this.$refs.popup.open();
+				const storeCur = key
+				this.storeCur = storeCur;
+				// console.log(storeCur)
+			},
+			
+			onShowDatePicker(type){//显示
+				this.type = type;
+				this.showPicker = true;
+				this.value = this[type];
+			},
+			onSelected(e) {//选择
+				this.showPicker = false;
+				this.$refs.popup.close();
+				if(e) {
+					this[this.type] = e.value; 
+					//选择的值
+					console.log('value => '+ e.value);
+					//原始的Date对象
+					console.log('date => ' + e.date);
+				}
+				const orderTime = this.value;
+				console.log(orderTime)
+				uni.setStorage({
+				    key: 'orderTime',
+				    data: orderTime,
+				    success: function () {
+				       
+				    }
+				});
+				uni.navigateTo({
+				    url: 'appointment/appointment'
+				});
+			}
 		}
 	}
 </script>
@@ -413,41 +532,48 @@
 			margin-top:40upx;
 			display: flex;
 			justify-content:flex-start;
-			.servince-img{
-				width:132upx;
-				height:123upx;
-				image{
+			.servince-left{
+				display: flex;
+				justify-content:flex-start;
+				.servince-img{
 					width:132upx;
 					height:123upx;
+					image{
+						width:132upx;
+						height:123upx;
+					}
+				}
+				.servince-left-one{
+					margin-left:10upx;
+					.servince-name{
+						font-size:29upx;
+					}
+					.servince-price{
+						width:400upx;
+						height:50upx;
+						line-height: 50upx;
+						margin-top: 15upx;
+						display: flex;
+						justify-content:space-between;
+						.price-name{
+							color:#FE5101;
+							font-size:40upx;
+						}
+					}
 				}
 			}
 			.servince-right{
 				margin-left: 20upx;
-				.servince-name{
-					font-size:29upx;
-				}
-				.servince-price{
-					width:500upx;
-					height:50upx;
-					line-height: 50upx;
-					margin-top: 15upx;
-					display: flex;
-					justify-content:space-between;
-					.price-name{
-						color:#FE5101;
-						font-size:40upx;
-					}
-					.price-order{
-						width:112upx;
-						height:36upx;
-						line-height:36upx;
-						color:#fff;
-						font-size:22upx;
-						background: #FE5100;
-						text-align: center;
-						border-radius:4upx;
-						margin-top: 10upx;
-					}
+				.price-order{
+					width:112upx;
+					height:36upx;
+					line-height:36upx;
+					color:#fff;
+					font-size:22upx;
+					background: #FE5100;
+					text-align: center;
+					border-radius:4upx;
+					margin-top: 50upx;
 				}
 			}
 		}
@@ -676,6 +802,108 @@
 			margin-top:4px;
 		  }
 		}
+	}
+	.uni-popup{
+		width:750upx;
+		z-index:1000;
+		.popup-detail{
+			width:667upx;
+			margin:0 auto;
+			.popup-title{
+				width:300upx;
+				height:50upx;
+				line-height:50upx;
+				font-size:33upx;
+				border-bottom: 3upx solid #FE5100;
+			}
+			.tips{
+				font-size:22upx;
+				margin-top: 7upx;
+				color:#A4A4A4;
+			}
+			.popup-img{
+				margin-top: 22upx;
+				width:667upx;
+				height:399upx;
+				img{
+					width:667upx;
+					height:399upx;
+				}
+			}
+			.popup-servince{
+				.servince-title{
+					width:139upx;
+					height:50upx;
+					border-bottom: 3upx solid #FE5100;
+					font-size:33upx;
+				}
+				.servince-box{
+					width:667upx;
+					margin-top:20upx;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
+					.servince-lists{
+						margin-top:10upx;
+						.servince-list{
+							text-align: center;
+							width:141upx;
+							font-size:25upx;
+							padding:3upx 5upx;
+							border:2upx solid #E7E7E7;
+							border-radius:11upx;
+						}
+					}
+				}
+			}
+		}
+		.popup-button{
+			margin-top: 111upx;
+			width:667upx;
+			height:98upx;
+			line-height:98upx;
+			text-align: center;
+			background:#FE5100;
+			color:#fff;
+		}
+		
+		.oil-title{
+			margin-top:50upx;
+			width:139upx;
+			height:50upx;
+			border-bottom: 3upx solid #FE5100;
+			font-size:33upx;
+		}
+		.oil-box{
+			margin-top:34upx;
+			.oil-list{
+				display: flex;
+				justify-content: start;
+				.oil-img{
+					width:234upx;
+					height:217upx;
+					img{
+						width:234upx;
+						height:217upx;
+					}
+				}
+				.oil-content{
+					height:217upx;
+					margin-left:34upx;
+					border-left:3upx solid #FE5100;
+					view{
+						height:50upx;
+						line-height: 50upx;
+						margin-left: 34upx;
+						font-size:27upx;
+						margin-top:5upx;
+					}
+				}
+			}
 		}
 	}
+}
+.date-box{
+	z-index:2000;
+}
 </style>
