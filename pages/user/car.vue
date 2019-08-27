@@ -17,13 +17,13 @@
 				<view class="vant-icon">&#xe65c;</view>
 			</view>
 			<view class="show-img" v-show="showImg" @click="chooseImage" >
-				<image mode="aspectFill" :src="DriverLicense"></image>
+				<image mode="aspectFill" :src="driverLicense"></image>
 			</view>
 			<view class="car-img-bot" @click="chooseImage2" v-show="chooseImg2">
 				<view class="vant-icon">&#xe65c;</view>
 			</view>
 			<view class="show-img" v-show="showImg2" @click="chooseImage2" >
-				<image mode="aspectFill" :src="DLSubPage"></image>
+				<image mode="aspectFill" :src="dLSubPage"></image>
 			</view>
 		</view>
 		<view class="car-discern">
@@ -71,12 +71,13 @@
 </template>
 
 <script>
+  import {uploadCarImg} from "@/api/index"
 	 export default{
 		 data(){
 			 return{
 				type:0,
-				DriverLicense:"",
-				DLSubPage:"",
+				driverLicense:"",
+				dLSubPage:"",
 				chooseImg:true,
 				showImg:false,
 				chooseImg2:true,
@@ -84,7 +85,7 @@
 			 }
 		 },
 		 methods:{
-			chooseImage(){
+			async chooseImage(file){
 				let that = this
 				uni.chooseImage({
 					count: 1, //默认9
@@ -95,17 +96,19 @@
 						uni.getImageInfo({
 							src: res.tempFilePaths[0],
 							success: function (image) {
-								let DriverLicense = image.path
-								that.DriverLicense = DriverLicense
-								console.log(that.DriverLicense);
+								let driverLicense = image.path
+								that.driverLicense = driverLicense
+								console.log(that.driverLicense);
 								that.chooseImg = false
 								that.showImg = true
 							},
 						});
 					},
 				});
+				let uploadData = await uploadCarImg({file: file.file, id: 1000});
+				this.driverLicense.push(uploadData.Data)
 			},
-			chooseImage2(){
+			async chooseImage2(file){
 				let that = this
 				uni.chooseImage({
 					count: 1, //默认9
@@ -116,15 +119,17 @@
 						uni.getImageInfo({
 							src: res.tempFilePaths[0],
 							success: function (image) {
-								let DLSubPage = image.path
-								that.DLSubPage = DLSubPage
-								console.log(that.DLSubPage);
+								let dLSubPage = image.path
+								that.dLSubPage = dLSubPage
+								console.log(that.dLSubPage);
 								that.chooseImg2 = false
 								that.showImg2 = true
 							},
 						});
 					},
 				});
+				let uploadData = await uploadCarImg({file: file.file, id: 1000});
+				this.dLSubPage.push(uploadData.Data)
 			},
 		 },
 	 }

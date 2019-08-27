@@ -43,7 +43,7 @@
 				<view class="vant-word">优象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
-			<view class="prove-center list">
+			<view class="prove-center list" @click="goGiftCard">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">赠卡中心</view>
 				<view class="vant-icon">&#xe609;</view>
@@ -84,6 +84,11 @@
 			goVip(){
 				uni.navigateTo({
 				    url: 'vip/vip'
+				});
+			},
+			goGiftCard(){
+				uni.navigateTo({
+				    url: 'giftCard/giftCard'
 				});
 			},
 			login(userData){

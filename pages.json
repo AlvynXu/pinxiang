@@ -51,6 +51,14 @@
             "path" : "pages/user/vip/vip",
             "style" : {}
         }
+        ,{
+            "path" : "pages/user/giftCard/giftCard",
+            "style" : {}
+        }
+		,{
+		    "path" : "pages/user/giftCard/pay",
+		    "style" : {}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

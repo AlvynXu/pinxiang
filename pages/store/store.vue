@@ -22,7 +22,7 @@
 			<view class="store-area">
 				<view class="area-top">
 					<view class="area-name">{{area}}</view>
-					<uni-rate value="2" size="12"></uni-rate>
+					<uni-rate value="5" size="12" disabled="true"></uni-rate>
 				</view>
 				<view class="store-address">{{address}}</view>
 			</view>

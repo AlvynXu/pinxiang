@@ -62,6 +62,25 @@ export function uploadTopicImg(params) {
   })
 }
 
+/**
+ * 上传车辆图片
+ * @param params
+ * @returns {*|Promise<any>}
+ */
+export function uploadCarImg(params) {
+  let formData = new FormData()
+  formData.append('type', params.type);
+  formData.append('file', params.file);
+  formData.append('id', params.id)
+  return fetch({
+    url: `${api.upload}/driver`,
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: formData
+  })
+}
 export function blogCollect(id, params = {}) {
   return fetch({
     url: `${api.blog}/collect/${id}`,
