@@ -134,10 +134,12 @@
 		</view>
 		<uni-popup class="uni-popup" ref="popup" type="bottom">
 			<view class="popup-detail">
-				<view class="popup-title">
-					{{itemDetail.Name}}
+				<view class="servince-top">
+					<view class="popup-title">
+						{{itemDetail.Name}}
+					</view>
+					<view class="tips">仅限5座及其以下车辆</view>
 				</view>
-				<view class="tips">仅限5座及其以下车辆</view>
 				<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
 				<view class="popup-servince">
 					<view class="servince-title">服务内容</view>
@@ -442,7 +444,6 @@
 			margin-top: 17upx;
 			display: flex;
 			justify-content:space-between;
-			padding-bottom:20upx;
 			.tips{
 				margin-top: 10upx;	
 				display: flex;
@@ -470,7 +471,8 @@
 				border-left-style: none;
 				.vant-icon{
 					color:#FE5100;
-					font-size:30upx;
+					font-size:45upx;
+					margin-top: -20upx;
 				}
 			}
 		}
@@ -480,7 +482,7 @@
 		display: flex;
 		justify-content:flex-start;
 		padding-top:31upx;
-		border-top:2upx solid #A4A4A4; 
+		border-top:1upx solid #f3f3f3; 
 		padding-bottom:20upx;
 		.store-icon{
 			.vant-icon{
@@ -505,7 +507,7 @@
 			}
 			.store-address{
 				width: 508upx;
-				font-size:29upx;
+				font-size:22upx;
 				color:#A4A4A4;
 				margin-top:8upx;
 				display: flex;
@@ -519,7 +521,7 @@
 			width:100upx;
 			height:51upx;
 			margin-top: 15upx;
-			border-left:2upx solid #A4A4A4;
+			border-left:1upx solid #f3f3f3;
 			.vant-icon{
 				color:#FE5100;
 				margin-left: 30upx;
@@ -814,20 +816,33 @@
 		.popup-detail{
 			width:667upx;
 			margin:0 auto;
-			.popup-title{
-				width:300upx;
-				height:50upx;
-				line-height:50upx;
-				font-size:33upx;
-				border-bottom: 3upx solid #FE5100;
-			}
-			.tips{
-				font-size:22upx;
-				margin-top: 7upx;
-				color:#A4A4A4;
+			.servince-top{
+				position: fixed;
+				top:0;
+				left:0;
+				width:750upx;
+				height:140upx;
+				z-index:1000;
+				background: #fff;
+				border-radius:11upx 11upx 0px 0px;
+				.popup-title{
+					width:300upx;
+					height:50upx;
+					line-height:50upx;
+					font-size:33upx;
+					margin: 20upx 42upx;
+					border-bottom: 3upx solid #FE5100;
+					z-index: 1000;
+				}
+				.tips{
+					font-size:22upx;
+					margin: 7upx 42upx;
+					color:#A4A4A4;
+					z-index: 1000;
+				}
 			}
 			.popup-img{
-				margin-top: 22upx;
+				margin-top: 112upx;
 				width:667upx;
 				height:399upx;
 				img{

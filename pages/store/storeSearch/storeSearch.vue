@@ -1,29 +1,12 @@
 <template>
 	<view class="store-box">
-		<view class="store-swiper">
-			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image :src="val.src" mode="aspectFit"></image>
-				</swiper-item>
-			</swiper>
-			<view class="store-search">
-				<view class="store-search-input">
-					<view class="input">输入小区、写字楼或门店信息</view>
-				</view>
-				<view class="vant-icon">&#xe692;</view>
-			</view>
-		</view>
-		<view class="store-vip" @click="goActive">
-			<view class="vip-top">
-				<view class="vip-name">立即开卡</view>
-				<view class="vant-icon">&#xe65c;</view>
-			</view>
-			<view class="vip-bottom">
-				<view class="vip-name">全年免费保养，另送12次洗车服务</view>
-			</view>
+		<view class="store-search">
+			<view class="vant-icon">&#xe692;</view>
+			<input class="uni-input" confirm-type="search" :value="searchText" placeholder="输入门店信息" placeholder-style="color:rgba(51,51,51,0.5)"/>
 		</view>
 		<view class="gray"></view>
-		<view class="store-nearby">
+		<!-- 输入框有字之后出现 -->
+		<view class="store-nearby" v-if="searchText!=''">
 			<view class="nearby-top">
 				附近商户
 			</view>
@@ -64,19 +47,7 @@
 		components: {uniRate},
 		data() {
 			return {
-				current:0,
-				swiperList:[
-					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner1.png"},
-					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner2.png"}
-					],
-				autoplay: true,
-				interval: 2000,
-				duration: 500,
-				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
-				title: 'Hello',
-				area:'下城区 · 钱江世纪城',
-				storeName:'御驾汇汽车服务中心',
-				address:'秋涛北路72号杭州大厦501负2楼',
+				searchText:"",
 				vip:1,
 				storeList:[]
 			}
@@ -90,12 +61,12 @@
 		methods: {
 			goStore(id){
 				uni.navigateTo({
-				    url: `../store/store?id=${id}`
+				    url: `/pages/store/store?id=${id}`
 				});
 			},
 			goActive(){
 				uni.navigateTo({
-				    url: '../user/active'
+				    url: '/pages/user/active'
 				});
 			}
 		}
@@ -114,83 +85,26 @@
 		align-items: center;
 		justify-content: flex-start;
 		margin-bottom:10upx;
-		.store-swiper{
-			width:750upx;
-			height:413upx;
-			position: relative;
-			.swiper{
-				width:750upx;
-				height:413upx;
-				image{
-					width:750upx;
-					height:413upx;
-				}
-			}
-			.store-search{
-				width:667upx;
-				height:121upx;
-				background: #fff;
-				position: absolute;
-				top:353upx;
-				left:42upx;
-				border-radius:11upx;
-				box-shadow:0upx 1upx 1upx 2upx rgba(4,4,4,0.1);
-				display: flex;
-				justify-content: space-between;
-				.store-search-input{
-					margin-top: 45upx;
-					width:450upx;
-					margin-left:33upx;
-					.input{
-						font-size:25upx;
-						color:#A4A4A4;
-					}
-				}
-				.vant-icon{
-					margin-top: 45upx;
-					font-size:30upx;
-					margin-right: 60upx;
-					color:#FE5100;
-				}
-			}
-		}
-		.store-vip{
-			width:667upx;
-			height:134upx;
-			box-shadow:0upx 0upx 0upx 2upx rgba(4,4,4,0.1);
-			margin-top: 100upx;
-			margin-bottom: 15upx;
-			border-radius:11upx;
-			.vip-top{
-				width:580upx;
-				font-size:29upx;
+		.store-search{
+			margin:40upx 40upx;
+			width:665upx;
+			height:80upx;
+			background:#F3F3F3;
+			border-radius: 36upx;
+			overflow: hidden;
+			display:flex;
+			justify-content:flex-start;
+			.vant-icon{
+				font-size:40upx;
 				color:#FE5100;
-				display: flex;
-				height:65upx;
-				line-height:65upx;
-				margin-left:33upx;
-				justify-content: space-between;
-				border-bottom:1upx solid rgba(254,81,0,0.1);
-				.vant-icon{
-					font-size:40upx;
-					margin-right: 0;
-				}
+				margin-left:22upx;
+				margin-top:18upx;
 			}
-			.vip-bottom{
-				width:580upx;
-				font-size:22upx;
-				display: flex;
-				height:65upx;
-				line-height:65upx;
-				margin-left:33upx;
-				justify-content: space-between;
-				.vip-name{
-					color:#A4A4A4;
-				}
-				.vant-icon{
-					font-size:40upx;
-					margin-right: 0;
-				}
+			.uni-input{
+				width:455upx;
+				height:60upx;
+				margin:10upx 0;
+				font-size:29upx;
 			}
 		}
 		.store-nearby{

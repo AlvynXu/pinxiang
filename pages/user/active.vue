@@ -6,10 +6,33 @@
 		<view class="active-join">
 			<view class="active-join-price">
 				<view class="active-join-price-left">
-					品象365天会员
+					品象365天会员-全合成机油版
 				</view>
 				<view class="active-join-price-right">
 					<view>888</view>元
+				</view>
+			</view>
+			<view class="active-join-price2">
+				<view class="active-join-price-left">
+					品象365天会员-半合成机油版
+				</view>
+				<view class="active-join-price-right">
+					<view>888</view>元
+				</view>
+			</view>
+			<view class="active-join-tip">
+				<view class="tip-left">
+					
+				</view>
+				<view class="tip-right">
+					营运车辆暂时未开通服务，请勿购买！
+				</view>
+			</view>
+			<view class="active-join-agree">
+				<view class="agree-box">
+					<radio class="agree-check" color="#FE5100"></radio>
+					开通会员需同意
+					<text class="agree-color" @click="agreement">《会员协议》</text>
 				</view>
 			</view>
 			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -27,7 +50,7 @@
 	export default {
 		data() {
 			return {
-				bgc:"https://cdn.doudouxiongglobal.com/a.jpg",
+				bgc:"http://pic1.win4000.com/wallpaper/2019-08-09/5d4cdf1311e0c.jpg",
 				phone : '',
 				redirect:''
 			}
@@ -75,7 +98,11 @@
 				        console.log('fail:' + JSON.stringify(err));
 				    }
 				});
+			},
+			agreement(){
+				
 			}
+		
 		},
 		mounted(options) {
 			let userData = uni.getStorageSync('user_data')
@@ -107,7 +134,7 @@
 		left:0;
 		z-index:2;
 		width:750upx;
-		height:283upx;
+		height:533upx;
 		background: #fff;
 		.active-join-price{
 			width:668upx;
@@ -131,12 +158,70 @@
 				}
 			}
 		}
+		.active-join-price2{
+			width:668upx;
+			height:76upx;
+			line-height: 76upx;
+			margin:32upx auto 20upx auto;
+			background:rgba(254,81,0,0.15);
+			border-radius:7upx;
+			display: flex;
+			justify-content: space-between;
+			font-size:29upx;
+			.active-join-price-left{
+				margin-left: 42upx;
+			}
+			.active-join-price-right{
+				margin-right: 62upx;
+				display: flex;
+				justify-content: space-between;
+				view{
+					color:#FE5100;
+				}
+			}
+		}
+		.active-join-tip{
+			display: flex;
+			justify-content: flex-start;
+			width:668upx;
+			height:46upx;
+			line-height: 46upx;
+			margin:12upx auto 20upx auto;
+			.tip-left{
+				width:18upx;
+				height:18upx;
+				border-radius: 18upx;
+				background: #FE5100;
+				margin-top: 7upx;
+			}
+			.tip-right{
+				height:31upx;
+				font-size:22upx;
+				color:#FE5100;
+				line-height:31upx;
+				margin-left: 7upx;
+			}
+		}
+		.active-join-agree{
+			font-size:22upx;
+			.agree-box{
+				height:55upx;
+				line-height:55upx;
+				text-align: center;
+			}
+			.agree-check{
+				transform:scale(0.5);
+			}
+			.agree-color{
+				color:#FE5100;
+			}
+		}
 		.active-join-button{
 			width:668upx;
 			height:89upx;
 			margin:31upx auto;
 			background:#FE5100;
-			border-radius:44upx;
+			border-radius:11upx;
 			font-size:29upx;
 			color:#fff;
 			line-height:89upx;

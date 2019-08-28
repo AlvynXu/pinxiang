@@ -59,6 +59,10 @@
 		    "path" : "pages/user/giftCard/pay",
 		    "style" : {}
 		}
+        ,{
+            "path" : "pages/store/storeSearch/storeSearch",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
