@@ -356,3 +356,11 @@ export function getOpenID(params = {}) {
 	})
 }
 
+export function decryptPhone(params={}) {
+	return fetch({
+		url: `${api.mina}/decrypt`,
+		method: 'post',
+		data: params
+	})
+}
+

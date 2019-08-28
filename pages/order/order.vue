@@ -87,7 +87,8 @@
 		    title="提示" 
 		    content="哈哈，还是被你看到了..."
 		    @cancel="clickCancel('cancel')" 
-		    @confirm="clickConfirm('confirm')">
+		    @confirm="clickConfirm('confirm')"
+			@close="closeFunc">
 		</xy-dialog>
 	</view>
 </template> 
@@ -300,6 +301,9 @@
 				uni.navigateTo({
 				    url: '../store/coupon/coupon'
 				});
+			},
+			closeFunc(){
+				this.show = false
 			}
 		},
 	}

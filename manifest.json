@@ -15,7 +15,11 @@
             "delay" : 0
         },
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "Payment" : {},
+            "OAuth" : {},
+            "Share" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -48,7 +52,24 @@
             /* ios打包配置 */
             "ios" : {},
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "payment" : {
+                    "weixin" : {
+                        "appid" : "wx6e06c31acc301cf2"
+                    }
+                },
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "wx6e06c31acc301cf2",
+                        "appsecret" : "e2abb8348448c2084e545b85782a2caf"
+                    }
+                },
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wx6e06c31acc301cf2"
+                    }
+                }
+            }
         }
     },
     /* 快应用特有相关 */

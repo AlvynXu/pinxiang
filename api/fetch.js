@@ -4,7 +4,7 @@ import uniRequest from 'uni-request';
 // import UserAgent from '@/libs/user-agent'
 
 // uniRequest.defaults.baseURL = 'https://yourapi.domain.com';
-uniRequest.defaults.headers.common['Authorization'] = uni.getStorageInfoSync('api_token');
+uniRequest.defaults.headers.common['Authorization'] = 'bearer '+uni.getStorageSync('api_token');
 uniRequest.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 uniRequest.interceptors.response.use(
@@ -12,21 +12,26 @@ uniRequest.interceptors.response.use(
 		if (parseInt(response.status) === 200) {
 			const code = response.data.Code;
 			if (parseInt(code) === 80002) {
-				Dialog.confirm({
-					title: '提醒',
-					message: '您未登陆，请完成登陆',
-					confirmButtonText: '前往',
-					lockScroll: true
-				}).then(() => {
-					// on confirm
-					window.location.href = '/login'
-				}).catch(() => {
-					// on cancel
-				});
+				wx.showModal({
+					title:'提醒',
+					content:'您未登陆，请完成登陆',
+					confirmText:'前往',
+					success (res) {
+					    if (res.confirm) {
+					      // window.location.href = '/login'
+					    } else if (res.cancel) {
+					      console.log('用户点击取消')
+					    }
+					}
+				})
 				return Promise.resolve(response.data);
 			}
 			if (parseInt(code) !== 200) {
-				Toast(response.data.Msg)
+				wx.showToast({
+					title:response.data.Msg,
+					icon: 'error',
+					duration:2000
+				})
 				return Promise.resolve(response.data);
 			}
 			return Promise.resolve(response.data);

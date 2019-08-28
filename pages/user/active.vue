@@ -12,22 +12,77 @@
 					<view>888</view>元
 				</view>
 			</view>
-			<view class="active-join-button">
+			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
 				加入会员，免费保养
-			</view>
+			</button>
+			<button v-if="phone!=''" class="active-join-button" @click="buyVIP">
+				加入会员，免费保养
+			</button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {decryptPhone} from '../../api/index.js'
 	export default {
 		data() {
 			return {
-				bgc:"https://cdn.doudouxiongglobal.com/a.jpg"
+				bgc:"https://cdn.doudouxiongglobal.com/a.jpg",
+				phone : ''
 			}
 		},
 		methods: {
-			
+			getPhoneNumber(e){
+				if(e.detail.errMsg === 'getPhoneNumber:ok'){
+					let wxOpenID = uni.getStorageSync('wxOpenID')
+					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
+						if(res.Code === 200){
+							let userData = uni.getStorageSync('user_data')
+							userData = JSON.parse(userData)
+							userData['Phone'] = res.Data.Phone
+							uni.setStorageSync('user_data',JSON.stringify(userData))
+							uni.requestPayment({
+							    provider: 'wxpay',
+							    timeStamp: String(Date.now()),
+							    nonceStr: 'A1B2C3D4E5',
+							    package: 'prepay_id=wx20180101abcdefg',
+							    signType: 'MD5',
+							    paySign: '',
+							    success: function (res) {
+							        console.log('success:' + JSON.stringify(res));
+							    },
+							    fail: function (err) {
+							        console.log('fail:' + JSON.stringify(err));
+							    }
+							});
+						}
+					})
+				}
+			},
+			buyVIP(){
+				uni.requestPayment({
+				    provider: 'wxpay',
+				    timeStamp: String(Date.now()),
+				    nonceStr: 'A1B2C3D4E5',
+				    package: 'prepay_id=wx20180101abcdefg',
+				    signType: 'MD5',
+				    paySign: '',
+				    success: function (res) {
+				        console.log('success:' + JSON.stringify(res));
+				    },
+				    fail: function (err) {
+				        console.log('fail:' + JSON.stringify(err));
+				    }
+				});
+			}
+		},
+		mounted() {
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			console.log(userData)
+			if(userData['Phone'] !== ''){
+				this.phone = userData['Phone']
+			}
 		}
 	}
 </script>
@@ -38,12 +93,17 @@
 	.active-img-box{
 		width:750upx;
 		height:1232upx;
+		margin-bottom:283upx;
 		.active-img{
 			width:750upx;
 			height:1232upx;
 		}
 	}
 	.active-join{
+		position: fixed;
+		bottom:0;
+		left:0;
+		z-index:2;
 		width:750upx;
 		height:283upx;
 		background: #fff;

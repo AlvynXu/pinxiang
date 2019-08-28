@@ -1,10 +1,10 @@
 export default {
-  base: 'https://api.doudouxiongglobal.com',
-  upload: 'https://api.doudouxiongglobal.com/upload',
-  sms: 'https://api.doudouxiongglobal.com/sms',
-  blog: 'https://api.doudouxiongglobal.com/blog',
-  user: 'https://api.doudouxiongglobal.com/user',
-  mina: 'https://api.doudouxiongglobal.com/mina',
+  base: 'https://api.quchebang.cn',
+  upload: 'https://api.quchebang.cn/upload',
+  sms: 'https://api.quchebang.cn/sms',
+  blog: 'https://api.quchebang.cn/blog',
+  user: 'https://api.quchebang.cn/user',
+  mina: 'https://api.quchebang.cn/mina',
   
   // base: 'http://api.dev.doudouxiongglobal.com',
   // upload: 'http://api.dev.doudouxiongglobal.com/upload',

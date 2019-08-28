@@ -43,11 +43,11 @@
 				<view class="vant-word">优象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
-			<view class="prove-center list" @click="goGiftCard">
+			<!-- <view class="prove-center list" @click="goGiftCard">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">赠卡中心</view>
 				<view class="vant-icon">&#xe609;</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -61,12 +61,21 @@
 				isLogin:0,
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
-				phone:''
+				phone:'',
+				vip : 0
 			}
 		},
 		methods: {
 			//打开弹出层
 			goActive(){
+				let userData = uni.getStorageSync('user_data')
+				if(userData === null || userData.length === 0){
+					wx.showModal({
+						title:"提示",
+						content:"未登录，请前往登录",
+					})
+					return false;
+				}
 				uni.navigateTo({
 				    url: 'active'
 				});
@@ -82,9 +91,26 @@
 				});
 			},
 			goVip(){
-				uni.navigateTo({
-				    url: 'vip/vip'
-				});
+				if(this.vip === 0){
+					wx.showModal({
+						title:'提示',
+						content:'您未购买vip，请先购买',
+						confirmText:'前往',
+						success(res) {
+							if (res.confirm) {
+							      uni.navigateTo({
+							          url: 'active'
+							      });
+							    } else if (res.cancel) {
+									
+							    }
+						}
+					})
+				}else{
+					uni.navigateTo({
+					    url: 'vip/vip'
+					});
+				}
 			},
 			goGiftCard(){
 				uni.navigateTo({
@@ -134,6 +160,7 @@
 				this.nickname = userData.Nickname,
 				this.phone = userData.Phone
 				this.isLogin = 1
+				if(userData.Vip === 1) this.vip = 1
 			}
 		}
 	}
