@@ -13,7 +13,7 @@
 				<view class="vant-icon">&#xe692;</view>
 			</view>
 		</view>
-		<view class="store-vip">
+		<view class="store-vip" @click="goActive">
 			<view class="vip-top">
 				<view class="vip-name">立即开卡</view>
 				<view class="vant-icon">&#xe65c;</view>
@@ -40,7 +40,7 @@
 			</view>
 			<view class="store-name">{{storeName}}</view>
 			<view class="store-address">{{address}}
-				<uni-rate value="2" size="12"></uni-rate>
+				<uni-rate value="5" size="12"></uni-rate>
 			</view>
 			<view class="store-tips">
 				<view class="tips">
@@ -86,6 +86,11 @@
 			goStore(){
 				uni.navigateTo({
 				    url: '../store/store'
+				});
+			},
+			goActive(){
+				uni.navigateTo({
+				    url: '../user/active'
 				});
 			}
 		}

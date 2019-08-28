@@ -1,11 +1,24 @@
 <template>
 	<view class="credit-box">
-		<view class="xy-credit">
+		<view class="xy-credit" v-if="type===0">
 			<view class="vip-top">
-				
+				<view class="vip-circle2"></view>
+				<view class="vip-circle3"></view>
+				<view class="vip-left"></view>
+				<view class="vip-top"></view>
+				<view class="vip-right"></view>
+				<view class="vip-num">{{defaultMark}}</view>
+				<view class="vip-content1">信用中等</view>
+				<view class="vip-content2">评估时间：2019-08-09</view>
+				<view class="vip-word">
+					<view class="vip-word-icon">
+						<view class="vant-icon">&#xe68b;</view>
+					</view>
+					<view class="vip-word-word">信用分优秀的会员，可享受免预约服务</view>
+				</view>
 			</view>
 		</view>
-		<view class="xy-vip">
+		<view class="xy-vip" v-if="type===1">
 			<view class="credit-top">
 				<view class="credit-top-mark">
 					{{mark}}分
@@ -60,6 +73,8 @@
 	export default{
 		data(){
 			return{
+				type:0,
+				defaultMark:"300",
 				mark:'360',
 				date:"2019-08-09",
 				creditList:[
@@ -99,7 +114,129 @@
 	justify-content: flex-start;
 	display: flex;
 	.xy-credit{
-		
+		width:750upx;
+		height:100vh;
+		.vip-top{
+			width:750upx;
+			height:549upx;
+			background: #FE5100;
+			position:relative;
+			.vip-circle2{
+				width: 200upx;
+				height: 100upx;
+				background-color: #FE5100;
+				border-radius: 200upx 200upx 0 0 ;
+				border-left:20upx solid #fff;
+				border-right:20upx solid #fff;
+				border-top:20upx solid #fff;
+				position: absolute;
+				top:100upx;
+				left:295upx;
+				z-index: 100;
+				transform:rotate(-310deg);
+				-ms-transform:rotate(-310deg); 	/* IE 9 */
+				-moz-transform:rotate(-310deg); 	/* Firefox */
+				-webkit-transform:rotate(-310deg); /* Safari 和 Chrome */
+				-o-transform:rotate(-310deg); 
+			}
+			.vip-circle3{
+				width: 200upx;
+				height: 100upx;
+				background-color: #FE5100;
+				border-radius: 0 0 200upx 200upx ;
+				border-left:20upx solid #fff;
+				border-right:20upx solid #fff;
+				border-bottom:20upx solid #fff;
+				position: absolute;
+				top:100upx;
+				left:203upx;	
+				z-index: 100;
+				transform:rotate(130deg);
+				-ms-transform:rotate(130deg); 	/* IE 9 */
+				-moz-transform:rotate(130deg); 	/* Firefox */
+				-webkit-transform:rotate(130deg); /* Safari 和 Chrome */
+				-o-transform:rotate(130deg); 
+			}
+			.vip-left{
+				width:25upx;
+				height:10upx;
+				position: absolute;
+				top:200upx;
+				left:263upx;
+				background: #fff;
+				z-index: 150;
+			}
+			.vip-right{
+				width:25upx;
+				height:10upx;
+				position: absolute;
+				top:200upx;
+				left:450upx;
+				background: #fff;
+				z-index: 150;
+			}
+			.vip-top{
+				width:10upx;
+				height:20upx;
+				position: absolute;
+				top:100upx;
+				left:360upx;
+				background: #fff;
+				z-index: 150;
+			}
+			.vip-num{
+				position: absolute;
+				top:170upx;
+				left:320upx;
+				color:#fff;
+				z-index:200;
+				font-size:55upx;
+			}
+			.vip-content1{
+				text-align: center;
+				color:#fff;
+				font-size:29upx;
+				position: absolute;
+				top:320upx;
+				left:313upx;
+				z-index:200;
+			}
+			.vip-content2{
+				text-align: center;
+				color:#fff;
+				font-size:27upx;
+				position: absolute;
+				top:370upx;
+				left:253upx;
+				z-index:200;
+			}
+			.vip-word{
+				position:absolute;
+				width:667upx;
+				height:207upx;
+				line-height:207upx;
+				background:#fff;
+				border-radius:11upx;
+				text-align: center;
+				top:480upx;
+				left:42upx;
+				display:flex;
+				justify-content:start;
+				.vip-word-icon{
+					width:107upx;
+					height:107upx;
+					margin:0upx 25upx;
+					.vant-icon{
+						font-size:100upx;
+						color:#FE5100;
+					}
+				}
+				.vip-word-word{
+					font-size:27upx;
+					margin-left: 10upx;
+				}
+			}
+		}
 	}
 	.xy-vip{
 		width:750upx;

@@ -22,17 +22,17 @@
 			<view class="store-area">
 				<view class="area-top">
 					<view class="area-name">{{area}}</view>
-					<uni-rate value="5" size="12" disabled="true"></uni-rate>
+					<uni-rate class="uni-rate" value="5" size="12" disabled="true"></uni-rate>
 				</view>
 				<view class="store-address">{{address}}</view>
 			</view>
-			<view class="store-phone">
+			<view class="store-phone" @click="callPhone">
 				<view class="vant-icon">&#xe686;</view>
 			</view>
 		</view>
 		<view class="gray"></view>
 		<view class="store-servince">
-			<wuc-tab :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
+			<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
 			<view v-if="TabCur===0">
 				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeList" :key="key">
 					<view class="servince-left" @click="openPopup(key)">
@@ -45,9 +45,9 @@
 								<view class="price-name">￥{{val.price}}</view>
 							</view>
 						</view>
-					</view>
-					<view class="servince-right">
-						<view class="price-order">立即预约</view>
+						<view class="servince-right">
+							<view class="price-order">立即预约</view>
+						</view>
 					</view>
 					
 				</view>
@@ -131,7 +131,7 @@
 				    </view>
 			</view>
 		</view>
-		<uni-popup ref="popup" type="bottom">
+		<uni-popup class="uni-popup" ref="popup" type="bottom">
 			<view class="popup-detail">
 				<view class="popup-title">
 					{{storeList[storeCur].name}}
@@ -184,6 +184,7 @@
 				area:'下城区 · 钱江世纪城',
 				storeName:'御驾汇汽车服务中心',
 				address:'秋涛北路72号杭州大厦501负2楼',
+				phone:"15245678945",
 				TabCur: 0,
 				storeCur:0,
 				tabList: [
@@ -387,7 +388,12 @@
 				uni.navigateTo({
 				    url: 'appointment/appointment'
 				});
-			}
+			},
+			callPhone(){
+				uni.makePhoneCall({
+					phoneNumber: this.phone
+				});
+			},
 		}
 	}
 </script>
@@ -403,13 +409,14 @@
 	margin-left: 23upx;
 }
 .wuc-tab /deep/ .wuc-tab-item{
-	width:160upx;
+	width:130upx;
 	font-size:25upx;
     height: 80upx;
     line-height: 80upx;
-    padding: 0 20upx;
-    margin: 0 0 0 6upx;
+    padding: 0 0upx;
+    margin: 0 25upx 0 25upx;
 	color:#A4A4A4;
+	text-align: center;
 }
 .wuc-tab /deep/ .text-blue{
 	color:#FE5100;
@@ -704,11 +711,12 @@
 					justify-content: start;
 					font-size:29upx;
 					.vant-icon{
-						margin:0 10upx;
+						margin:0 0 0 0;
 						font-size:50upx;
 					}
 					view{
-						margin-left:20upx;
+						margin-left:10upx;
+						margin-top:7upx;
 					}
 				}
 				.intro-detail{
@@ -847,9 +855,9 @@
 						margin-top:10upx;
 						.servince-list{
 							text-align: center;
-							width:141upx;
+							width:150upx;
 							font-size:25upx;
-							padding:3upx 5upx;
+							padding:3upx 2upx;
 							border:2upx solid #E7E7E7;
 							border-radius:11upx;
 						}
@@ -902,8 +910,8 @@
 			}
 		}
 	}
-}
-.date-box{
-	z-index:2000;
+	.date-box{
+		z-index:2000;
+	}
 }
 </style>

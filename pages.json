@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "优象",
+				"navigationBarTitleText": "品象",
 				"backgroundColor":"#f3f3f3"
 			}
 		}
@@ -20,7 +20,7 @@
         },{
             "path" : "pages/user/credit",
             "style" : {
-					"navigationBarTitleText": "优享信用"
+					"navigationBarTitleText": "品象信用"
 					}
         },{
             "path" : "pages/user/active",
@@ -62,7 +62,7 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "优象",
+		"navigationBarTitleText": "品象",
 		"navigationBarBackgroundColor": "#FCFCFC",
 		"backgroundColor": "#FCFCFC",
 		"navigationBarShadow":"grey",

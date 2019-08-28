@@ -13,17 +13,23 @@
 			<view class="car-img-top">
 				行驶证：
 			</view>
-			<view class="car-img-bot" @click="chooseImage" v-show="chooseImg">
+			<view class="car-img-bot1" @click="chooseImage" v-show="chooseImg">
 				<view class="vant-icon">&#xe65c;</view>
 			</view>
 			<view class="show-img" v-show="showImg" @click="chooseImage" >
 				<image mode="aspectFill" :src="driverLicense"></image>
 			</view>
-			<view class="car-img-bot" @click="chooseImage2" v-show="chooseImg2">
+			<view class="car-img-bot2" @click="chooseImage2" v-show="chooseImg2">
 				<view class="vant-icon">&#xe65c;</view>
 			</view>
 			<view class="show-img" v-show="showImg2" @click="chooseImage2" >
 				<image mode="aspectFill" :src="dLSubPage"></image>
+			</view>
+			<view class="car-img-bot3" @click="chooseImage3" v-show="chooseImg3">
+				<view class="vant-icon">&#xe65c;</view>
+			</view>
+			<view class="show-img" v-show="showImg3" @click="chooseImage3" >
+				<image mode="aspectFill" :src="carImg"></image>
 			</view>
 		</view>
 		<view class="car-discern">
@@ -78,10 +84,13 @@
 				type:0,
 				driverLicense:"",
 				dLSubPage:"",
+				carImg:"",
 				chooseImg:true,
 				showImg:false,
 				chooseImg2:true,
 				showImg2:false,
+				chooseImg3:true,
+				showImg3:false,
 			 }
 		 },
 		 methods:{
@@ -131,6 +140,29 @@
 				let uploadData = await uploadCarImg({file: file.file, id: 1000});
 				this.dLSubPage.push(uploadData.Data)
 			},
+			async chooseImage3(file){
+				let that = this
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function (res) {
+						// console.log(JSON.stringify(res.tempFilePaths));
+						uni.getImageInfo({
+							src: res.tempFilePaths[0],
+							success: function (image) {
+								let carImg = image.path
+								that.carImg = carImg
+								console.log(that.carImg);
+								that.chooseImg3 = false
+								that.showImg3 = true
+							},
+						});
+					},
+				});
+				let uploadData = await uploadCarImg({file: file.file, id: 1000});
+				this.carImg.push(uploadData.Data)
+			},
 		 },
 	 }
 </script>
@@ -177,11 +209,40 @@
 			margin-left: 42upx;
 			font-size:29upx;
 		}
-		.car-img-bot{
+		.car-img-bot1{
 			width:667upx;
 			height:326upx;
 			line-height: 326upx;
-			background: #f3f3f3;
+			background: url(https://cdn.doudouxiongglobal.com/pinxiang/image/example/inside.png);
+			background-size:100% 100%;
+			margin:0 auto 25upx auto;
+			border:2upx dashed #A4A4A4;
+			.vant-icon{
+				text-align: center;
+				font-size:120upx;
+				color:#A4A4A4;
+			}
+		}
+		.car-img-bot2{
+			width:667upx;
+			height:326upx;
+			line-height: 326upx;
+			background-image: url(https://cdn.doudouxiongglobal.com/pinxiang/image/example%E6%9C%AA%E6%A0%87%E9%A2%98-2_%E7%94%BB%E6%9D%BF%201.png);
+			background-size:100% 100%;
+			margin:0 auto 25upx auto;
+			border:2upx dashed #A4A4A4;
+			.vant-icon{
+				text-align: center;
+				font-size:120upx;
+				color:#A4A4A4;
+			}
+		}
+		.car-img-bot3{
+			width:667upx;
+			height:326upx;
+			line-height: 326upx;
+			background-image: url(https://cdn.doudouxiongglobal.com/pinxiang/image/example/car.png);
+			background-size:100% 100%;
 			margin:0 auto 25upx auto;
 			border:2upx dashed #A4A4A4;
 			.vant-icon{
@@ -245,7 +306,7 @@
 	}
 	.mask{
 		position: absolute;
-		top:920upx;
+		top:1270upx;
 		left:0;
 		width:750upx;
 		height:400upx;

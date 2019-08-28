@@ -2,7 +2,7 @@
 	<view class="user-box">
 		<view class="user-login" v-if="isLogin===0">
 			<view class="login-white">
-				<image class="login-avatar" :src="avatar" mode="aspectFill"></image>
+				<view class="vant-icon">&#xe691;</view>
 				<view class="login">
 					<button class="login-button" plain="true" lang="zh_CN" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即登录</button>
 				</view>
@@ -29,18 +29,18 @@
 		</view>
 		<view class="user-prove">
 			<view class="prove-car list" @click="goCar">
-				<view class="vant-icon">&#xe6a4;</view>
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/car.png" mode="aspectFit"></image>
 				<view class="vant-word">车辆认证</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-vip list" @click="goVip">
-				<view class="vant-icon">&#xe6a4;</view>
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/vip.png" mode="aspectFit"></image>
 				<view class="vant-word">我的会员</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-credit list" @click="goCredit">
-				<view class="vant-icon">&#xe6a4;</view>
-				<view class="vant-word">优象信用</view>
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/credit.png" mode="aspectFit"></image>
+				<view class="vant-word">品象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<!-- <view class="prove-center list" @click="goGiftCard">
@@ -185,6 +185,12 @@
 			background: #fff;
 			display: flex;
 			justify-content:start;
+			.vant-icon{
+				font-size:100upx;
+				margin-left:20upx;
+				margin-right:0;
+				color:#A4A4A4;
+			}
 			.login-avatar{
 				width:121upx;
 				height:121upx;
@@ -258,13 +264,25 @@
 			border-bottom: 2upx solid #f3f3f3;
 			display: flex;
 			justify-content: start;
-			.vant-icon{
-				font-size:30upx;
-				margin-top: 3upx;
+			.img{
+				width:35upx;
+				height:31upx;
+				margin-top: 35upx;
 			}
 			.vant-word{
 				width:520upx;
 				font-size:29upx;
+				margin-left: 20upx;
+			}
+			.vant-icon{
+				font-size:30upx;
+			}
+		}
+		.prove-credit{
+			.img{
+				width:40upx;
+				height:38upx;
+				margin-top: 31upx;
 			}
 		}
 	}
