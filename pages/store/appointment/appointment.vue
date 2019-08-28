@@ -5,7 +5,7 @@
 		</view>
 		<view class="appointment-content">
 			<view class="appointment-content-left">手机号码：</view>
-			<view class="appointment-content-right">15245758452</view>
+			<view class="appointment-content-right">{{phone}}</view>
 		</view>
 		<view class="appointment-content">
 			<view class="appointment-content-left">预约时间：</view>
@@ -22,8 +22,9 @@
 	export default {
 		data() {
 			return {
-				phone:"15978456985",
-				orderTime:""
+				phone:"",
+				orderTime:"",
+				
 			};
 		},
 		onLoad() {
@@ -31,13 +32,21 @@
 			uni.getStorage({
 			    key: 'orderTime',
 			    success: function (res) {
-					const orderTime = res.data;
-					that.orderTime = orderTime;
-			        console.log(res.data);
-			        console.log(that.orderTime);
+					that.orderTime = res.data;
 			    }
 			});
-			        console.log(that.orderTime);
+			let userData = uni.getStorageSync('user_data')
+			if(userData===null || userData.length===0){
+				wx.showToast({
+					title:"请先登录",
+					success() {
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					}
+				})
+			}
+			this.phone = (JSON.parse(userData)).Phone
 		},
 		methods:{
 			goCoupon(){

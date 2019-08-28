@@ -186,7 +186,7 @@ export default {
       &.bottom {
         & .uni-popup__wrapper-box {
           width: 100%;
-          max-height: 80%;
+          height: 85vh;
           overflow-y: scroll;
         }
       }
