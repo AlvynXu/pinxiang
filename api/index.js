@@ -403,3 +403,12 @@ export function getStoreReply(id, params={}){
 		params: params
 	})
 }
+
+export function storeSearch(params={}) {
+	console.log(params)
+	return fetch({
+		url: `${api.store}/search`,
+		method: 'post',
+		data: params
+	})
+}

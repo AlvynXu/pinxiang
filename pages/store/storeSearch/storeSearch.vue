@@ -2,7 +2,7 @@
 	<view class="store-box">
 		<view class="store-search">
 			<view class="vant-icon">&#xe692;</view>
-			<input class="uni-input" confirm-type="search" :value="searchText" placeholder="输入门店信息" placeholder-style="color:rgba(51,51,51,0.5)"/>
+			<input class="uni-input" confirm-type="search" :value="searchText" @input="search" placeholder="输入门店信息" placeholder-style="color:rgba(51,51,51,0.5)"/>
 		</view>
 		<view class="gray"></view>
 		<!-- 输入框有字之后出现 -->
@@ -42,14 +42,16 @@
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
-	import {getStore} from "@/api/index.js"
+	import {getStore,storeSearch} from "@/api/index.js"
 	export default {
 		components: {uniRate},
 		data() {
 			return {
 				searchText:"",
 				vip:1,
-				storeList:[]
+				storeList:[],
+				
+				timeout: null,
 			}
 		},
 		async onLoad() {
@@ -68,6 +70,25 @@
 				uni.navigateTo({
 				    url: '/pages/user/active'
 				});
+			},
+			search(e){
+				let that = this
+				let value = e.detail.value
+				clearTimeout(that.timeout)
+				if(value === ''){
+					getStore().then(storeData => {
+						if(storeData.Code === 200){
+							that.storeList = storeData.Data
+						}
+					});
+				}else{
+					that.timeout = setTimeout(async ()=>{
+						let storeData = await storeSearch({Name:value})
+						if(storeData.Code === 200){
+							that.storeList = storeData.Data
+						}
+					},300)
+				}
 			}
 		}
 	}

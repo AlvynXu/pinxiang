@@ -70,10 +70,9 @@
 						<view v-for="(v,i) in 24" :key="i">{{i<10?'0'+i:i}}时</view>
 					</picker-view-column>
 					<picker-view-column>
-						<view v-for="(v,i) in 60" :key="i">{{i<10?'0'+i:i}}分</view>
-					</picker-view-column>
-					<picker-view-column v-if="showSeconds">
-						<view v-for="(v,i) in 60" :key="i">{{i<10?'0'+i:i}}秒</view>
+						<!-- <view v-for="(v,i) in 60" :key="i">{{i<10?'0'+i:i}}分</view> -->
+						<view>00分</view>
+						<view>30分</view>
 					</picker-view-column>
 				</picker-view>
 				<view class="picker-modal-footer">

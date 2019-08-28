@@ -6,7 +6,7 @@
 					<image :src="val.src" mode="aspectFit"></image>
 				</swiper-item>
 			</swiper>
-			<view class="store-search">
+			<view class="store-search" @click="goSearch">
 				<view class="store-search-input">
 					<view class="input">输入小区、写字楼或门店信息</view>
 				</view>
@@ -96,6 +96,11 @@
 			goActive(){
 				uni.navigateTo({
 				    url: '../user/active'
+				});
+			},
+			goSearch(){
+				uni.navigateTo({
+				    url: '../store/storeSearch/storeSearch'
 				});
 			}
 		}
