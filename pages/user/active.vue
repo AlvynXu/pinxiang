@@ -28,7 +28,8 @@
 		data() {
 			return {
 				bgc:"https://cdn.doudouxiongglobal.com/a.jpg",
-				phone : ''
+				phone : '',
+				redirect:''
 			}
 		},
 		methods: {
@@ -76,13 +77,14 @@
 				});
 			}
 		},
-		mounted() {
+		mounted(options) {
 			let userData = uni.getStorageSync('user_data')
 			userData = JSON.parse(userData)
 			console.log(userData)
 			if(userData['Phone'] !== ''){
 				this.phone = userData['Phone']
 			}
+			this.redirect = options.redirect
 		}
 	}
 </script>

@@ -10,7 +10,7 @@
 				<view class="tips" v-for="(val,key) in tags" :key="key">
 					<view class="tip">{{val}}</view>
 				</view>
-				<button class="store-share" open-type="share" @click="share">
+				<button class="store-share" :plain="true" open-type="share" @click="share">
 					<view class="vant-icon">&#xe685;</view>
 				</button>
 			</view>
@@ -162,7 +162,7 @@
 			</view>
 			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
 		</uni-popup>
-		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="true" @confirm="onSelected" @cancel="onCancel" />
 		
 		
 	</view>
@@ -179,6 +179,7 @@
 		data() {
 			return {
 				id:0,
+				userData:[],
 				showPicker: false,
 				datetime: '2019/01/01 15:00:12',
 				type: 'rangetime',
@@ -269,7 +270,6 @@
 				this.txt = this.isShow?  '查看更多精彩评论':'收起'
 			},
 			async openPopup(id){
-				console.log("id",id)
 				let itemDetail = await getStoreItemDetail(id)
 				if(itemDetail.Code === 200){
 					this.itemDetail = itemDetail.Data
@@ -281,17 +281,23 @@
 				// console.log(storeCur)
 			},
 			share(){
-				this.onShareAppMessage()
+				// this.onShareAppMessage()
 			},
 			onShowDatePicker(type){//显示
 				this.type = type;
 				this.showPicker = true;
 				this.value = this[type];
 			},
-			onSelected(e) {//选择
+			onCancel(e){
 				this.showPicker = false;
 				this.$refs.popup.close();
+			},
+			onSelected(e) {//选择
+				this.showPicker = false;
+				let that = this
+				this.$refs.popup.close();
 				if(e) {
+					console.log(e)
 					this[this.type] = e.value; 
 					//选择的值
 					console.log('value => '+ e.value);
@@ -299,7 +305,6 @@
 					console.log('date => ' + e.date);
 				}
 				let orderTime = this.value;
-				console.log(orderTime)
 				uni.setStorage({
 				    key: 'orderTime',
 				    data: orderTime,
@@ -307,6 +312,37 @@
 				       
 				    }
 				});
+				if(this.userData.length===0){
+					wx.showModal({
+						title:'提醒',
+						content:"您还未登陆，请前往登陆",
+						confirmText:"前往",
+						success(res) {
+							if(res.confirm) {
+								getApp().globalData.redirect=`/pages/store/store?id=${that.id}`
+								uni.switchTab({
+									url:"/pages/user/user"
+								})
+							}
+						}
+					})
+					return false
+				}
+				if(this.userData.Vip === 0){
+					wx.showModal({
+						title:'提醒',
+						content:"您还未购买会员",
+						confirmText:"前往",
+						success(res) {
+							if(res.confirm) {
+								uni.navigateTo({
+								    url: `/pages/user/active?redirect=/pages/store/store?id=${that.id}`
+								});
+							}
+						}
+					})
+					return false
+				}
 				uni.navigateTo({
 				    url: 'appointment/appointment'
 				});
@@ -315,6 +351,12 @@
 		async onLoad(options) {
 			let id = options.id
 			this.id = id
+			let userData = uni.getStorageSync('user_data')
+			if(userData === null ||userData.length === 0){
+				
+			}else{
+				this.userData = JSON.parse(userData)
+			}
 			let storeData = await getStoreByID(id)
 			if(storeData.Code === 200){
 				let store = storeData.Data[0]

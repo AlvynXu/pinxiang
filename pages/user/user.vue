@@ -62,7 +62,8 @@
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
 				phone:'',
-				vip : 0
+				vip : 0,
+				redirect:'',
 			}
 		},
 		methods: {
@@ -139,6 +140,13 @@
 						that.nickname = res.Data.user.Nickname,
 						that.phone = res.Data.user.Phone
 						that.isLogin = 1
+						if(that.redirect!=''){
+							console.log(that.redirect)
+							getApp().globalData.redirect=''
+							wx.navigateTo({
+								url:that.redirect
+							})
+						}
 					}
 				})
 				console.log(openID)
@@ -152,7 +160,7 @@
 			    console.log(e.detail.encryptedData)
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
 			if(userData.length > 0){
 				userData = JSON.parse(userData)
@@ -162,6 +170,7 @@
 				this.isLogin = 1
 				if(userData.Vip === 1) this.vip = 1
 			}
+			this.redirect = getApp().globalData.redirect
 		}
 	}
 </script>
