@@ -32,32 +32,34 @@
 			</view>
 		</view>
 		<view class="gray"></view>
-		<view class="store-list" @click="goStore">
-			<image class="cover" :src="cover" mode="aspectFill"></image>
-			<view class="store-area">
-				<view class="vant-icon">&#xe68f;</view>
-				<view class="area-name">{{area}}</view>
-			</view>
-			<view class="store-name">{{storeName}}</view>
-			<view class="store-address">{{address}}
-				<uni-rate value="5" size="12"></uni-rate>
-			</view>
-			<view class="store-tips">
-				<view class="tips">
-					<view class="tip">地铁周边</view>
-					<view class="tip">地铁周边</view>
-					<view class="tip">地铁周边</view>
+
+		<view v-for="(val,key) in storeList" :key="key">
+			<view class="store-list" @click="goStore(val.ID)">
+				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
+				<view class="store-area">
+					<view class="vant-icon">&#xe68f;</view>
+					<view class="area-name">{{val.Area}}</view>
 				</view>
-				<view class="store-buy" v-if="vip===1">会员免费</view>
-				<view class="store-buy" v-if="vip===0">立即预约</view>
+				<view class="store-name">{{val.Name}}</view>
+				<view class="store-address">{{val.Address}}
+					<uni-rate :value="val.Rate" size="12" :disabled="true"></uni-rate>
+				</view>
+				<view class="store-tips">
+					<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
+						<view class="tip">{{v}}</view>
+					</view>
+					<view class="store-buy" v-if="vip===0">会员免费</view>
+					<view class="store-buy" v-if="vip===1">立即预约</view>
+				</view>
+				<view class="gray"></view>
 			</view>
-			<view class="gray"></view>
 		</view>
 	</view>
 </template>
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
+	import {getStore} from "@/api/index.js"
 	export default {
 		components: {uniRate},
 		data() {
@@ -76,16 +78,20 @@
 				area:'下城区 · 钱江世纪城',
 				storeName:'御驾汇汽车服务中心',
 				address:'秋涛北路72号杭州大厦501负2楼',
-				vip:1
+				vip:1,
+				storeList:[]
 			}
 		},
-		onLoad() {
-			
+		async onLoad() {
+			let storeData = await getStore();
+			if(storeData.Code === 200){
+				this.storeList = storeData.Data
+			}
 		},
 		methods: {
-			goStore(){
+			goStore(id){
 				uni.navigateTo({
-				    url: '../store/store'
+				    url: `../store/store?id=${id}`
 				});
 			},
 			goActive(){

@@ -364,3 +364,19 @@ export function decryptPhone(params={}) {
 	})
 }
 
+export function getStore(params={}) {
+	return fetch({
+		url: `${api.store}/index`,
+		method: 'get',
+		params: params
+	})
+}
+
+export function getStoreByID(id,params={}) {
+	return fetch({
+		url: `${api.store}/get/${id}`,
+		method: 'get',
+		params: params
+	})
+}
+

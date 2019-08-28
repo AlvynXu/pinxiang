@@ -5,6 +5,7 @@ export default {
   blog: 'https://api.quchebang.cn/blog',
   user: 'https://api.quchebang.cn/user',
   mina: 'https://api.quchebang.cn/mina',
+  store: 'https://api.quchebang.cn/store',
   
   // base: 'http://api.dev.doudouxiongglobal.com',
   // upload: 'http://api.dev.doudouxiongglobal.com/upload',

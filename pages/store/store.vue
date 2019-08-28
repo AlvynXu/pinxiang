@@ -4,13 +4,11 @@
 			<image class="cover" :src="cover" mode="aspectFill"></image>
 			<view class="store-name">
 				{{storeName}}
-				<view class="store-distance">{{distance}}</view>
+				<view class="store-distance" v-if="distance">{{distance}}</view>
 			</view>
 			<view class="store-tips">
-				<view class="tips">
-					<view class="tip">地铁周边</view>
-					<view class="tip">地铁周边</view>
-					<view class="tip">地铁周边</view>
+				<view class="tips" v-for="(val,key) in tags" :key="key">
+					<view class="tip">{{val}}</view>
 				</view>
 				<view class="vant-icon">&#xe685;</view>
 			</view>
@@ -22,12 +20,12 @@
 			<view class="store-area">
 				<view class="area-top">
 					<view class="area-name">{{area}}</view>
-					<uni-rate class="uni-rate" value="5" size="12" disabled="true"></uni-rate>
+					<uni-rate :value="rate" size="12" :disabled="false"></uni-rate>
 				</view>
 				<view class="store-address">{{address}}</view>
 			</view>
-			<view class="store-phone" @click="callPhone">
-				<view class="vant-icon">&#xe686;</view>
+			<view class="store-phone">
+				<view class="vant-icon" @click="tel">&#xe686;</view>
 			</view>
 		</view>
 		<view class="gray"></view>
@@ -59,8 +57,10 @@
 			        <view>营业时间</view>
 			      </view>
 			      <view class="information-comment-foot">
-			        <view class="comment-foot-left">平均营业</view>
-			        <view>周一至周日 09:00-21:00</view>
+			        <view class="comment-foot-left" v-if="rest">{{rest}} 休息</view>
+					<view class="comment-foot-left" v-else>平均营业</view>
+					<view>{{working}}</view>
+			        <view>{{startTime}}-{{endTime}}</view>
 			      </view>
 			    </view>
 			    <view class="ddx-information-basics">
@@ -70,25 +70,24 @@
 			      </view>
 			      <view class="information-basics-foot">
 			        <view class="basics-foot" v-for="(val,key) in basicsList" :key="key">
-						<view class="vant-icon one"  v-if="val.name==='免费WiFi'">&#xe6b9;</view>
-						<view class="vant-icon two"  v-if="val.name==='免费茶水'">&#xe66a;</view>
-						<view>{{val.name}}</view>
+						<view class="vant-icon one"  v-if="val.Icon" v-html="val.Icon"></view>
+						<view>{{val.Name}}</view>
 			        </view>
 			      </view>
 			    </view>
 			    <view class="ddx-information-details">
 			      <view class="ddx-information-detail" v-for="(val,key) in detailsList" :key="key">
 			        <view class="information-detail-head">
-						<view class="vant-icon" v-show="val.name==='洗车服务'">&#xe6b0;</view>
-						<view class="vant-icon" v-show="val.name==='美容服务'">&#xe688;</view>
-						<view class="vant-icon" v-show="val.name==='保养服务'">&#xe67b;</view>
-						<view class="vant-icon" v-show="val.name==='维修服务'">&#xe6aa;</view>
-						<view class="vant-icon" v-show="val.name==='改装服务'">&#xe6b0;</view>
-						<view>{{val.name}}</view>
+						<view class="vant-icon" v-show="key==='洗车服务'">&#xe6b0;</view>
+						<view class="vant-icon" v-show="key==='美容服务'">&#xe688;</view>
+						<view class="vant-icon" v-show="key==='保养服务'">&#xe67b;</view>
+						<view class="vant-icon" v-show="key==='维修服务'">&#xe6aa;</view>
+						<view class="vant-icon" v-show="key==='改装服务'">&#xe6b0;</view>
+						<view>{{key}}</view>
 			        </view>
 			        <view class="information-detail-foot">
-						<view class="information-detail-list" v-for="(v,k) in val.detail" :key="k">
-							<view>{{v.name}}</view>
+						<view class="information-detail-list" v-for="(v,k) in val" :key="k">
+							<view>{{v}}</view>
 						</view>
 			        </view>
 			      </view>
@@ -100,7 +99,7 @@
 						<view>门店介绍</view>
 					</view>
 					<view class="intro-detail">
-						{{tabList[TabCur].detail}}
+						{{introduction}}
 					</view>
 				</view>
 			</view>
@@ -170,6 +169,7 @@
 	import WucTab from '@/components/wuc-tab/wuc-tab.vue'
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
+	import {getStoreByID} from "@/api/index.js"
 	export default {
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
@@ -178,15 +178,22 @@
 				datetime: '2019/01/01 15:00:12',
 				type: 'rangetime',
 				value: '',
-				distance:"1.3km",
-				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
-				title: 'Hello',
-				area:'下城区 · 钱江世纪城',
-				storeName:'御驾汇汽车服务中心',
-				address:'秋涛北路72号杭州大厦501负2楼',
-				phone:"15245678945",
+				distance:"", //距离
+				cover:'',
+				title: '',
+				area:'',
+				storeName:'',
+				address:'',
 				TabCur: 0,
 				storeCur:0,
+				tags:[],
+				working:'', //工作时间
+				rest:'', // 休息时间
+				phone:'',
+				startTime:'',
+				endTime:'',
+				introduction:'',
+				rate:0,
 				tabList: [
 					{ 
 						name: '服务介绍',
@@ -257,40 +264,10 @@
 					},
 				],
 				basicsList:[
-					{name:"免费WiFi"},
-					{name:"免费茶水"},
+					
 				], 
 				detailsList:[
-					{
-						name:"洗车服务",
-						detail:[
-							{name:'洗车'},
-							{name:'精洗'},
-							{name:'内饰清洗'},
-							{name:'自助洗车'}
-						]
-
-					},
-					{
-						name:"维修服务",
-						detail:[
-							{name:'维修'},
-							{name:'喷漆'},
-							{name:'玻璃修复'},
-							{name:'漆面修复'}
-						]
-
-					},
-					{
-						name:"保养服务",
-						detail:[
-							{name:'保养'},
-							{name:'底盘装甲'},
-							{name:'贴膜'},
-							{name:'表板上光'}
-						]
-
-					},
+					
 				],
 				replyList:[
 				  {
@@ -345,6 +322,18 @@
 			};
 		},
 		methods:{
+			tel(){
+				let phone = this.phone
+				if(phone === ''){
+					wx.showToast({
+						title:"该商户未录入手机号"
+					})
+					return false
+				}
+				wx.makePhoneCall({
+					phoneNumber: phone
+				})
+			},
 			tabChange(index) {
 				this.TabCur = index;
 			},
@@ -388,12 +377,28 @@
 				uni.navigateTo({
 				    url: 'appointment/appointment'
 				});
-			},
-			callPhone(){
-				uni.makePhoneCall({
-					phoneNumber: this.phone
-				});
-			},
+			}
+		},
+		async onLoad(options) {
+			let id = options.id
+			let storeData = await getStoreByID(id)
+			if(storeData.Code === 200){
+				console.log(storeData.Data[0])
+				let store = storeData.Data[0]
+				this.cover = store.Image[0]
+				this.storeName = store.Name
+				this.area = store.Area
+				this.address = store.Address
+				this.tags = store.TagsZH
+				this.working = store.WeeksZH
+				this.rest = store.Rest
+				this.basicsList = store.InfrastructureZH
+				this.startTime = store.StartTime
+				this.endTime = store.EndTime
+				this.introduction = store.Intro
+				this.detailsList = store.ServicesZH
+				this.rate = store.Rate
+			}
 		}
 	}
 </script>
@@ -618,9 +623,10 @@
 					margin-top: 20upx;
 					padding-bottom: 20upx;
 					font-size:25upx;
+					justify-content: space-between;
 					color:#979797;
 					.comment-foot-left{
-						width:200upx;
+						// width:200upx;
 					}
 				}
 			}
