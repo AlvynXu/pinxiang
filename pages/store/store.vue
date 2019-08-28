@@ -415,6 +415,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	-webkit-overflow-scrolling: touch;
 	justify-content: flex-start;
 	.store-list{
 		width: 667upx;
