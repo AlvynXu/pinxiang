@@ -10,7 +10,9 @@
 				<view class="tips" v-for="(val,key) in tags" :key="key">
 					<view class="tip">{{val}}</view>
 				</view>
-				<view class="vant-icon">&#xe685;</view>
+				<button class="store-share" open-type="share" @click="share">
+					<view class="vant-icon">&#xe685;</view>
+				</button>
 			</view>
 		</view>
 		<view class="store-area-box">
@@ -161,6 +163,8 @@
 			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
 		</uni-popup>
 		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="true" @confirm="onSelected" @cancel="onSelected" />
+		
+		
 	</view>
 </template>
 
@@ -321,6 +325,15 @@
 				num: 3,
 			};
 		},
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+		    return {
+		      title: '品象养车',
+		      path: '/pages/store/store'
+		    }
+		},
 		methods:{
 			tel(){
 				let phone = this.phone
@@ -349,7 +362,9 @@
 				this.storeCur = storeCur;
 				// console.log(storeCur)
 			},
-			
+			share(){
+				this.onShareAppMessage()
+			},
 			onShowDatePicker(type){//显示
 				this.type = type;
 				this.showPicker = true;
@@ -365,7 +380,7 @@
 					//原始的Date对象
 					console.log('date => ' + e.date);
 				}
-				const orderTime = this.value;
+				let orderTime = this.value;
 				console.log(orderTime)
 				uni.setStorage({
 				    key: 'orderTime',
@@ -402,7 +417,6 @@
 		}
 	}
 </script>
-
 <style lang="scss" scoped>
 .gray{
 	width:750upx;
@@ -478,9 +492,19 @@
 					border:2upx solid rgba(254,140,0,1);
 				}
 			}
-			.vant-icon{
-				color:#FE5100;
-				margin-top: 10upx;
+			.store-share{
+				background:#fff;
+				border-color:#fff;
+				padding-right:14upx;
+				margin-right:0;
+				border-top-style: none;
+				border-right-style: none;
+				border-bottom-style: none;
+				border-left-style: none;
+				.vant-icon{
+					color:#FE5100;
+					font-size:30upx;
+				}
 			}
 		}
 	}
@@ -918,6 +942,54 @@
 	}
 	.date-box{
 		z-index:2000;
+	}
+	.uni-popup2{
+		width:750upx;
+		z-index:1000;
+		padding-top:50upx;
+		.share-box{
+			width:500upx;
+			margin:0 auto;
+			display:flex;
+			justify-content:space-between;
+			.share-friend{
+				width:300upx;
+				height:200upx;
+				background:#fff;
+				.share-img{
+					width:80upx;
+					height:80upx;
+					margin-left:60upx;
+					img{
+						width:80upx;
+						height:80upx;
+					}
+				}
+				.share-word{
+					width:200upx;
+					text-align: center;
+				}
+			}
+			.share-circle{
+				width:300upx;
+				height:200upx;
+				background:#fff;
+				.share-img{
+					width:80upx;
+					height:80upx;
+					margin-left:60upx;
+					img{
+						width:80upx;
+						height:80upx;
+					}
+				}
+				.share-word{
+					width:200upx;
+					text-align: center;
+				}
+			}
+	
+		}
 	}
 }
 </style>
