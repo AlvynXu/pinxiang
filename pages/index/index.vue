@@ -66,9 +66,8 @@
 			return {
 				current:0,
 				swiperList:[
-					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg"},
-					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/shanghai.jpg"},
-					{src:"https://cdn.doudouxiongglobal.com/Default_image/city/nanjing-2.jpg"},
+					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner1.png"},
+					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner2.png"}
 					],
 				autoplay: true,
 				interval: 2000,

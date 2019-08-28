@@ -61,6 +61,11 @@
 				starList:[]
 			}
 		},
+		watch:{
+			value(val){
+				this.valueSync = val
+			}
+		},
 		computed: {
 			stars() {
 				const max = Number(this.maxSync) ? Number(this.maxSync) : 5

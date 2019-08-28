@@ -22,7 +22,7 @@
 			<view class="store-area">
 				<view class="area-top">
 					<view class="area-name">{{area}}</view>
-					<uni-rate :value="rate" size="12" :disabled="false"></uni-rate>
+					<uni-rate class="store-rate" :value="rate" size="12" :disabled="true"></uni-rate>
 				</view>
 				<view class="store-address">{{address}}</view>
 			</view>
@@ -34,15 +34,15 @@
 		<view class="store-servince">
 			<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
 			<view v-if="TabCur===0">
-				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeList" :key="key">
-					<view class="servince-left" @click="openPopup(key)">
+				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeItem" :key="key">
+					<view class="servince-left" @click="openPopup(val.ID)">
 						<view class="servince-img">
-							<image :src="val.image" mode="aspectFill"></image>
+							<image :src="val.Image" mode="aspectFill"></image>
 						</view>
 						<view class="servince-left-one">
-							<view class="servince-name">{{val.name}}</view>
+							<view class="servince-name">{{val.Name}}</view>
 							<view class="servince-price">
-								<view class="price-name">￥{{val.price}}</view>
+								<view class="price-name">￥{{val.Price}}</view>
 							</view>
 						</view>
 						<view class="servince-right">
@@ -113,15 +113,15 @@
 			<view class="servince-reply" v-if="TabCur===3">
 				<view class="ddx-reply-list" v-for="(val,key) in replyList" :key="key" v-show="key<num">
 				      <view class="ddx-reply-left">
-						  <image class="reply-avatar" :src="val.avatar" mode="aspectFill"></image>
+						  <image class="reply-avatar" :src="val.Avatar" mode="aspectFill"></image>
 				      </view>
 				      <view class="ddx-reply-right">
-				        <view class="ddx-reply-name">{{val.name}}</view>
-				        <view class="ddx-reply-date">{{val.date}}</view>
-				        <view class="ddx-reply-reply">{{val.reply}}</view>
+				        <view class="ddx-reply-name">{{val.Nickname}}</view>
+				        <view class="ddx-reply-date">{{val.Date}}</view>
+				        <view class="ddx-reply-reply">{{val.Reply}}</view>
 				        <view class="ddx-reply-img">
-				          <view class="ddx-img-list" v-for="(v,k) in val.imgList" :key="k">
-							<image class="reply-image" :src="v.img" mode="aspectFill"></image>
+				          <view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
+							<image class="reply-image" :src="v" mode="aspectFill"></image>
 				          </view>
 				        </view>
 				      </view>
@@ -135,27 +135,27 @@
 		<uni-popup class="uni-popup" ref="popup" type="bottom">
 			<view class="popup-detail">
 				<view class="popup-title">
-					{{storeList[storeCur].name}}
+					{{itemDetail.Name}}
 				</view>
 				<view class="tips">仅限5座及其以下车辆</view>
-				<image class="popup-img" :src="storeList[storeCur].img" mode="aspectFill"></image>
+				<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
 				<view class="popup-servince">
 					<view class="servince-title">服务内容</view>
 					<view class="servince-box">
-						<view class="servince-lists" v-for="(val,key) in storeList[storeCur].list" :key="key">
-							<view class="servince-list">{{val.name}}</view>
+						<view class="servince-lists" v-for="(val,key) in itemDetail.Service" :key="key">
+							<view class="servince-list">{{val.Name}}</view>
 						</view>
 					</view>
 				</view>
-				<view class="oil-title" v-if="storeList[storeCur].type===1">机油品牌</view>
-				<view class="oil-box" v-for="(val,key) in storeList[storeCur].oilList" :key="key" v-if="storeList[storeCur].type===1">
+				<view class="oil-title" v-if="itemDetail.Type===1">机油品牌</view>
+				<view class="oil-box" v-for="(val,key) in itemDetail.Oil" :key="key" v-if="itemDetail.Type===1">
 					<view class="oil-list">
-						<image class="oil-img" :src="val.img" mode="aspectFill"></image>
+						<image class="oil-img" :src="val.Image" mode="aspectFill"></image>
 						<view class="oil-content">
-							<view>机油品牌</view>
-							<view>{{val.brand}}</view>
-							<view>{{val.synthesis}}   {{val.capacity}}</view>
-							<view>适合{{val.distance}}km/{{val.time}}更换一次</view>
+							<view>{{val.Brand}}</view>
+							<view>SN: {{val.SN}}</view>
+							<view>{{val.Type}}   {{val.Capacity}}L</view>
+							<view>适合{{val.Distance}}km/{{val.Time}}</view>
 						</view>
 					</view>
 				</view>
@@ -173,11 +173,12 @@
 	import WucTab from '@/components/wuc-tab/wuc-tab.vue'
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import MxDatePicker from "@/components/mx-datepicker/mx-datepicker.vue";
-	import {getStoreByID} from "@/api/index.js"
+	import {getStoreByID,getStoreItem,getStoreItemDetail,getStoreReply} from "@/api/index.js"
 	export default {
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
+				id:0,
 				showPicker: false,
 				datetime: '2019/01/01 15:00:12',
 				type: 'rangetime',
@@ -204,7 +205,7 @@
 					 }, 
 					{ 
 						name: '门店介绍',
-						detail:'杭州聚拓汽车专注保时捷服务，经营范围涵盖：原厂升级、改装加装、维修保养、车身贴膜、内饰升级等诸多个性化服务。作为专业保时捷服务品牌，业务范围辐射江浙沪乃至全国，提供上门服务，只为将服务做到极致'
+						detail:''
 					},
 					{ 
 						name: '服务须知',
@@ -212,61 +213,8 @@
 					},
 					{ name: '服务案例' },
 				],
-				storeList:[
-					{
-						type:0,
-						name:"御驾汇特色洗车服务",
-						price:'35.0',
-						image:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
-						
-						img:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_03.png",
-						list:[
-							{name:"车身清洗"},
-							{name:"轮毂清洗"},
-							{name:"车内除尘"},
-							{name:"脚垫清洗"},
-							{name:"出风口清洁"},
-							{name:"局部打蜡"},
-							{name:"后视镜清洗"},
-							{name:"收纳槽清洁"},
-						]
-					},
-					{
-						type:1,
-						name:"御驾汇特色保养服务",
-						price:'35.0',
-						image:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
-						img:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_10.png",
-						oilList:[
-							{
-								img:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg",
-								brand:"SN:5W-40",
-								synthesis:"半合成机油",
-								capacity:"4L",
-								distance:"5000",
-								time:"半年"
-							},
-							{
-								img:"https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg",
-								brand:"SN:5W-40",
-								synthesis:"全合成机油",
-								capacity:"4L",
-								distance:"10000",
-								time:"全年"
-							}
-						],
-						list:[
-							{name:"换机油"},
-							{name:"换机滤"},
-							{name:"防冻液养护"},
-							{name:"雨刮器养护"},
-							{name:"四轮气压检测"},
-							{name:"轮胎检测"},
-							{name:"四轮定位"},
-							{name:"电瓶检测"},
-						]
-					},
-				],
+				storeItem:[],
+				itemDetail:[],
 				basicsList:[
 					
 				], 
@@ -274,50 +222,7 @@
 					
 				],
 				replyList:[
-				  {
-					avatar : 'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg' ,
-					name : '哈噻' ,
-					date : '7月31日',
-					reply:'啊痛里诶尅痛',
-					imgList:[
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					]
-				  },
-				  {
-					avatar : 'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg' ,
-					name : '哈噻' ,
-					date : '7月31日',
-					reply:'啊痛里诶尅痛',
-					imgList:[
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					]
-				  },
-				  {
-					avatar : 'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg' ,
-					name : '哈噻' ,
-					date : '7月31日',
-					reply:'啊痛里诶尅痛',
-					imgList:[
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					]
-				  },
-				  {
-					avatar : 'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg' ,
-					name : '哈噻' ,
-					date : '7月31日',
-					reply:'啊痛里诶尅痛',
-					imgList:[
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					  {img:'https://cdn.doudouxiongglobal.com/blog/1/123f36820be6af2cad46ba112ac8ed71.jpg'},
-					]
-				  }
+				  
 				],
 				more:'arrow',
 				isShow: true,
@@ -347,8 +252,15 @@
 					phoneNumber: phone
 				})
 			},
-			tabChange(index) {
+			async tabChange(index) {
 				this.TabCur = index;
+				if(index === 3){
+					let replayData = await getStoreReply(this.id)
+					if(replayData.Code === 200){
+						console.log(replayData.Data)
+						this.replyList = replayData.Data
+					}
+				}
 			},
 			
 			showMore(){
@@ -356,10 +268,16 @@
 				this.num = this.isShow? 3: this.replyList.length;
 				this.txt = this.isShow?  '查看更多精彩评论':'收起'
 			},
-			openPopup(key){
-				this.$refs.popup.open();
-				const storeCur = key
-				this.storeCur = storeCur;
+			async openPopup(id){
+				console.log("id",id)
+				let itemDetail = await getStoreItemDetail(id)
+				if(itemDetail.Code === 200){
+					this.itemDetail = itemDetail.Data
+					this.$refs.popup.open();
+					// const storeCur = id
+					// this.storeCur = storeCur;
+				}
+				
 				// console.log(storeCur)
 			},
 			share(){
@@ -396,9 +314,9 @@
 		},
 		async onLoad(options) {
 			let id = options.id
+			this.id = id
 			let storeData = await getStoreByID(id)
 			if(storeData.Code === 200){
-				console.log(storeData.Data[0])
 				let store = storeData.Data[0]
 				this.cover = store.Image[0]
 				this.storeName = store.Name
@@ -412,7 +330,13 @@
 				this.endTime = store.EndTime
 				this.introduction = store.Intro
 				this.detailsList = store.ServicesZH
+				this.phone = store.Phone
 				this.rate = store.Rate
+				let storeItem = await getStoreItem(store.ID)
+				if(storeItem.Code === 200){
+					console.log(storeItem.Data)
+					this.storeItem = storeItem.Data
+				}
 			}
 		}
 	}
@@ -530,9 +454,9 @@
 				display: flex;
 				justify-content:flex-start;
 				.area-name{
+					margin-right:33upx;
 				}
-				.uni-rate{
-					margin-left: 33upx;
+				.store-rate{
 					margin-top: 5upx;
 				}
 			}
