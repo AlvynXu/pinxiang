@@ -20,6 +20,7 @@
 			</view>
 			<view class="vip-bottom">
 				<view class="vip-name">全年免费保养，另送12次洗车服务</view>
+				<view class="vant-icon">&#xe693;</view>
 			</view>
 		</view>
 		<view class="gray"></view>
@@ -196,6 +197,7 @@
 				.vant-icon{
 					font-size:40upx;
 					margin-right: 0;
+					color:rgba(254,81,0,0.5)
 				}
 			}
 		}
