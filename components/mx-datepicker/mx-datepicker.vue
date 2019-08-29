@@ -67,12 +67,10 @@
 				</view>
 				<picker-view class="picker-modal-time" indicator-class="picker-modal-time-item" :value="timeValue" @change="onTimeChange">
 					<picker-view-column>
-						<view v-for="(v,i) in 24" :key="i">{{i<10?'0'+i:i}}时</view>
+						<view v-for="(v,i) in hours" :key="i">{{v<10?'0'+v:v}}时</view>
 					</picker-view-column>
 					<picker-view-column>
-						<!-- <view v-for="(v,i) in 60" :key="i">{{i<10?'0'+i:i}}分</view> -->
-						<view>00分</view>
-						<view>30分</view>
+						<view v-for="(v,i) in minutes" :key="i">{{v<10?'0'+v:v}}分</view>
 					</picker-view-column>
 				</picker-view>
 				<view class="picker-modal-footer">
@@ -93,6 +91,7 @@
 </template>
 
 <script>
+	import {getAppointmentTime} from '@/api/index.js'
 	/**
 	 * 工具函数库
 	 */
@@ -238,7 +237,7 @@
 			//颜色
 			color: {
 				type: String,
-				default: '#409eff'
+				default: '#FE5100'
 			},
 			//是否显示秒 针对type为datetime或time时生效
 			showSeconds: {
@@ -281,6 +280,14 @@
 			endText: {
 				type: String,
 				default: '结束'
+			},
+			storeID: {
+				type: Number,
+				default:0
+			},
+			itemType:{
+				type:Number,
+				default:0
 			}
 		},
 		data() {
@@ -298,7 +305,9 @@
 				timeValue: [8, 30, 0], //时间选择器的值
 				timeType: 'begin', //当前时间选择的类型
 				beginTime: [0, 0, 0], //当前所选的开始时间值
-				endTime: [0, 0, 0], //当前所选的结束时间值
+				endTime: [0, 0, 0], //当前所选的结束时间值,
+				hours:[0,1,2,3,4,5,6,7,8,9,10,11],
+				minutes:[0,30]
 			};
 		},
 		methods: {
@@ -356,7 +365,8 @@
 			},
 			//时间选择变更
 			onTimeChange(e) {
-				this.timeValue = e.detail.value;
+				let tmp = e.detail.value
+				this.timeValue = [this.hours[tmp[0]],this.minutes[tmp[1]]];
 			},
 			//设置时间选择器的显示状态
 			onShowTimePicker(type) {
@@ -458,7 +468,7 @@
 				this.refreshCalendars();
 			},
 			//选中日期
-			onSelectDate(date) {
+			async onSelectDate(date) {
 				if (~this.type.indexOf('range') && this.checkeds.length == 2) this.checkeds = [];
 				else if (!(~this.type.indexOf('range')) && this.checkeds.length) this.checkeds = [];
 				this.checkeds.push(new Date(date.dateObj));
@@ -466,6 +476,16 @@
 				this.calendars.forEach(calendar => {
 					calendar.forEach(this.procCalendar); //重新处理
 				});
+				let storeID = this.storeID
+				let hideDate = await getAppointmentTime({'StoreID':storeID,'Date':(new Date(date.dateObj).getFullYear())+'-'+ (new Date(date.dateObj).getMonth()+1)+'-'+(new Date(date.dateObj).getDate())})
+				if(hideDate.Code === 200){
+					let tmpHours = [0,1,2,3,4,5,6,7,8,9,10,11]
+					for(let i=0;i<hideDate.Data.length;i++){
+						// tmpHours.splice(tmpHours.indexOf(parseInt(hideDate.Data[i]['Hour'])),1)
+					}
+					console.log(tmpHours)
+					this.hours = tmpHours
+				}
 				this.showTimePicker = true;
 			},
 			//时间选择取消

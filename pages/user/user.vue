@@ -22,9 +22,12 @@
 				</view>
 			</view>
 			<view class="user-join" @click="goActive">
-				<view class="join-name">加入会员</view>
-				<view class="join-word">尊享全年免费保养特权</view>
-				<view class="join-button">立即领取特权</view>
+				<view>
+					<view class="join-name">加入会员</view>
+					<view class="join-word">尊享全年免费保养特权</view>
+					<view class="join-button">立即领取特权</view>
+				</view>
+				
 			</view>
 		</view>
 		<view class="user-prove">
@@ -164,6 +167,7 @@
 			let userData = uni.getStorageSync('user_data')
 			if(userData.length > 0){
 				userData = JSON.parse(userData)
+				console.log(userData)
 				this.avatar = userData.Avatar,
 				this.nickname = userData.Nickname,
 				this.phone = userData.Phone

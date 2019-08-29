@@ -19,12 +19,15 @@
 </template>
 
 <script>
+	import {appointment} from '@/api/index.js'
 	export default {
 		data() {
 			return {
 				phone:"",
 				orderTime:"",
-				
+				storeID:0,
+				storeItemID:0,
+				type:0
 			};
 		},
 		onLoad() {
@@ -35,6 +38,9 @@
 					that.orderTime = res.data;
 			    }
 			});
+			this.storeID = uni.getStorageSync('store_id')
+			this.storeItemID = uni.getStorageSync('store_item_id')
+			this.type = uni.getStorageSync('store_type')
 			let userData = uni.getStorageSync('user_data')
 			if(userData===null || userData.length===0){
 				wx.showToast({
@@ -49,10 +55,17 @@
 			this.phone = (JSON.parse(userData)).Phone
 		},
 		methods:{
-			goCoupon(){
-				uni.navigateTo({
-					url: '../coupon/coupon'
-				})
+			async goCoupon(){
+				let result = await appointment({'Appointment':this.orderTime,'StoreID':this.storeID,'Type':this.type,'StoreItemID':this.storeItemID,'Phone':this.phone})
+				if(result.Code === 200){
+					console.log(result.Data)
+					wx.showToast({
+						title:"预约成功"
+					})
+				}
+				// uni.navigateTo({
+				// 	url: '../coupon/coupon'
+				// })
 			}
 		},
 		

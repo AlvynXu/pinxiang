@@ -46,7 +46,7 @@ uniRequest.interceptors.response.use(
 export function fetch(options) {
 	return new Promise((resolve, reject) => {
 		if (options.method == 'get') {
-			uniRequest.get(options.url, options.params).then(function(response) {
+			uniRequest.get(options.url, {data:options.params}).then(function(response) {
 				console.log(response)
 				resolve(response);
 			}).catch(function(error) {

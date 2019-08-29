@@ -405,9 +405,24 @@ export function getStoreReply(id, params={}){
 }
 
 export function storeSearch(params={}) {
-	console.log(params)
 	return fetch({
 		url: `${api.store}/search`,
+		method: 'post',
+		data: params
+	})
+}
+
+export function getAppointmentTime(params={}) {
+	return fetch({
+		url: `${api.store}/appointment`,
+		method: 'get',
+		params: params
+	})
+}
+
+export function appointment(params={}) {
+	return fetch({
+		url: `${api.store}/appointment`,
 		method: 'post',
 		data: params
 	})

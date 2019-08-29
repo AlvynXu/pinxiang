@@ -35,7 +35,7 @@
 			<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
 			<view v-if="TabCur===0">
 				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeItem" :key="key">
-					<view class="servince-left" @click="openPopup(val.ID)">
+					<view class="servince-left" @click="openPopup(val.ID,val.Type)">
 						<view class="servince-img">
 							<image :src="val.Image" mode="aspectFill"></image>
 						</view>
@@ -164,7 +164,7 @@
 			</view>
 			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
 		</uni-popup>
-		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="true" @confirm="onSelected" @cancel="onCancel" />
+		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="false" :storeID="id" @confirm="onSelected" @cancel="onCancel" />
 		
 		
 	</view>
@@ -231,6 +231,7 @@
 				isShow: true,
 				txt: '查看更多精彩评论',
 				num: 3,
+				itemType:0
 			};
 		},
 		onShareAppMessage(res) {
@@ -271,13 +272,17 @@
 				this.num = this.isShow? 3: this.replyList.length;
 				this.txt = this.isShow?  '查看更多精彩评论':'收起'
 			},
-			async openPopup(id){
+			async openPopup(id,type){
 				let itemDetail = await getStoreItemDetail(id)
+				this.itemType = type
 				if(itemDetail.Code === 200){
 					this.itemDetail = itemDetail.Data
 					this.$refs.popup.open();
 					// const storeCur = id
 					// this.storeCur = storeCur;
+					uni.setStorageSync('store_id',parseInt(this.id))
+					uni.setStorageSync('store_item_id',id)
+					uni.setStorageSync('store_type',type)
 				}
 				
 				// console.log(storeCur)
@@ -305,15 +310,10 @@
 					console.log('value => '+ e.value);
 					//原始的Date对象
 					console.log('date => ' + e.date);
+					let orderTime = e.value;
+					uni.setStorageSync('orderTime',orderTime)
 				}
-				let orderTime = this.value;
-				uni.setStorage({
-				    key: 'orderTime',
-				    data: orderTime,
-				    success: function () {
-				       
-				    }
-				});
+				
 				if(this.userData.length===0){
 					wx.showModal({
 						title:'提醒',
@@ -353,6 +353,16 @@
 		async onLoad(options) {
 			let id = options.id
 			this.id = id
+			let that = this
+			setTimeout(()=>{
+				let date = new Date();
+				let minute = date.getMinutes()
+				if(parseInt(minute)>30){
+					that.datetime = (date.getFullYear())+'/'+ (date.getMonth()+1)+'/'+(date.getDate())+' '+(date.getHours()+1)+':00'
+				}else{
+					that.datetime = (date.getFullYear())+'/'+ (date.getMonth()+1)+'/'+(date.getDate())+' '+(date.getHours())+':30'
+				}
+			})
 			let userData = uni.getStorageSync('user_data')
 			if(userData === null ||userData.length === 0){
 				
