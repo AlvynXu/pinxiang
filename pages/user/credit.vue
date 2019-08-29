@@ -1,6 +1,6 @@
 <template>
 	<view class="credit-box">
-		<view class="xy-credit" v-if="type===0">
+		<view class="xy-credit" v-show="vip===0">
 			<view class="vip-top">
 				<view class="vip-circle2"></view>
 				<view class="vip-circle3"></view>
@@ -18,7 +18,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="xy-vip" v-if="type===1">
+		<view class="xy-vip" v-show="vip===1">
 			<view class="credit-top">
 				<view class="credit-top-mark">
 					{{score}}分
@@ -28,11 +28,46 @@
 				</view>
 				<view class="credit-top-star">
 					<view class="credit-word-list">
-						<view class="credit-word">较差</view>
-						<view class="credit-word">中等</view>
-						<view class="credit-word">良好</view>
-						<view class="credit-word">优秀</view>
-						<view class="credit-word">极好</view>
+						<view class="credit-word">
+							<view class="credit-choose choosed" v-if="score<350">
+								<view class="credit-word-bot"></view>较差
+							</view>
+							<view class="credit-choose" v-if="score>350">
+								较差
+							</view>
+						</view>
+						<view class="credit-word">
+							<view class="credit-choose choosed" v-if="score>350 && score<500">
+								<view class="credit-word-bot"></view>中等
+							</view>
+							<view class="credit-choose" v-if="score<350 || score>500">
+								中等
+							</view>
+						</view>
+						<view class="credit-word">
+							<view class="credit-choose choosed" v-if="score>500 && score<650">
+								<view class="credit-word-bot"></view>良好
+							</view>
+							<view class="credit-choose" v-if="score<500 || score>650">
+								良好
+							</view>
+						</view>
+						<view class="credit-word">
+							<view class="credit-choose choosed" v-if="score>650 && score<800">
+								<view class="credit-word-bot"></view>优秀
+							</view>
+							<view class="credit-choose" v-if="score<650 || score>800">
+								优秀
+							</view>
+						</view>
+						<view class="credit-word">
+							<view class="credit-choose choosed" v-if="score>800 && score<950">
+								<view class="credit-word-bot"></view>极好
+							</view>
+							<view class="credit-choose" v-if="score<800 || score>950">
+								极好
+							</view>
+						</view>
 					</view>
 					<view class="credit-star-list">
 						<view class="credit-star one"></view>
@@ -74,6 +109,7 @@
 		data(){
 			return{
 				type:0,
+				vip:1,
 				score:"",
 				date:"2019-08-09",
 				creditList:[
@@ -103,6 +139,7 @@
 			let that = this;
 			let userData = uni.getStorageSync('user_data')
 			userData = JSON.parse(userData)
+			that.vip = userData.Vip
 			that.score = userData.Score;
 			// console.log(that.score)
 		},
@@ -279,9 +316,32 @@
 					margin-top:47upx;
 					.credit-word{
 						width:127upx;
-						font-size:22upx;
+						font-size:21upx;
 						text-align: center;
 						margin-right:5upx;
+						.credit-choose{
+							width:58upx;
+							height:31upx;
+							line-height:31upx;
+							margin-left:40upx;
+							position: relative;
+							.credit-word-bot{
+								position: absolute;
+								width: 0;
+								height: 0;
+								border-width: 7upx;
+								border-style: solid;
+								border-color:  #FE5100  #fff #fff  #fff ;
+								bottom:-12upx;
+								left:24upx;
+								z-index:1000;
+							}
+						}
+						.choosed{
+							color:#fff;
+							background: #FE5100;
+							border-radius:4upx;
+						}
 					}
 				}
 				.credit-star-list{
