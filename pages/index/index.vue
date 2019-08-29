@@ -140,7 +140,7 @@
 				top:353upx;
 				left:42upx;
 				border-radius:11upx;
-				box-shadow: 0px 0px 3px 3px rgba(4,4,4,0.1);
+				box-shadow: 0px 0px 3px 3px rgba(164,164,164,0.1);
 				display: flex;
 				justify-content: space-between;
 				.store-search-input{
@@ -163,7 +163,7 @@
 		.store-vip{
 			width:667upx;
 			height:134upx;
-			box-shadow: 0px 0px 3px 3px rgba(4,4,4,0.1);
+			box-shadow: 0px 0px 3px 3px rgba(164,164,164,0.1);
 			margin-top: 100upx;
 			margin-bottom: 15upx;
 			border-radius:11upx;

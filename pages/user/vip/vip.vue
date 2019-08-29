@@ -2,7 +2,7 @@
 	<view class="vip-box">
 		<view class="vip-user">
 			<view class="login-white">
-				<image class="login-avatar" :src="avatar" mode="aspectFill"></image>
+				<view class="vant-icon">&#xe691;</view>
 				<view class="login-msg">
 					<view class="vip">{{nickname}}</view>
 					<view class="phone" v-if="phone">{{phone}}</view>
@@ -99,6 +99,13 @@
 			background: #fff;
 			display: flex;
 			justify-content:start;
+			.vant-icon{
+				font-size:100upx;
+				margin-left:20upx;
+				margin-right:0;
+				margin-top:10upx;
+				color:#A4A4A4;
+			}
 			.login-avatar{
 				width:121upx;
 				height:121upx;

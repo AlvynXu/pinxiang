@@ -1,5 +1,5 @@
 <template>
-	<view class="store-box" :class="{'hide':ishide}">
+	<view class="store-box">
 		<view class="store-list">
 			<image class="cover" :src="cover" mode="aspectFill"></image>
 			<view class="store-name">
@@ -17,7 +17,7 @@
 		</view>
 		<view class="store-area-box">
 			<view class="store-icon">
-				<view class="vant-icon">&#xe68f;</view>
+				<view class="vant-icon" @click="getArea">&#xe68f;</view>
 			</view>
 			<view class="store-area">
 				<view class="area-top">
@@ -55,7 +55,7 @@
 			<view class="ddx-information-box" v-if="TabCur===1">
 			    <view class="ddx-information-comment">
 			      <view class="information-comment-head">
-					<view class="vant-icon">&#xe66b;</view>
+					<view class="vant-icon">&#xe69a;</view>
 			        <view>营业时间</view>
 			      </view>
 			      <view class="information-comment-foot">
@@ -67,7 +67,7 @@
 			    </view>
 			    <view class="ddx-information-basics">
 			      <view class="information-basics-head">
-					<view class="vant-icon">&#xe6a9;</view>
+					<view class="vant-icon">&#xe699;</view>
 			        <view>基础设施</view>
 			      </view>
 			      <view class="information-basics-foot">
@@ -126,10 +126,10 @@
 				        </view>
 				      </view>
 				    </view>
-				    <view class="ddx-shop-more"  @click="showMore">
+				    <!-- <view class="ddx-shop-more"  @click="showMore">
 				      <view>{{txt}}</view>
 					  <view class="vant-icon">&#xe60c;</view>
-				    </view>
+				    </view> -->
 			</view>
 		</view>
 		<uni-popup class="uni-popup" ref="popup" type="bottom" style="z-index:1000;">
@@ -140,7 +140,7 @@
 					</view>
 					<view class="tips">仅限5座及其以下车辆</view>
 				</view>
-				<view style="overflow-y: scroll;height:58vh;-webkit-overflow-scrolling: touch;">
+				<view style="overflow-y: scroll;height:62vh;-webkit-overflow-scrolling: touch;">
 					<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
 					<view class="popup-servince">
 						<view class="servince-title">服务内容</view>
@@ -182,7 +182,8 @@
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
-				ishide:false,
+				latitude:25.22,
+				longitude:42.25,
 				id:0,
 				userData:[],
 				showPicker: false,
@@ -259,6 +260,16 @@
 					phoneNumber: phone
 				})
 			},
+			getArea(){
+				let that = this
+				let latitude = that.latitude;
+				let longitude = that.longitude;
+				   wx.openLocation({
+				     latitude,
+				     longitude,
+				     scale: 18
+				   })
+			},
 			async tabChange(index) {
 				this.TabCur = index;
 				if(index === 3){
@@ -281,7 +292,6 @@
 				if(itemDetail.Code === 200){
 					this.itemDetail = itemDetail.Data
 					this.$refs.popup.open();
-					this.ishide = true;
 					// const storeCur = id
 					// this.storeCur = storeCur;
 					uni.setStorageSync('store_id',parseInt(this.id))
@@ -400,9 +410,6 @@
 	}
 </script>
 <style lang="scss" scoped>
-.hide{
-	overflow: hidden;
-}
 .gray{
 	width:750upx;
 	height:10upx;
@@ -890,7 +897,7 @@
 			}
 		}
 		.popup-button{
-			margin-top: 50upx;
+			margin-top: 14upx;
 			width:667upx;
 			height:98upx;
 			line-height:98upx;

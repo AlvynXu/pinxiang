@@ -7,7 +7,7 @@
 				<view class="vip-left"></view>
 				<view class="vip-top"></view>
 				<view class="vip-right"></view>
-				<view class="vip-num">{{defaultMark}}</view>
+				<view class="vip-num">{{score}}</view>
 				<view class="vip-content1">信用中等</view>
 				<view class="vip-content2">评估时间：2019-08-09</view>
 				<view class="vip-word">
@@ -21,7 +21,7 @@
 		<view class="xy-vip" v-if="type===1">
 			<view class="credit-top">
 				<view class="credit-top-mark">
-					{{mark}}分
+					{{score}}分
 				</view>
 				<view class="credit-top-date">
 					评估时间:  {{date}}
@@ -74,8 +74,7 @@
 		data(){
 			return{
 				type:0,
-				defaultMark:"300",
-				mark:'360',
+				score:"",
 				date:"2019-08-09",
 				creditList:[
 					{
@@ -99,6 +98,16 @@
 				],
 				
 			}
+		},
+		onLoad(){
+			let that = this;
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			that.score = userData.Score;
+			// console.log(that.score)
+		},
+		methods:{
+			
 		}
 	}
 </script>
