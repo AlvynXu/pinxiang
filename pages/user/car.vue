@@ -21,19 +21,19 @@
 			<view class="show-img" v-show="showImg3" @click="chooseImage3"><image mode="aspectFill" :src="carImg"></image></view>
 		</view>
 		<view style="position: relative;">
-			<view class="car-discern" v-show="type!=3">
+			<view class="car-discern" v-if="type===0 || type===1 || type===2">
 				<view class="car-discern-left">车辆识别代码号(VIN码)：</view>
 				<view class="car-discern-right"><input :value="vin" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-show="type!=3">
+			<view class="car-enginen" v-if="type!=3">
 				<view class="car-enginen-left">发动机号码：</view>
 				<view class="car-enginen-right"><input :value="engineNumber" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-show="type!=3">
+			<view class="car-enginen" v-if="type!=3">
 				<view class="car-enginen-left">车辆类型：</view>
 				<view class="car-enginen-right"><input :value="carType" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-show="type!=3">
+			<view class="car-enginen" v-if="type!=3">
 				<view class="car-enginen-left">核定载人数：</view>
 				<view class="car-enginen-right"><input :value="persons" :disabled="true" class="uni-input" /></view>
 			</view>
@@ -81,7 +81,8 @@ export default {
 		let uptoken = await h5UploadKey({key:key,bucket:'doudouxiong'})
 		let driverData = await getDriver({});
 		if(driverData.Code === 200){
-			if(driverData.Data != []){
+			if(driverData.Data.length>0){
+				console.log(1)
 				let data = driverData.Data
 				this.type = parseInt(data.Status)
 				this.driverLicense = data.DriverLicense

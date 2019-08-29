@@ -228,16 +228,15 @@
 				margin-left:51upx;
 			}
 			.login-msg{
+				margin-top: 20upx;
 				height:121upx;
-				display:flex;
-				align-items: center;
-				justify-content: center;
 				margin-left:51upx;
 				.vip{
 					font-size:33upx;
 				}
 				.phone{
 					font-size:29upx;
+					margin-top: 10upx;
 				}
 			}
 		}

@@ -1,8 +1,20 @@
 <template>
 	<view class="vip-box">
-		<view class="vip-user">
+		<view class="vip-user" v-if="isLogin===0">
 			<view class="login-white">
 				<view class="vant-icon">&#xe691;</view>
+				<view class="login-msg">
+					<view class="vip">{{nickname}}</view>
+					<view class="phone" v-if="phone">{{phone}}</view>
+				</view>
+			</view>
+			<view class="vip-tips">
+				2019.12.31到期  品质养车，就在品象会员养车 VIP续费>
+			</view>
+		</view>
+		<view class="vip-user" v-if="isLogin===1">
+			<view class="login-white">
+				<image class="login-avatar" :src="avatar" mode="aspectFill"></image>
 				<view class="login-msg">
 					<view class="vip">{{nickname}}</view>
 					<view class="phone" v-if="phone">{{phone}}</view>
@@ -53,15 +65,17 @@
 			<view class="vip-help-content">
 				会员帮助中心
 			</view>
-			<view class="vant-icon">&#xe60c;</view>
+			<view class="vant-icon">&#xe609;</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {login,getVip} from '@/api/index.js'
 	export default {
 		data() {
 			return {
+				isLogin:0,
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
 				phone:'18735166097',
@@ -78,6 +92,26 @@
 					},
 				]
 			};
+		},
+		onLoad(options) {
+			let userData = uni.getStorageSync('user_data')
+			let that = this
+			if(userData.length > 0){
+				userData = JSON.parse(userData)
+				console.log(userData)
+				this.avatar = userData.Avatar,
+				this.nickname = userData.Nickname,
+				this.phone = userData.Phone
+				this.isLogin = 1
+				if(userData.Vip === 1) this.vip = 1
+				getVip({}).then((res)=>{
+					console.log(res)
+					if(res.Code === 200){
+						that.vipData = res.Data
+					}
+				})
+			}
+			this.redirect = getApp().globalData.redirect
 		}
 	}
 </script>
@@ -194,6 +228,9 @@
 			width:460upx;
 			margin-left:24upx;
 			font-size:25upx;	
+		}
+		.vant-icon{
+			font-size: 25upx;
 		}
 	}
 }
