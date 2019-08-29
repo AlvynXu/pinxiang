@@ -90,12 +90,17 @@
 				<view class="credit-bot-title">以下是历史消息</view>
 				<view class="credit-history" v-for="(val,key) in creditList" :key="key">
 					<view class="credit-history-name">
-						<view class="credit-history-name-left">{{val.name}}</view>
-						<view class="credit-history-name-right">+{{val.smallMark}}</view>
+						<view class="credit-history-name-left" v-if="val.Type==0">履行预约体验</view>
+						<view class="credit-history-name-left" v-if="val.Type==1">完成手机绑定</view>
+						<view class="credit-history-name-left" v-if="val.Type==2">完成车辆认证</view>
+						<view class="credit-history-name-left" v-if="val.Type==3">购买VIP</view>
+						<view class="credit-history-name-left" v-if="val.Type==4">逾期不到店，未履行信用预约</view>
+						<view class="credit-history-name-right" v-if="val.Type==4">-{{val.Rate}}</view>
+						<view class="credit-history-name-right" v-else>+{{val.Rate}}</view>
 					</view>
 					<view class="credit-history-total">
-						<view class="credit-history-total-left">个人优象信用分：{{val.mark}}</view>
-						<view class="credit-history-total-right">{{val.addDate}}</view>
+						<view class="credit-history-total-left">个人优象信用分：{{val.Score}}</view>
+						<view class="credit-history-total-right">{{val.CreatedDate}}</view>
 					</view>
 				</view>
 			</view>
@@ -105,42 +110,31 @@
 </template>
 
 <script>
+	import {rateRecord} from "@/api/index.js"
 	export default{
 		data(){
 			return{
 				type:0,
 				vip:1,
 				score:"",
-				date:"2019-08-09",
+				date:"",
 				creditList:[
-					{
-						mark:'260',
-						name:"履行预约体验",
-						smallMark:'10',
-						addDate:'2019-08-02'
-					},
-					{
-						mark:'250',
-						name:"履行预约体验",
-						smallMark:'10',
-						addDate:'2019-08-01'
-					},
-					{
-						mark:'200',
-						name:"履行预约体验",
-						smallMark:'50',
-						addDate:'2019-08-01'
-					}
+					
 				],
 				
 			}
 		},
-		onLoad(){
+		async onLoad(){
 			let that = this;
 			let userData = uni.getStorageSync('user_data')
 			userData = JSON.parse(userData)
 			that.vip = userData.Vip
 			that.score = userData.Score;
+			let record = await rateRecord({})
+			if(record.Code == 200){
+				this.creditList = record.Data
+				this.date = record.Data[0].CreatedDate
+			}
 			// console.log(that.score)
 		},
 		methods:{

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-	import {decryptPhone} from '../../api/index.js'
+	import {decryptPhone,changePhone} from '../../api/index.js'
 	export default {
 		data() {
 			return {
@@ -61,24 +61,28 @@
 					let wxOpenID = uni.getStorageSync('wxOpenID')
 					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
 						if(res.Code === 200){
-							let userData = uni.getStorageSync('user_data')
-							userData = JSON.parse(userData)
-							userData['Phone'] = res.Data.Phone
-							uni.setStorageSync('user_data',JSON.stringify(userData))
-							uni.requestPayment({
-							    provider: 'wxpay',
-							    timeStamp: String(Date.now()),
-							    nonceStr: 'A1B2C3D4E5',
-							    package: 'prepay_id=wx20180101abcdefg',
-							    signType: 'MD5',
-							    paySign: '',
-							    success: function (res) {
-							        console.log('success:' + JSON.stringify(res));
-							    },
-							    fail: function (err) {
-							        console.log('fail:' + JSON.stringify(err));
-							    }
-							});
+							changePhone({Phone:res.Data.Phone}).then(response =>{
+								if(response.Code === 200){
+									let userData = uni.getStorageSync('user_data')
+									userData = JSON.parse(userData)
+									userData['Phone'] = res.Data.Phone
+									uni.setStorageSync('user_data',JSON.stringify(userData))
+									uni.requestPayment({
+									    provider: 'wxpay',
+									    timeStamp: String(Date.now()),
+									    nonceStr: 'A1B2C3D4E5',
+									    package: 'prepay_id=wx20180101abcdefg',
+									    signType: 'MD5',
+									    paySign: '',
+									    success: function (res) {
+									        console.log('success:' + JSON.stringify(res));
+									    },
+									    fail: function (err) {
+									        console.log('fail:' + JSON.stringify(err));
+									    }
+									});
+								}
+							})
 						}
 					})
 				}
