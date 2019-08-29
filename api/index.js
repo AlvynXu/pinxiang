@@ -68,17 +68,17 @@ export function uploadTopicImg(params) {
  * @returns {*|Promise<any>}
  */
 export function uploadCarImg(params) {
-	let formData = new FormData()
-	formData.append('type', params.type);
-	formData.append('file', params.file);
-	formData.append('id', params.id)
 	return fetch({
 		url: `${api.upload}/driver`,
 		method: 'post',
 		headers: {
 			'Content-Type': 'multipart/form-data'
 		},
-		data: formData
+		data: {
+			'type': params.type,
+			'file': params.file,
+			'id': params.id
+		}
 	})
 }
 export function blogCollect(id, params = {}) {
@@ -423,6 +423,30 @@ export function getAppointmentTime(params={}) {
 export function appointment(params={}) {
 	return fetch({
 		url: `${api.store}/appointment`,
+		method: 'post',
+		data: params
+	})
+}
+
+export function getVip(params={}) {
+	return fetch({
+		url: `${api.user}/vip`,
+		method: 'get',
+		data: params
+	})
+}
+
+export function getDriver(params={}) {
+	return fetch({
+		url: `${api.user}/driver`,
+		method: 'get',
+		params: params
+	})
+}
+
+export function addDriver(params={}) {
+	return fetch({
+		url: `${api.user}/driver`,
 		method: 'post',
 		data: params
 	})
