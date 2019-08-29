@@ -451,3 +451,19 @@ export function addDriver(params={}) {
 		data: params
 	})
 }
+
+export function rateRecord(params={}){
+	return fetch({
+		url: `${api.user}/rate/record`,
+		method: 'get',
+		params: params
+	})
+}
+
+export function vipBenefits(params={}){
+	return fetch({
+		url: `${api.user}/vip/benefits`,
+		method: 'get',
+		params: params
+	})
+}

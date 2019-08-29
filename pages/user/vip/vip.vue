@@ -9,7 +9,7 @@
 				</view>
 			</view>
 			<view class="vip-tips">
-				2019.12.31到期  品质养车，就在品象会员养车 VIP续费>
+				{{endDate}}到期  品质养车，就在品象会员养车 VIP续费>
 			</view>
 		</view>
 		<view class="vip-user" v-if="isLogin===1">
@@ -21,7 +21,7 @@
 				</view>
 			</view>
 			<view class="vip-tips">
-				2019.12.31到期  品质养车，就在品象会员养车 VIP续费>
+				{{endDate}}到期  品质养车，就在品象会员养车 VIP续费>
 			</view>
 		</view>
 		<view class="vip-lists">
@@ -44,7 +44,7 @@
 							上次{{val.name}}里程：
 						</view>
 						<view class="vip-content-time-right">
-							{{val.distance}}公里
+							{{val.distance}}
 						</view>
 					</view>
 					<view class="vip-content-km" v-if="val.name==='洗车'">
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-	import {login,getVip} from '@/api/index.js'
+	import {login,getVip,vipBenefits} from '@/api/index.js'
 	export default {
 		data() {
 			return {
@@ -80,25 +80,16 @@
 				nickname:'优象会员',
 				phone:'18735166097',
 				vipList:[
-					{
-						name:"保养",
-						time:"2019-04-23",
-						distance:"1300"
-					},
-					{
-						name:"洗车",
-						time:"2019-04-23",
-						total:10
-					},
-				]
+					
+				],
+				endDate:''
 			};
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
 			let that = this
 			if(userData.length > 0){
 				userData = JSON.parse(userData)
-				console.log(userData)
 				this.avatar = userData.Avatar,
 				this.nickname = userData.Nickname,
 				this.phone = userData.Phone
@@ -107,11 +98,27 @@
 				getVip({}).then((res)=>{
 					console.log(res)
 					if(res.Code === 200){
-						that.vipData = res.Data
+						let lastDate = res.Data.EndDate
+						that.endDate = lastDate.substring(0,4)+'-'+lastDate.substring(5,7)+'-'+lastDate.substring(8,10)
 					}
 				})
 			}
 			this.redirect = getApp().globalData.redirect
+			let benefits = await vipBenefits({})
+			if(benefits.Code == 200){
+				this.vipList = [
+					{
+						name:"保养",
+						time:benefits.Data.care.date == '' ? '-' : benefits.Data.care.date,
+						distance:benefits.Data.care.km
+					},
+					{
+						name:"洗车",
+						time:benefits.Data.wash.date == '' ? '-' : benefits.Data.wash.date,
+						total:benefits.Data.wash.times
+					},
+				]
+			}
 		}
 	}
 </script>
