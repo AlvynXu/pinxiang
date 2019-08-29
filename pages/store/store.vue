@@ -1,5 +1,5 @@
 <template>
-	<view class="store-box">
+	<view class="store-box" :class="{'hide':ishide}">
 		<view class="store-list">
 			<image class="cover" :src="cover" mode="aspectFill"></image>
 			<view class="store-name">
@@ -132,7 +132,7 @@
 				    </view>
 			</view>
 		</view>
-		<uni-popup class="uni-popup" ref="popup" type="bottom">
+		<uni-popup class="uni-popup" ref="popup" type="bottom" style="z-index:1000;">
 			<view class="popup-detail">
 				<view class="servince-top">
 					<view class="popup-title">
@@ -140,24 +140,26 @@
 					</view>
 					<view class="tips">仅限5座及其以下车辆</view>
 				</view>
-				<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
-				<view class="popup-servince">
-					<view class="servince-title">服务内容</view>
-					<view class="servince-box">
-						<view class="servince-lists" v-for="(val,key) in itemDetail.Service" :key="key">
-							<view class="servince-list">{{val.Name}}</view>
+				<view style="overflow-y: scroll;height:58vh;-webkit-overflow-scrolling: touch;">
+					<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
+					<view class="popup-servince">
+						<view class="servince-title">服务内容</view>
+						<view class="servince-box">
+							<view class="servince-lists" v-for="(val,key) in itemDetail.Service" :key="key">
+								<view class="servince-list">{{val.Name}}</view>
+							</view>
 						</view>
 					</view>
-				</view>
-				<view class="oil-title" v-if="itemDetail.Type===1">机油品牌</view>
-				<view class="oil-box" v-for="(val,key) in itemDetail.Oil" :key="key" v-if="itemDetail.Type===1">
-					<view class="oil-list">
-						<image class="oil-img" :src="val.Image" mode="aspectFill"></image>
-						<view class="oil-content">
-							<view>{{val.Brand}}</view>
-							<view>SN: {{val.SN}}</view>
-							<view>{{val.Type}}   {{val.Capacity}}L</view>
-							<view>适合{{val.Distance}}km/{{val.Time}}</view>
+					<view class="oil-title" v-if="itemDetail.Type===1">机油品牌</view>
+					<view class="oil-box" v-for="(val,key) in itemDetail.Oil" :key="key" v-if="itemDetail.Type===1">
+						<view class="oil-list">
+							<image class="oil-img" :src="val.Image" mode="aspectFill"></image>
+							<view class="oil-content">
+								<view>{{val.Brand}}</view>
+								<view>SN: {{val.SN}}</view>
+								<view>{{val.Type}}   {{val.Capacity}}L</view>
+								<view>适合{{val.Distance}}km/{{val.Time}}</view>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -180,6 +182,7 @@
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
+				ishide:false,
 				id:0,
 				userData:[],
 				showPicker: false,
@@ -278,6 +281,7 @@
 				if(itemDetail.Code === 200){
 					this.itemDetail = itemDetail.Data
 					this.$refs.popup.open();
+					this.ishide = true;
 					// const storeCur = id
 					// this.storeCur = storeCur;
 					uni.setStorageSync('store_id',parseInt(this.id))
@@ -396,6 +400,9 @@
 	}
 </script>
 <style lang="scss" scoped>
+.hide{
+	overflow: hidden;
+}
 .gray{
 	width:750upx;
 	height:10upx;
@@ -539,7 +546,7 @@
 		}
 	}
 	.store-servince{
-		width:750upx;
+		width:723upx;
 		margin-left: 27upx;
 		.servince-list{
 			width:667upx;
@@ -826,14 +833,9 @@
 		.popup-detail{
 			width:667upx;
 			margin:0 auto;
-			padding-bottom:100upx;
 			.servince-top{
-				position: fixed;
-				top:0;
-				left:0;
-				width:750upx;
-				height:140upx;
-				z-index:1000;
+				width:667upx;
+				height:120upx;
 				background: #fff;
 				border-radius:11upx 11upx 0px 0px;
 				.popup-title{
@@ -841,19 +843,18 @@
 					height:50upx;
 					line-height:50upx;
 					font-size:33upx;
-					margin: 20upx 42upx;
+					margin: 0 0;
 					border-bottom: 3upx solid #FE5100;
 					z-index: 1000;
 				}
 				.tips{
 					font-size:22upx;
-					margin: 7upx 42upx;
+					margin: 7upx 0;
 					color:#A4A4A4;
 					z-index: 1000;
 				}
 			}
 			.popup-img{
-				margin-top: 112upx;
 				width:667upx;
 				height:399upx;
 				img{
@@ -889,16 +890,13 @@
 			}
 		}
 		.popup-button{
-			margin-top: 111upx;
+			margin-top: 50upx;
 			width:667upx;
 			height:98upx;
 			line-height:98upx;
 			text-align: center;
 			background:#FE5100;
 			color:#fff;
-			position: fixed;
-			bottom:10upx;
-			left:42upx;
 		}
 		
 		.oil-title{

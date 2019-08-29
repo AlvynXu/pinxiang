@@ -192,7 +192,7 @@
 		position: relative;
 		.login-white{
 			padding-top:50upx;
-			width:750upx;
+			width:723upx;
 			padding-left:27upx;
 			height:303upx;
 			background: #fff;
