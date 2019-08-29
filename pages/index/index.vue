@@ -1,9 +1,9 @@
 <template>
 	<view class="store-box">
 		<view class="store-swiper">
-			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration">
+			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image :src="val.src" mode="aspectFit"></image>
+					<image class="swiper-img" :src="val.src" mode="aspectFit"></image>
 				</swiper-item>
 			</swiper>
 			<view class="store-search" @click="goSearch">
@@ -69,8 +69,9 @@
 					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner1.png"},
 					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner2.png"}
 					],
-				autoplay: true,
+				autoplay: false,
 				interval: 2000,
+				circular:true,
 				duration: 500,
 				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
 				title: 'Hello',
@@ -126,7 +127,7 @@
 			.swiper{
 				width:750upx;
 				height:413upx;
-				image{
+				.swiper-img{
 					width:750upx;
 					height:413upx;
 				}
@@ -139,7 +140,7 @@
 				top:353upx;
 				left:42upx;
 				border-radius:11upx;
-				box-shadow:0upx 1upx 1upx 2upx rgba(4,4,4,0.1);
+				box-shadow: 0px 0px 3px 3px rgba(4,4,4,0.1);
 				display: flex;
 				justify-content: space-between;
 				.store-search-input{
@@ -162,7 +163,7 @@
 		.store-vip{
 			width:667upx;
 			height:134upx;
-			box-shadow:0upx 0upx 0upx 2upx rgba(4,4,4,0.1);
+			box-shadow: 0px 0px 3px 3px rgba(4,4,4,0.1);
 			margin-top: 100upx;
 			margin-bottom: 15upx;
 			border-radius:11upx;
@@ -261,12 +262,12 @@
 				margin-left: 33upx;
 				margin-top: 17upx;
 				display: flex;
-				justify-content:space-between;
+				justify-content:flex-start;
 				padding-bottom:20upx;
 				.tips{
-					margin-top: 10upx;	
-					display: flex;
-					justify-content:flex-start;
+					// margin-top: 10upx;	
+					// display: flex;
+					// justify-content:flex-start;
 					.tip{
 						width:141upx;
 						height:40upx;
@@ -289,6 +290,7 @@
 					font-weight:500;
 					color:#fff;
 					text-align: center;
+					margin-left:63upx;
 				}
 			}
 		}

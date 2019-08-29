@@ -826,6 +826,7 @@
 		.popup-detail{
 			width:667upx;
 			margin:0 auto;
+			padding-bottom:100upx;
 			.servince-top{
 				position: fixed;
 				top:0;
@@ -895,6 +896,9 @@
 			text-align: center;
 			background:#FE5100;
 			color:#fff;
+			position: fixed;
+			bottom:10upx;
+			left:42upx;
 		}
 		
 		.oil-title{
