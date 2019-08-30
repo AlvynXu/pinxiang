@@ -30,9 +30,9 @@
 			</view>
 			<view class="active-join-agree">
 				<view class="agree-box">
-					<radio class="agree-check" color="#FE5100"></radio>
+					<radio class="agree-check" color="#FE5100" :checked="checked" @click="radioChange"></radio>
 					开通会员需同意
-					<text class="agree-color" @click="agreement">《会员协议》</text>
+					<text class="agree-color" @click="goAgreement">《会员协议》</text>
 				</view>
 			</view>
 			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -52,10 +52,13 @@
 			return {
 				bgc:"http://pic1.win4000.com/wallpaper/2019-08-09/5d4cdf1311e0c.jpg",
 				phone : '',
-				redirect:''
+				checked:false
 			}
 		},
 		methods: {
+			radioChange(){
+				this.checked = true
+			},
 			getPhoneNumber(e){
 				if(e.detail.errMsg === 'getPhoneNumber:ok'){
 					let wxOpenID = uni.getStorageSync('wxOpenID')
@@ -88,23 +91,37 @@
 				}
 			},
 			buyVIP(){
-				uni.requestPayment({
-				    provider: 'wxpay',
-				    timeStamp: String(Date.now()),
-				    nonceStr: 'A1B2C3D4E5',
-				    package: 'prepay_id=wx20180101abcdefg',
-				    signType: 'MD5',
-				    paySign: '',
-				    success: function (res) {
-				        console.log('success:' + JSON.stringify(res));
-				    },
-				    fail: function (err) {
-				        console.log('fail:' + JSON.stringify(err));
-				    }
-				});
+				if(this.checked == true){
+					uni.requestPayment({
+						provider: 'wxpay',
+						timeStamp: String(Date.now()),
+						nonceStr: 'A1B2C3D4E5',
+						package: 'prepay_id=wx20180101abcdefg',
+						signType: 'MD5',
+						paySign: '',
+						success: function (res) {
+							console.log('success:' + JSON.stringify(res));
+						},
+						fail: function (err) {
+							console.log('fail:' + JSON.stringify(err));
+						}
+					});
+				}else{
+					wx.showModal({
+					  title: '提示',
+					  content: '购买会员需阅读并同意《会员协议》',
+					  success (res) {
+					    if (res.confirm) {
+					    } else if (res.cancel) {
+					    }
+					  }
+					})
+				}
 			},
-			agreement(){
-				
+			goAgreement(){
+				uni.navigateTo({
+					url:'vipAgreement'
+				})
 			}
 		
 		},
@@ -115,7 +132,6 @@
 			if(userData['Phone'] !== ''){
 				this.phone = userData['Phone']
 			}
-			this.redirect = options.redirect
 		}
 	}
 </script>

@@ -1,68 +1,41 @@
 <template>
 	<view class="content">
-		<view class="navbar">
-			<view 
-				v-for="(item, index) in navList" :key="index" 
-				class="nav-item" 
-				:class="{current: tabCurrentIndex === index}"
-				@click="tabClick(index)"
-			>
-				{{item.text}}
+		<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
+		<view v-if="TabCur===1" v-for="(item,index) in orderList" :key="index" class="order-item">
+			<view class="i-top b-b">
+				<text>预约编号：</text>
+				<text>{{item.SerialNumber}}</text>
 			</view>
+			
+			<view class="goods-box">
+				<view class="goods-item">
+					<image class="goods-img" :src="item.Image" mode="aspectFill"></image>
+				</view>
+				<view class="goods-items">
+					<text class="goods-content">{{item.Name}}</text>
+				</view>
+			</view>
+			<view class="price-box">
+				<view class="price-box-time">
+					<text class="time">{{item.CreatedDate}}</text>
+				</view>
+				<view class="price-box-price">
+					<text class="price">30.00</text>
+					<text class="num">会员免费</text>
+				</view>
+			</view>
+			<view class="action-box b-t">
+				<text class="action-text" v-if="item.Type != 5">有效期至：{{item.EffectiveTime}}</text>
+				<!-- 根据状态不同显示 -->
+				<text class="action-text" v-if="item.Type === 5">消费时间：{{item.UpdatedDate}}</text>
+				<button class="action-btn recom" v-if="item.Type === 5">已取消</button>
+				<button class="action-btn recom" v-if="item.Type === 2">写评价</button>
+				<button class="action-btn recom" v-if="item.Type === 3">已逾期</button>
+				<button class="action-btn" @click="openPopup(index,item.ID)" v-if="item.Type === 1">取消</button>
+				<button class="action-btn recom" v-if="item.Type === 1" @click="goStore">已预约</button>
+			</view>
+			<view class="action-bot" v-if="item.Type === 5">取消原因：{{item.CancelReason}}</view>
 		</view>
-
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
-			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
-				<scroll-view 
-					class="list-scroll-content" 
-					scroll-y
-					@scrolltolower="loadData"
-				>
-					<!-- 空白页 -->
-					<empty v-if="tabItem.loaded === true && tabItem.orderList.length === 0"></empty>
-					
-					<!-- 订单列表 -->
-					<view v-for="(item,index) in tabItem.orderList" :key="index" class="order-item">
-						<view class="i-top b-b">
-							<text>预约编号：</text>
-							<text>{{item.orderId}}</text>
-						</view>
-						
-						<view class="goods-box">
-							<view class="goods-item">
-								<image class="goods-img" :src="item.goods.image" mode="aspectFill"></image>
-							</view>
-							<view class="goods-items">
-								<text class="goods-content">{{item.goods.content}}</text>
-							</view>
-						</view>
-						<view class="price-box">
-							<view class="price-box-time">
-								<text class="time">{{item.time}}</text>
-							</view>
-							<view class="price-box-price">
-								<text class="price">30.00</text>
-								<text class="num">会员免费</text>
-							</view>
-						</view>
-						<view class="action-box b-t">
-							<text class="action-text" v-if="item.state != 4">有效期至：2019-09-30 22:22</text>
-							<!-- 根据状态不同显示 -->
-							<text class="action-text" v-if="item.state === 4">消费时间：2019-09-30 22:22</text>
-							<button class="action-btn recom" v-if="item.state === 4">已取消</button>
-							<button class="action-btn recom" v-if="item.state === 2">写评价</button>
-							<button class="action-btn recom" v-if="item.state === 3">已逾期</button>
-							<button class="action-btn" @click="openPopup(index)" v-if="item.state === 1">取消</button>
-							<button class="action-btn recom" v-if="item.state === 1" @click="goStore">已预约</button>
-						</view>
-						<view class="action-bot" v-if="item.state === 4">取消原因：{{item.goods.noBuy}}</view>
-					</view>
-					 
-					<uni-load-more :status="tabItem.loadingType"></uni-load-more>
-					
-				</scroll-view>
-			</swiper-item>
-		</swiper>
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup-detail">
 				<view class="popup-title">取消原因</view>
@@ -81,15 +54,6 @@
 			</view>
 			<view class="popup-button" @click="closePopup">暂时不取消</view>
 		</uni-popup>
-		<xy-dialog 
-			style="z-index:100000;"
-		    :show="show" 
-		    title="提示" 
-		    content="哈哈，还是被你看到了..."
-		    @cancel="clickCancel('cancel')" 
-		    @confirm="clickConfirm('confirm')"
-			@close="closeFunc">
-		</xy-dialog>
 	</view>
 </template> 
 
@@ -97,12 +61,12 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import uniPopup from "@/components/uni-popup/uni-popup.vue";
 	import xyDialog from '@/components/xy-dialog/xy-dialog.vue';
-	import empty from "@/components/empty";
-	import Json from '@/Json';
+	import WucTab from '@/components/wuc-tab/wuc-tab.vue'
+	import {getAppointment,cancleOrder} from "@/api/index.js"
 	export default {
 		components: {
 			uniLoadMore,
-			empty,
+			WucTab,
 			uniPopup,
 			xyDialog
 		},
@@ -126,56 +90,41 @@
 					},
 				],
 				current: 0,
-				tabCurrentIndex: 0,
-				navList: [{
-						state: 0,
-						text: '全部预约',
-						loadingType: 'more',
-						orderList: []
+				TabCur: 0,
+				type:0,
+				id:1,
+				tabList: [
+					{ 
+						name: '全部预约',
+					 }, 
+					{ 
+						name: '已预约',
 					},
-					{
-						state: 1,
-						text: '已预约',
-						loadingType: 'more',
-						orderList: []
+					{ 
+						name: '已体验',
 					},
-					{
-						state: 2,
-						text: '已体验',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 3,
-						text: '已逾期',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 4,
-						text: '已取消',
-						loadingType: 'more',
-						orderList: []
-					},
+					{ name: '已逾期' },
+					{ name: '已取消' },
 				],
+				orderList: [],
+				// cancelOrderList:[],
 			};
 		},
 		
-		onLoad(options){
+		async onLoad(options){
 			/**
 			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
 			 * 替换onLoad下代码即可
 			 */
-			this.tabCurrentIndex = +options.state;
+			// this.tabCurrentIndex = +options.state;
 			// #ifndef MP
-			this.loadData()
+			// this.loadData()
 			// #endif
 			// #ifdef MP
-			if(options.state == 0){
-				this.loadData()
-			}
+			// if(options.state == 0){
+			// 	this.loadData()
+			// }
 			// #endif
-			
 		},
 		 
 		methods: {
@@ -187,70 +136,23 @@
 					}
 				}
 			},
-			//获取订单列表
-			loadData(source){
-				//这里是将订单挂载到tab列表下
-				let index = this.tabCurrentIndex;
-				let navItem = this.navList[index];
-				let state = navItem.state;
-				
-				if(source === 'tabChange' && navItem.loaded === true){
-					//tab切换只有第一次需要加载数据
-					return;
+			async tabChange(index) {
+				this.TabCur = index;
+				// this.type = type;
+				if(index === 1){
+					let appointmentData = await getAppointment(1)
+					// console.log(appointmentData.Data[0])
+					if(appointmentData.Code === 200){
+						this.orderList = appointmentData.Data
+					}
 				}
-				if(navItem.loadingType === 'loading'){
-					//防止重复加载
-					return;
-				}
-				
-				navItem.loadingType = 'loading';
-				
-				setTimeout(()=>{
-					let orderList = Json.orderList.filter(item=>{
-						//添加不同状态下订单的表现形式
-						item = Object.assign(item, this.orderStateExp(item.state));
-						//演示数据所以自己进行状态筛选
-						if(state === 0){
-							//0为全部订单
-							return item;
-						}
-						return item.state === state
-					});
-					orderList.forEach(item=>{
-						navItem.orderList.push(item);
-					})
-					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
-					this.$set(navItem, 'loaded', true);
-					
-					//判断是否还有数据， 有改为 more， 没有改为noMore 
-					navItem.loadingType = 'more';
-				}, 600);	
-			}, 
-
-			//swiper 切换
-			changeTab(e){
-				this.tabCurrentIndex = e.target.current;
-				this.loadData('tabChange');
+				// console.log(this.orderList)
 			},
-			//顶部tab点击
-			tabClick(index){
-				this.tabCurrentIndex = index;
-			},
-			//删除订单
-			openPopup(index){
+			
+			openPopup(index,id){
 				this.$refs.popup.open();
-				// const storeCur = key
-				// this.storeCur = storeCur;
-				// console.log(storeCur)
-			},
-			deleteOrder(index){
-				uni.showLoading({
-					title: '请稍后'
-				})
-				setTimeout(()=>{
-					this.navList[this.tabCurrentIndex].orderList.splice(index, 1);
-					uni.hideLoading();
-				}, 600)
+				this.id = id
+				// console.log(this.id)
 			},
 			//关闭取消弹框
 			closePopup(){
@@ -258,8 +160,24 @@
 			},
 			//取消订单
 			orderCancel(index){
-				this.show = true
-				console.log(index)
+				let id =  this.id
+				let cancelReason = this.items[index].name;
+				console.log(cancelReason)
+				wx.showModal({
+					title: '提示',
+					  content: '确定取消吗？',
+					  async success (res) {
+					    if (res.confirm) {
+							let data = {
+								CancelReason:cancelReason
+							}
+							let cancleOrderData = await cancleOrder(id,data)
+					    } else if (res.cancel) {
+					      
+					    }
+					  }
+				})
+				this.$refs.popup.close()
 			},
 			cancelOrder(item){
 				setTimeout(()=>{
@@ -310,53 +228,30 @@
 </script>
 
 <style lang="scss" scoped>
-	page, .content{
-		background: $page-color-base;
-		height: 100%;
+	.wuc-tab{
+		width:750upx;
+	}
+	.wuc-tab /deep/ .wuc-tab-item{
+		width:130upx;
+		font-size:25upx;
+	    height: 80upx;
+	    line-height: 80upx;
+	    margin: 0 10upx 0 10upx;
+		color:#A4A4A4;
+		text-align: center;
+	}
+	.wuc-tab /deep/ .text-blue{
+		color:#FE5100;
+	}
+	.wuc-tab /deep/ .wuc-tab-item.cur {
+		font-size:29upx;
+		color:#333333;
+	    border-bottom: 4upx solid #FE5100;
 	}
 	
-	.swiper-box{
-		height: calc(100% - 40px);
-	}
-	.list-scroll-content{
-		height: 100%;
-	}
-
-	.navbar{
-		display: flex;
-		height: 40px;
-		padding: 0 5px;
-		background: #fff;
-		box-shadow: 0 1px 5px rgba(0,0,0,.06);
-		position: relative;
-		z-index: 10;
-		.nav-item{
-			flex: 1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			font-size: 15px;
-			color: #A4A4A4;
-			position: relative;
-			&.current{
-				color: #333333;
-				font-size: 16px;
-				&:after{
-					content: '';
-					position: absolute;
-					left: 50%;
-					bottom: 0;
-					transform: translateX(-50%);
-					width: 50%;
-					height: 0;
-					border-bottom: 2px solid #FE5100;
-				}
-			}
-		}
-	}
 	.uni-popup{
 			width:750upx;
+			z-index:1000;
 			.popup-detail{
 				width:667upx;
 				margin:0 auto;

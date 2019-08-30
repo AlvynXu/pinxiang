@@ -67,6 +67,10 @@
             "path" : "pages/store/storeSearch/storeSearch",
             "style" : {}
         }
+        ,{
+            "path" : "pages/user/vipAgreement",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

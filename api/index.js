@@ -467,3 +467,17 @@ export function vipBenefits(params={}){
 		params: params
 	})
 }
+export function getAppointment(type,params={}){
+	return fetch({
+		url: `${api.order}/user/${type}`,
+		method: 'get',
+		params: params
+	})
+}
+export function cancleOrder(id, params = {}) {
+	return fetch({
+		url: `${api.order}/user/${id}`,
+		method: 'put',
+		data: params
+	})
+}
