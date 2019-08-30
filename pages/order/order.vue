@@ -1,13 +1,13 @@
 <template>
 	<view class="content">
 		<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
-		<view v-if="TabCur===1" v-for="(item,index) in orderList" :key="index" class="order-item">
+		<view v-for="(item,index) in orderList" :key="index" class="order-item">
 			<view class="i-top b-b">
 				<text>预约编号：</text>
 				<text>{{item.SerialNumber}}</text>
 			</view>
 			
-			<view class="goods-box">
+			<view class="goods-box" @click="goStoreDetail(item.StoreID)">
 				<view class="goods-item">
 					<image class="goods-img" :src="item.Image" mode="aspectFill"></image>
 				</view>
@@ -25,16 +25,16 @@
 				</view>
 			</view>
 			<view class="action-box b-t">
-				<text class="action-text" v-if="item.Type != 5">有效期至：{{item.EffectiveTime}}</text>
+				<text class="action-text" v-if="item.Status != 5">有效期至：{{item.EffectiveTime}}</text>
 				<!-- 根据状态不同显示 -->
-				<text class="action-text" v-if="item.Type === 5">消费时间：{{item.UpdatedDate}}</text>
-				<button class="action-btn recom" v-if="item.Type === 5">已取消</button>
-				<button class="action-btn recom" v-if="item.Type === 2">写评价</button>
-				<button class="action-btn recom" v-if="item.Type === 3">已逾期</button>
-				<button class="action-btn" @click="openPopup(index,item.ID)" v-if="item.Type === 1">取消</button>
-				<button class="action-btn recom" v-if="item.Type === 1" @click="goStore">已预约</button>
+				<text class="action-text" v-if="item.Status === 5">消费时间：{{item.UpdatedDate}}</text>
+				<button class="action-btn recom" v-if="item.Status === 5">已取消</button>
+				<button class="action-btn recom" v-if="item.Status === 2">写评价</button>
+				<button class="action-btn recom" v-if="item.Status === 3">已逾期</button>
+				<button class="action-btn" @click="openPopup(index,item.ID)" v-if="item.Status === 1">取消</button>
+				<button class="action-btn recom" v-if="item.Status === 1" @click="goStore">已预约</button>
 			</view>
-			<view class="action-bot" v-if="item.Type === 5">取消原因：{{item.CancelReason}}</view>
+			<view class="action-bot" v-if="item.Status === 5">取消原因：{{item.CancelReason}}</view>
 		</view>
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup-detail">
@@ -91,8 +91,8 @@
 				],
 				current: 0,
 				TabCur: 0,
-				type:0,
 				id:1,
+				storeID:0,
 				tabList: [
 					{ 
 						name: '全部预约',
@@ -125,9 +125,21 @@
 			// 	this.loadData()
 			// }
 			// #endif
+			let type = 0
+			let appointmentData = await getAppointment(type)
+			// console.log(appointmentData.Data[0])
+			if(appointmentData.Code === 200){
+				this.orderList = appointmentData.Data
+			}
 		},
 		 
 		methods: {
+			goStoreDetail(id){
+				uni.navigateTo({
+				    url: `../store/store?id=${id}`,
+					
+				});
+			},
 			radioChange: function(evt) {
 				for (let i = 0; i < this.items.length; i++) {
 					if (this.items[i].value === evt.target.value) {
@@ -138,10 +150,41 @@
 			},
 			async tabChange(index) {
 				this.TabCur = index;
-				// this.type = type;
 				if(index === 1){
-					let appointmentData = await getAppointment(1)
+					let type = 1
+					let appointmentData = await getAppointment(type)
 					// console.log(appointmentData.Data[0])
+					if(appointmentData.Code === 200){
+						this.orderList = appointmentData.Data
+					}
+				}
+				if(index === 0){
+					let type = 0
+					let appointmentData = await getAppointment(type)
+					// console.log(appointmentData.Data[0])
+					if(appointmentData.Code === 200){
+						this.orderList = appointmentData.Data
+					}
+				}
+				if(index === 2){
+					let type = 3
+					let appointmentData = await getAppointment(type)
+					// console.log(appointmentData.Data[0])
+					if(appointmentData.Code === 200){
+						this.orderList = appointmentData.Data
+					}
+				}
+				if(index === 3){
+					let type = 4
+					let appointmentData = await getAppointment(type)
+					// console.log(appointmentData.Data[0])
+					if(appointmentData.Code === 200){
+						this.orderList = appointmentData.Data
+					}
+				}
+				if(index === 4){
+					let type = 5
+					let appointmentData = await getAppointment(type)
 					if(appointmentData.Code === 200){
 						this.orderList = appointmentData.Data
 					}
