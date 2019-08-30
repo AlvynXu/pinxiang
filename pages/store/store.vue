@@ -686,6 +686,7 @@
 						.one{
 							font-size:25upx;
 							color:#FE5100;
+							margin-top:4upx;
 						}
 						.two{
 							font-size:30upx;

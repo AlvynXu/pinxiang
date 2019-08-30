@@ -10,18 +10,27 @@
 		</view>
 		<view class="car-img">
 			<view class="car-img-top">行驶证：</view>
-			<view class="car-img-bot1" @click="chooseImage" v-show="chooseImg"><view class="vant-icon">&#xe65c;</view></view>
+			<view class="car-img-bot1" @click="chooseImage" v-show="chooseImg">
+				<view class="vant-icon">&#xe636;</view>
+				<view class="car-img-word">主页示例图</view>
+			</view>
 			<view class="show-img" v-show="showImg" @click="chooseImage"><image mode="aspectFill" :src="driverLicense"></image></view>
-			<view class="car-img-bot2" @click="chooseImage2" v-show="chooseImg2"><view class="vant-icon">&#xe65c;</view></view>
+			<view class="car-img-bot2" @click="chooseImage2" v-show="chooseImg2">
+				<view class="vant-icon">&#xe636;</view>
+				<view class="car-img-word">副页示例图</view>
+			</view>
 			<view class="show-img" v-show="showImg2" @click="chooseImage2"><image mode="aspectFill" :src="dLSubPage"></image></view>
 		</view>
 		<view class="car-img">
 			<view class="car-img-top">后车身45度照片：</view>
-			<view class="car-img-bot3" @click="chooseImage3" v-show="chooseImg3"><view class="vant-icon">&#xe65c;</view></view>
+			<view class="car-img-bot3" @click="chooseImage3" v-show="chooseImg3">
+				<view class="vant-icon">&#xe636;</view>
+				<view class="car-img-word">车身示例图</view>
+			</view>
 			<view class="show-img" v-show="showImg3" @click="chooseImage3"><image mode="aspectFill" :src="carImg"></image></view>
 		</view>
 		<view style="position: relative;">
-			<view class="car-discern" v-if="type===0 || type===1 || type===2">
+			<view class="car-discern" v-if="type!=3">
 				<view class="car-discern-left">车辆识别代码号(VIN码)：</view>
 				<view class="car-discern-right"><input :value="vin" :disabled="true" class="uni-input" /></view>
 			</view>
@@ -333,10 +342,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
+			position:relative;
 			.vant-icon {
 				text-align: center;
-				font-size: 120upx;
-				color: #a4a4a4;
+				font-size: 140upx;
+				color: #fff;
+				margin-top:-30upx;
+			}
+			.car-img-word{
+				position:absolute;
+				top:80upx;
+				left:250upx;
+				font-size:36upx;
+				color:#fff;
 			}
 		}
 		.car-img-bot2 {
@@ -347,10 +365,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
+			position:relative;
 			.vant-icon {
 				text-align: center;
-				font-size: 120upx;
-				color: #a4a4a4;
+				font-size: 140upx;
+				color: #fff;
+				margin-top:-30upx;
+			}
+			.car-img-word{
+				position:absolute;
+				top:80upx;
+				left:250upx;
+				font-size:36upx;
+				color:#fff;
 			}
 		}
 		.car-img-bot3 {
@@ -361,10 +388,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
+			position:relative;
 			.vant-icon {
 				text-align: center;
-				font-size: 120upx;
-				color: #a4a4a4;
+				font-size: 140upx;
+				color: #fff;
+				margin-top:-30upx;
+			}
+			.car-img-word{
+				position:absolute;
+				top:80upx;
+				left:250upx;
+				font-size:36upx;
+				color:#fff;
 			}
 		}
 		.show-img {
