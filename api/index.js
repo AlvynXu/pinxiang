@@ -428,6 +428,14 @@ export function appointment(params={}) {
 	})
 }
 
+export function getAppointmentDetail(id,params={}) {
+	return fetch({
+		url: `${api.store}/appointment/${id}`,
+		method: 'get',
+		params: params
+	})
+}
+
 export function getVip(params={}) {
 	return fetch({
 		url: `${api.user}/vip`,
@@ -478,6 +486,22 @@ export function cancleOrder(id, params = {}) {
 	return fetch({
 		url: `${api.order}/user/${id}`,
 		method: 'put',
+		data:params,
+	})
+}
+
+export function payDetail(params={}) {
+	return fetch({
+		url: `${api.pay}/detail`,
+		method: 'post',
+		data: params
+	})
+}
+
+export function payVip(params={}) {
+	return fetch({
+		url: `${api.pay}/vip`,
+		method: 'post',
 		data: params
 	})
 }

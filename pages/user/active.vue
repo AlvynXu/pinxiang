@@ -4,20 +4,20 @@
 			<image class="active-img" :src="bgc" mode="aspectFill"></image>
 		</view>
 		<view class="active-join">
-			<view class="active-join-price">
+			<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
 				<view class="active-join-price-left">
 					品象365天会员-全合成机油版
 				</view>
 				<view class="active-join-price-right">
-					<view>888</view>元
+					<view>999</view>元
 				</view>
 			</view>
-			<view class="active-join-price2">
+			<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
 				<view class="active-join-price-left">
 					品象365天会员-半合成机油版
 				</view>
 				<view class="active-join-price-right">
-					<view>888</view>元
+					<view>599</view>元
 				</view>
 			</view>
 			<view class="active-join-tip">
@@ -30,9 +30,9 @@
 			</view>
 			<view class="active-join-agree">
 				<view class="agree-box">
-					<radio class="agree-check" color="#FE5100" :checked="checked" @click="radioChange"></radio>
-					开通会员需同意
-					<text class="agree-color" @click="goAgreement">《会员协议》</text>
+					<radio class="agree-check" :checked="agreementChecked" color="#FE5100"></radio>
+					<text @click="agreementRadio">开通会员需同意</text>
+					<text class="agree-color" @click="agreement">《会员协议》</text>
 				</view>
 			</view>
 			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -46,20 +46,20 @@
 </template>
 
 <script>
-	import {decryptPhone,changePhone} from '../../api/index.js'
+	import {decryptPhone,changePhone,payDetail,payVip} from '../../api/index.js'
 	export default {
 		data() {
 			return {
 				bgc:"http://pic1.win4000.com/wallpaper/2019-08-09/5d4cdf1311e0c.jpg",
 				phone : '',
-				checked:false
+				redirect:'',
+				vipSelected:0,
+				agreementChecked:false
 			}
 		},
 		methods: {
-			radioChange(){
-				this.checked = true
-			},
 			getPhoneNumber(e){
+				let that = this
 				if(e.detail.errMsg === 'getPhoneNumber:ok'){
 					let wxOpenID = uni.getStorageSync('wxOpenID')
 					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
@@ -70,68 +70,84 @@
 									userData = JSON.parse(userData)
 									userData['Phone'] = res.Data.Phone
 									uni.setStorageSync('user_data',JSON.stringify(userData))
-									uni.requestPayment({
-									    provider: 'wxpay',
-									    timeStamp: String(Date.now()),
-									    nonceStr: 'A1B2C3D4E5',
-									    package: 'prepay_id=wx20180101abcdefg',
-									    signType: 'MD5',
-									    paySign: '',
-									    success: function (res) {
-									        console.log('success:' + JSON.stringify(res));
-									    },
-									    fail: function (err) {
-									        console.log('fail:' + JSON.stringify(err));
-									    }
-									});
+									that.buyVIP()
 								}
 							})
 						}
 					})
 				}
 			},
-			buyVIP(){
-				if(this.checked == true){
-					uni.requestPayment({
-						provider: 'wxpay',
-						timeStamp: String(Date.now()),
-						nonceStr: 'A1B2C3D4E5',
-						package: 'prepay_id=wx20180101abcdefg',
-						signType: 'MD5',
-						paySign: '',
-						success: function (res) {
-							console.log('success:' + JSON.stringify(res));
-						},
-						fail: function (err) {
-							console.log('fail:' + JSON.stringify(err));
-						}
-					});
-				}else{
-					wx.showModal({
-					  title: '提示',
-					  content: '购买会员需阅读并同意《会员协议》',
-					  success (res) {
-					    if (res.confirm) {
-					    } else if (res.cancel) {
-					    }
-					  }
+			async buyVIP(){
+				let that = this
+				if(this.agreementChecked==false){
+					wx.showToast({
+						title:"请先阅读会员协议"
 					})
+					return false
 				}
-			},
-			goAgreement(){
-				uni.navigateTo({
-					url:'vipAgreement'
+				
+				let detail =  await payDetail({
+					OpenID: uni.getStorageSync('wxOpenID'),
+					VipType : this.vipSelected
 				})
+				if(detail.Code === 200){
+					uni.requestPayment({
+					    provider: 'wxpay',
+					    timeStamp: detail.Data.timestamp.toString(),
+					    nonceStr: detail.Data.nonce_str,
+					    package: `prepay_id=${detail.Data.prepay_id}`,
+					    signType: 'MD5',
+					    paySign: detail.Data.sign,
+					    success: function (res) {
+					        console.log('success:' + JSON.stringify(res));
+							if(res.errMsg=='requestPayment:ok'){
+								payVip({OrderNo:detail.Data.order_number,VipType:that.vipSelected}).then(response=>{
+									if(response.Code === 200){
+										wx.showToast({
+											title:"购买成功",
+											success() {
+												wx.redirectTo({
+													url:'/pages/user/credit'
+												})
+											}
+										})
+	
+									}
+								})
+							}else{
+								wx.showToast({
+									title:"支付失败",
+									icon:"none"
+								})
+							}
+					    },
+					    fail: function (err) {
+					        console.log('fail:' + JSON.stringify(err));
+					    }
+					});
+				}
+				
+			},
+			agreement(){
+				uni.navigateTo({
+					url:"/pages/user/vipAgreement"
+				})
+			},
+			selectVipCard(type){
+				this.vipSelected = type
+			},
+			agreementRadio(){
+				this.agreementChecked = true
 			}
 		
 		},
 		mounted(options) {
 			let userData = uni.getStorageSync('user_data')
 			userData = JSON.parse(userData)
-			console.log(userData)
 			if(userData['Phone'] !== ''){
 				this.phone = userData['Phone']
 			}
+			// this.redirect = options.redirect
 		}
 	}
 </script>
@@ -248,6 +264,9 @@
 			letter-spacing:5upx;
 			text-align: center;
 		}
+	}
+	.selected{
+		background:rgba(254,81,0,0.5) !important;
 	}
 }
 </style>

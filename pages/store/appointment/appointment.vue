@@ -58,14 +58,18 @@
 			async goCoupon(){
 				let result = await appointment({'Appointment':this.orderTime,'StoreID':this.storeID,'Type':this.type,'StoreItemID':this.storeItemID,'Phone':this.phone})
 				if(result.Code === 200){
-					console.log(result.Data)
+					uni.removeStorageSync('store_id')
+					uni.removeStorageSync('store_item_id')
+					uni.removeStorageSync('store_type')
 					wx.showToast({
-						title:"预约成功"
+						title:"预约成功",
+						success() {
+							uni.navigateTo({
+								url: '../coupon/coupon?id='.result.Data.ID
+							})
+						}
 					})
 				}
-				// uni.navigateTo({
-				// 	url: '../coupon/coupon'
-				// })
 			}
 		},
 		

@@ -7,6 +7,7 @@ export default {
   mina: 'https://api.quchebang.cn/mina',
   store: 'https://api.quchebang.cn/store',
   order: 'https://api.quchebang.cn/order',
+  pay: 'https://api.quchebang.cn/pay'
   
   // base: 'http://api.dev.doudouxiongglobal.com',
   // upload: 'http://api.dev.doudouxiongglobal.com/upload',

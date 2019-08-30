@@ -2,11 +2,11 @@
 	<view class="coupon-box">
 		<view class="coupon-top">
 			<view class="coupon-title">
-				服务内容：御驾汇常规保养服务
+				服务内容：{{data.Name}}
 			</view>
 			<view class="coupon-time">
-				<view class="coupon-time-left">预约时间丨</view>
-				<view class="coupon-time-right">{{orderTime}}</view>
+				<view class="coupon-time-left">预约时间丨{{data.AppointmentTime}}</view>
+				<view class="coupon-time-right"></view>
 			</view>
 		</view>
 		<view class="coupon-ewm">
@@ -14,10 +14,10 @@
 				商家扫码核销即可体验
 			</view>
 			<view class="coupon-ewm-img">
-				<image class="coupon-ewm-image" :src="ewm" mode="aspectFill"></image>
+				<image class="coupon-ewm-image" :src="data.QrCode" mode="aspectFill"></image>
 			</view>
 			<view class="coupon-ewm-cont">
-				券码：{{coupon}}
+				券码：{{data.SerialNumber}}
 			</view>
 		</view>
 		<view class="coupon-store">
@@ -26,15 +26,15 @@
 					门店信息
 				</view>
 				<view class="coupon-store-detail">
-					<image class="coupon-store-detail-img" :src="cover" mode="aspectFill"></image>
+					<image class="coupon-store-detail-img" :src="data.SImage" mode="aspectFill"></image>
 					<view class="coupon-store-detail-cont">
 						<view class="coupon-store-detail-cont-top">
-							斗斗熊汽车美容保养·改装喷漆
+							{{data.SName}}
 						</view>
 						<view class="coupon-store-detail-cont-bot">
 							<uni-rate value="5" size="12"></uni-rate>
 							<view class="coupon-store-detail-cont-bot-area">
-								{{area}}
+								{{data.SAddress}}
 							</view>
 						</view>
 					</view>
@@ -49,19 +49,21 @@
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
+	import {getAppointmentDetail} from "@/api/index.js"
 	export default {
 		components: {uniRate},
 		data() {
 			return {
-				phone:"15745687459",
+				phone:"",
 				orderTime:"",
 				ewm:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_03.png",
 				coupon:"2019 0522 0601",
 				area:"钱江世纪城 维修",
 				cover:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_03.png",
+				data:[],
 			};
 		},
-		onLoad() {
+		async onLoad(options) {
 			const that = this;
 			uni.getStorage({
 			    key: 'orderTime',
@@ -72,7 +74,13 @@
 			        console.log(that.orderTime);
 			    }
 			});
-			        console.log(that.orderTime);
+			let id = options.id
+			let data = await getAppointmentDetail(id,{})
+			if(data.Code === 200){
+				console.log(data.Data)
+				that.data = data.Data
+				that.phone = data.Data.Phone
+			}
 		},
 		methods:{
 			goStore(){
@@ -190,6 +198,9 @@
 							font-size:25upx;
 							color:#A4A4A4;
 							margin-left:20upx;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
 						}
 					}
 				}
