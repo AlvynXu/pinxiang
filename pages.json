@@ -88,6 +88,12 @@
 				"text": "首页"
 			},
 			{
+				"pagePath": "pages/order/order",
+				"iconPath": "static/img/footerBar/order.png",
+				"selectedIconPath": "static/img/footerBar/order-selected.png",
+				"text": "预约"
+			},
+			{
 				"pagePath": "pages/user/user",
 				"iconPath": "static/img/footerBar/mine.png",
 				"selectedIconPath": "static/img/footerBar/mineSelect.png",
