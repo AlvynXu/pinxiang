@@ -57,6 +57,7 @@
 		methods:{
 			async goCoupon(){
 				let result = await appointment({'Appointment':this.orderTime,'StoreID':this.storeID,'Type':this.type,'StoreItemID':this.storeItemID,'Phone':this.phone})
+				console.log(result.Data.ID)
 				if(result.Code === 200){
 					uni.removeStorageSync('store_id')
 					uni.removeStorageSync('store_item_id')
@@ -64,10 +65,10 @@
 					wx.showToast({
 						title:"预约成功",
 						success() {
-							uni.navigateTo({
-								url: '../coupon/coupon?id='.result.Data.ID
-							})
 						}
+					})
+					uni.navigateTo({
+						url: '../coupon/coupon?id='+result.Data.ID
 					})
 				}
 			}

@@ -22,12 +22,12 @@
 				</view>
 			</view>
 			<view class="user-join" @click="goActive">
-				<view v-if="vip===0">
+				<view v-show="vip===0">
 					<view class="join-name">加入会员</view>
 					<view class="join-word">尊享全年免费保养特权</view>
 					<view class="join-button">立即领取特权</view>
 				</view>
-				<view v-if="vip===1" style="position: relative;height: 100%;">
+				<view v-show="vip===1" style="position: relative;height: 100%;">
 					<image class="vip-image" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1567057302541&di=9fe523e12b9a091873830050b3c9f438&imgtype=0&src=http%3A%2F%2Fimage8.huangye88.com%2F2015%2F01%2F29%2Fc969d08f22ed60c5.jpg" mode="aspectFill"></image>
 					<view class="vip-endtime">{{vipData.EndDate}} 到期</view>
 					<view class="vip-number">{{vipData.VipNo}}</view>
@@ -148,6 +148,15 @@
 						that.nickname = res.Data.user.Nickname,
 						that.phone = res.Data.user.Phone
 						that.isLogin = 1
+						// let userData = uni.getStorageSync('user_data')
+						// console.log(userData)
+						if(res.Data.user.Vip === 1) that.vip = 1
+						getVip({}).then((res)=>{
+							console.log(res)
+							if(res.Code === 200){
+								that.vipData = res.Data
+							}
+						})
 						if(that.redirect!=''){
 							console.log(that.redirect)
 							getApp().globalData.redirect=''
@@ -155,6 +164,7 @@
 								url:that.redirect
 							})
 						}
+						
 					}
 				})
 				console.log(openID)

@@ -96,8 +96,16 @@
 				});
 			},
 			goActive(){
+				let userData = uni.getStorageSync('user_data')
+				if(userData === null || userData.length === 0){
+					wx.showModal({
+						title:"提示",
+						content:"未登录，请前往登录",
+					})
+					return false;
+				}
 				uni.navigateTo({
-				    url: '../user/active'
+					url: '../user/active'
 				});
 			},
 			goSearch(){
