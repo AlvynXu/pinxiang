@@ -29,9 +29,9 @@
 				</view>
 			</view>
 			<view class="active-join-agree">
-				<view class="agree-box">
+				<view class="agree-box" @click="agreementRadio">
 					<radio class="agree-check" :checked="agreementChecked" color="#FE5100"></radio>
-					<text @click="agreementRadio">开通会员需同意</text>
+					<text>开通会员需同意</text>
 					<text class="agree-color" @click="agreement">《会员协议》</text>
 				</view>
 			</view>
@@ -54,7 +54,8 @@
 				phone : '',
 				redirect:'',
 				vipSelected:0,
-				agreementChecked:false
+				agreementChecked:false,
+				vip:0
 			}
 		},
 		methods: {
@@ -103,11 +104,15 @@
 							if(res.errMsg=='requestPayment:ok'){
 								payVip({OrderNo:detail.Data.order_number,VipType:that.vipSelected}).then(response=>{
 									if(response.Code === 200){
+										let userData = uni.getStorageSync('user_data')
+										userData = JSON.parse(userData)
+										userData.Vip = 1
+										uni.setStorageSync('user_data',JSON.stringify(userData))
 										wx.showToast({
 											title:"购买成功",
 											success() {
 												wx.redirectTo({
-													url:'/pages/user/credit'
+													url:'/pages/user/vip/vip'
 												})
 											}
 										})
@@ -138,6 +143,7 @@
 			},
 			agreementRadio(){
 				this.agreementChecked = true
+				console.log(this.agreementChecked)
 			}
 		
 		},

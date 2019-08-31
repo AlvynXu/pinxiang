@@ -21,7 +21,7 @@
 			</view>
 		</view>
 		<view class="coupon-store">
-			<view class="coupon-store-left" @click="goStore">
+			<view class="coupon-store-left" @click="goStore(storeId)">
 				<view class="coupon-store-title">
 					门店信息
 				</view>
@@ -61,6 +61,7 @@
 				area:"钱江世纪城 维修",
 				cover:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_03.png",
 				data:[],
+				storeId:""
 			};
 		},
 		async onLoad(options) {
@@ -77,15 +78,17 @@
 			let id = options.id
 			let data = await getAppointmentDetail(id,{})
 			if(data.Code === 200){
-				console.log(data.Data)
+				// console.log(data.Data)
 				that.data = data.Data
+				that.storeId = data.Data.StoreID
 				that.phone = data.Data.Phone
 			}
 		},
 		methods:{
-			goStore(){
+			goStore(id){
+				console.log(id)
 				uni.navigateTo({
-				    url: '../store'
+				    url: '../store?id='+id
 				});
 			},
 			callPhone(){

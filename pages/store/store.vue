@@ -182,8 +182,8 @@
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
-				latitude:25.22,
-				longitude:42.25,
+				latitude:'',
+				longitude:'',
 				id:0,
 				userData:[],
 				showPicker: false,
@@ -400,6 +400,8 @@
 				this.detailsList = store.ServicesZH
 				this.phone = store.Phone
 				this.rate = store.Rate
+				this.latitude = parseFloat(store.Lat)
+				this.longitude =parseFloat(store.Lng)
 				let storeItem = await getStoreItem(store.ID)
 				if(storeItem.Code === 200){
 					console.log(storeItem.Data)
