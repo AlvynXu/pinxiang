@@ -1,7 +1,7 @@
 <template>
 	<view class="active-box">
 		<view class="active-img-box">
-			<image class="active-img" :src="bgc" mode="aspectFill"></image>
+			<img class="active-img" :src="bgc"/>
 		</view>
 		<view class="active-join">
 			<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
@@ -50,7 +50,7 @@
 	export default {
 		data() {
 			return {
-				bgc:"http://pic1.win4000.com/wallpaper/2019-08-09/5d4cdf1311e0c.jpg",
+				bgc:"https://cdn.doudouxiongglobal.com/Default_image/78c34fe76e6c748a1b7f7b6a650a5e8.png",
 				phone : '',
 				redirect:'',
 				vipSelected:0,
@@ -157,11 +157,10 @@
 	width:750upx;
 	.active-img-box{
 		width:750upx;
-		height:1232upx;
-		margin-bottom:283upx;
+		margin-bottom:533upx;
 		.active-img{
 			width:750upx;
-			height:1232upx;
+			height:530.3592vw;
 		}
 	}
 	.active-join{

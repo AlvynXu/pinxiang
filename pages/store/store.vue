@@ -216,7 +216,7 @@
 					},
 					{ 
 						name: '服务须知',
-						image:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg'
+						image:'https://cdn.doudouxiongglobal.com/Default_imge/af49ffbdc907693a1b13c507a85384b.jpg'
 					},
 					{ name: '服务案例' },
 				],

@@ -7,7 +7,7 @@
 			<view class="reply-rate">
 				<view class="reply-rate-name">
 					评分
-					<uni-rate class="star" :value="rate" size="18"></uni-rate>
+					<uni-rate class="star" :value="rate" size="18" @change="rateClick"></uni-rate>
 				</view>
 				<view class="reply-word">超赞</view>
 			</view>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+	import { uploadCarImg, h5UploadKey,addReply} from '@/api/index';
+	import qiniuUploader from '@/utils/qiniuUploader.js';
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
 	export default {
 		components: {uniRate},
@@ -61,8 +63,32 @@
 				isclean:false,
 				iscare:false,
 				type:0,
-				value:""
+				value:"",
+				domain: 'https://cdn.doudouxiongglobal.com',
+				storeID : 0,
+				storeItemID : 0
 			};
+		},
+		async onLoad(options) {
+			this.storeID = options.store;
+			this.storeItemID = options.item;
+			let key="g3Y7NQmKSFb6Oyu91yOERMpLYcw9goCeteodilEQ"
+			let uptoken = await h5UploadKey({key:key,bucket:'doudouxiong'})
+			qiniuUploader.init({
+				region: 'SCN', 
+				// uptokenURL: 'https://[yourserver.com]/api/uptoken', //请求后端uptoken的url地址
+				uptoken: uptoken,  //你请求后端的uptoken,和上面一样的，uptokenURL不填就找uptoken,填一个就可以了（这里是字符串数据不是url了）
+				domain: 'https://cdn.doudouxiongglobal.com/', //yourBucketId:这个去你域名配置那里要
+				shouldUseQiniuFileName: true,
+				key: 'reply/'
+			});
+		},
+		watch:{
+			imgList(value){
+				if(value.length>2){
+					this.chooseImg = false
+				}
+			}
 		},
 		methods: {
 			bindTextAreaBlur: function (e) {
@@ -76,6 +102,9 @@
 					this.chooseImg = true
 				};
 			},
+			rateClick(value){
+				this.rate = value.value
+			},
 			//选择图片上传
 			chooseImage(){
 				let that = this
@@ -83,20 +112,41 @@
 				    count: 3,
 				    sourceType: ['album'],
 				    success: function (res) {
-				        // console.log(JSON.stringify(res.tempFilePaths));
-						let imgList = JSON.stringify(res.tempFilePaths)
-						that.imgList = that.imgList.concat(res.tempFilePaths)
-						console.log(that.imgList);
-						if(that.imgList.length>2){
-							that.chooseImg = false
-						};
+				        console.log(res.tempFilePaths);
+						wx.showLoading({
+							title:"正在上传"
+						})
+						console.log(that.imgList)
+						
 						that.showImg = true
 						that.showWord = false
-				        uni.getImageInfo({
-				            src: res.tempFilePaths[0],
-				            success: function (image) {
-							},
-				        });
+						for(let i=0;i<res.tempFilePaths.length;i++){
+							qiniuUploader.upload(
+								res.tempFilePaths[i], 
+								(res) => {that.imageObject=res}, 
+								(error) => {console.log(error);wx.showToast({title:'上传失败'})},null,
+								(progress) => {
+									// console.log('上传进度', progress.progress)
+									// console.log('已经上传的数据长度', progress.totalBytesSent)
+									// console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend)
+								}, null,null,
+								(compolete) => {
+										wx.hideLoading()
+									
+									if(compolete.statusCode === 200){
+										let data = JSON.parse(compolete.data)
+										let driverLicense = that.domain+'/'+data.key;
+										that.imgList.push(driverLicense);
+									}else{
+										wx.hideLoading()
+										wx.showToast({
+											title:'上传失败'
+										})
+									}
+								}
+							);
+						}
+						
 				    }
 				});
 			},
@@ -110,11 +160,20 @@
 				this.iscare = true;
 				this.type = 1
 			},
-			submit(){
-				console.log(this.value)
-				console.log(this.imgList)
-				console.log(this.type)
-				console.log(this.rate)
+			async submit(){
+				let result = await addReply({StoreID:this.storeID,ItemID:this.storeItemID,Reply:this.value,Image:this.imgList,Rate:this.rate})
+				if(result.Code === 200){
+					wx.showToast({
+						title:"评价成功",
+						icon:"none",
+						success() {
+							wx.navigateBack({
+								
+							})
+						}
+					})
+					
+				}
 			}
 		}
 	}

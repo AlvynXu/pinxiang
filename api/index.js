@@ -505,3 +505,11 @@ export function payVip(params={}) {
 		data: params
 	})
 }
+
+export function addReply(params={}) {
+	return fetch({
+		url: `${api.store}/reply`,
+		method: 'post',
+		data: params
+	})
+}
