@@ -2,12 +2,12 @@
 	<view class="reply-box">
 		<view class="reply-top">
 			<view class="reply-title">门店名称
-				<view class="reply-fabu">发布</view>
+				<view class="reply-fabu" @click="submit">发布</view>
 			</view>
 			<view class="reply-rate">
 				<view class="reply-rate-name">
 					评分
-					<uni-rate class="star" value="5" size="18"></uni-rate>
+					<uni-rate class="star" :value="rate" size="18"></uni-rate>
 				</view>
 				<view class="reply-word">超赞</view>
 			</view>
@@ -16,15 +16,11 @@
 			<view class="uni-textarea">
 				<textarea @blur="bindTextAreaBlur" auto-height />
 				<view class="uni-textarea">
-					<textarea placeholder-style="color:#D8D8D8" placeholder="亲爱的品象会员车主，门店的服务您还满意吗？您的评价对我们非常重要，将会帮助我们更好的监督门店，同时会帮助到更多会员朋友哦～"/>
+					<textarea placeholder-style="color:#D8D8D8"  @blur="bindTextAreaBlur" placeholder="亲爱的品象会员车主，门店的服务您还满意吗？您的评价对我们非常重要，将会帮助我们更好的监督门店，同时会帮助到更多会员朋友哦～"/>
 				</view>
 			</view>
 		</view>
 		<view class="create-top">
-			<view class="create-top-name">
-				门头照片
-				<view class="create-top-name-tip">*</view>
-			</view>
 			<view class="create-top-img">
 				<view class="show-img" v-if="showImg" v-for="(val,key) in imgList" :key="key">
 					<image mode="aspectFill" :src="val"></image>
@@ -32,13 +28,20 @@
 				</view>
 				<view class="create-top-img-left" @click="chooseImage" v-if="chooseImg">
 					<view class="vant-icon">&#xe6a4;</view>
-					<view class="create-top-img-left-word">上传门头图</view>
+					<view class="create-top-img-left-word">上传图片</view>
 				</view>
 				<view class="create-top-img-right" v-show="showWord">
 					<view class="create-top-img-right-word">
 						带图评价更加生动哦
 					</view>
 				</view>
+			</view>
+		</view>
+		<view class="servince-box">
+			<view class="servince-title">服务项目</view>
+			<view class="servince-list">
+				<view class="servince-left" :class="{clean:isclean}" @click="clean">洗车</view>
+				<view class="servince-right" :class="{clean:iscare}" @click="care">保养</view>
 			</view>
 		</view>
 	</view>
@@ -50,32 +53,41 @@
 		components: {uniRate},
 		data() {
 			return {
+				rate:5,
 				chooseImg:true,
 				showImg:false,
 				showWord:true,
 				imgList:[],
+				isclean:false,
+				iscare:false,
+				type:0,
+				value:""
 			};
 		},
 		methods: {
 			bindTextAreaBlur: function (e) {
-				console.log(e.detail.value)
+				this.value = e.detail.value
+				console.log(this.value)
 			},
 			//删除图片
 			deleteImage(key){
 				this.imgList.splice(key,1);
+				if(this.imgList.length<3){
+					this.chooseImg = true
+				};
 			},
 			//选择图片上传
 			chooseImage(){
 				let that = this
 				uni.chooseImage({
-				    count: 9,
+				    count: 3,
 				    sourceType: ['album'],
 				    success: function (res) {
 				        // console.log(JSON.stringify(res.tempFilePaths));
 						let imgList = JSON.stringify(res.tempFilePaths)
 						that.imgList = that.imgList.concat(res.tempFilePaths)
 						console.log(that.imgList);
-						if(that.imgList.length>8){
+						if(that.imgList.length>2){
 							that.chooseImg = false
 						};
 						that.showImg = true
@@ -88,6 +100,22 @@
 				    }
 				});
 			},
+			clean(){
+				this.isclean = true;
+				this.iscare = false;
+				this.type = 0
+			},
+			care(){
+				this.isclean = false;
+				this.iscare = true;
+				this.type = 1
+			},
+			submit(){
+				console.log(this.value)
+				console.log(this.imgList)
+				console.log(this.type)
+				console.log(this.rate)
+			}
 		}
 	}
 </script>
@@ -156,19 +184,8 @@
 	}
 	.create-top{
 		width:100%;
-		height:259upx;
+		height:289upx;
 		background: #fff;
-		.create-top-name{
-			width:696upx;
-			margin:0 auto;
-			padding-top:24upx;
-			font-size:27upx;
-			display: flex;
-			justify-content:start;
-			.create-top-name-tip{
-				color:#FE5100;
-			}
-		}
 		.create-top-img{
 			width:696upx;
 			margin:0 auto;
@@ -193,7 +210,7 @@
 				.create-top-img-left-word{
 					text-align: center;
 					font-size:27upx;
-					color:#FE5100;
+					color:#A4A4A4;
 				}
 			}
 			.show-img{
@@ -223,8 +240,8 @@
 			}
 			.create-top-img-right{
 				width:450upx;
-				height:145upx;
-				line-height:145upx;
+				height:217upx;
+				line-height:217upx;
 				.create-top-img-right-word{
 					text-align: center;
 					font-size:25upx;
@@ -233,6 +250,50 @@
 			}
 		}
 	}
-	
+	.servince-box{
+		width:750upx;
+		margin-top:18upx;
+		height:199upx;
+		background: #fff;
+		.servince-title{
+			font-size:33upx;
+			width:667upx;
+			margin:0 auto;
+			padding-top: 16upx;
+		}
+		.servince-list{
+			font-size:33upx;
+			width:407upx;
+			margin:45upx auto 0 auto;
+			display: flex;
+			justify-content:space-between;
+			.servince-left{
+				width:145upx;
+				height:58upx;
+				line-height: 58upx;
+				background:rgba(164,164,164,0.2);
+				border-radius:29upx;
+				text-align: center;
+				font-size:29upx;
+				color:#A4A4A4;
+			}
+			.servince-right{
+				width:145upx;
+				height:58upx;
+				line-height: 58upx;
+				background:rgba(164,164,164,0.2);
+				border-radius:29upx;
+				text-align: center;
+				font-size:29upx;
+				color:#A4A4A4;
+			}
+			.clean{
+				background:rgba(254,81,0,0.2);
+			}
+			.care{
+				background:rgba(254,81,0,0.2);
+			}
+		}
+	}
 }
 </style>

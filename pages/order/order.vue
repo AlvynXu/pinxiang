@@ -29,8 +29,8 @@
 				<!-- 根据状态不同显示 -->
 				<text class="action-text" v-if="item.Status === 5">消费时间：{{item.UpdatedDate}}</text>
 				<button class="action-btn recom" v-if="item.Status === 5">已取消</button>
-				<button class="action-btn recom" v-if="item.Status === 2">写评价</button>
-				<button class="action-btn recom" v-if="item.Status === 3">已逾期</button>
+				<button class="action-btn recom" @click="goReply" v-if="item.Status === 3">写评价</button>
+				<button class="action-btn recom" v-if="item.Status === 4">已逾期</button>
 				<button class="action-btn" @click="openPopup(index,item.ID)" v-if="item.Status === 1">取消</button>
 				<button class="action-btn recom" v-if="item.Status === 1" @click="goStore">已预约</button>
 			</view>
@@ -137,6 +137,12 @@
 			goStoreDetail(id){
 				uni.navigateTo({
 				    url: `../store/store?id=${id}`,
+					
+				});
+			},
+			goReply(){
+				uni.navigateTo({
+				    url: `../reply/reply`,
 					
 				});
 			},
