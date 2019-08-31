@@ -46,8 +46,10 @@
 					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
 				</view>
 				<view class="store-tips">
-					<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
-						<view class="tip">{{v}}</view>
+					<view class="store-tip-list">
+						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
+							<view class="tip">{{v}}</view>
+						</view>
 					</view>
 					<view class="store-buy" v-if="vip===0">会员免费</view>
 					<view class="store-buy" v-if="vip===1">立即预约</view>
@@ -274,20 +276,26 @@
 				display: flex;
 				justify-content:flex-start;
 				padding-bottom:20upx;
-				.tips{
-					// margin-top: 10upx;	
-					// display: flex;
-					// justify-content:flex-start;
-					.tip{
-						width:141upx;
-						height:40upx;
-						margin-right: 5upx;
-						line-height: 40upx;
-						text-align: center;
-						color:#FE8C00;
-						font-size: 25upx;
-						border-radius:18px;
-						border:2upx solid rgba(254,140,0,1);
+				.store-tip-list{
+					width:470upx;
+					display: flex;
+					justify-content:flex-start;
+					margin-top:10upx;
+					.tips{
+						// margin-top: 10upx;	
+						// display: flex;
+						// justify-content:flex-start;
+						.tip{
+							width:141upx;
+							height:40upx;
+							margin-right: 5upx;
+							line-height: 40upx;
+							text-align: center;
+							color:#FE8C00;
+							font-size: 25upx;
+							border-radius:18px;
+							border:2upx solid rgba(254,140,0,1);
+						}
 					}
 				}
 				.store-buy{
@@ -300,7 +308,7 @@
 					font-weight:500;
 					color:#fff;
 					text-align: center;
-					margin-left:63upx;
+					margin-left:43upx;
 				}
 			}
 		}
