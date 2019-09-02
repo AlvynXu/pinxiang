@@ -305,8 +305,8 @@
 				timeValue: [8, 30, 0], //时间选择器的值
 				timeType: 'begin', //当前时间选择的类型
 				beginTime: [0, 0, 0], //当前所选的开始时间值
-				endTime: [0, 0, 0], //当前所选的结束时间值,
-				hours:[0,1,2,3,4,5,6,7,8,9,10,11],
+				endTime: [0, 0, 0], //当前所选的结束时间值
+				hours:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
 				minutes:[0,30]
 			};
 		},
@@ -479,7 +479,7 @@
 				let storeID = this.storeID
 				let hideDate = await getAppointmentTime({'StoreID':storeID,'Date':(new Date(date.dateObj).getFullYear())+'-'+ (new Date(date.dateObj).getMonth()+1)+'-'+(new Date(date.dateObj).getDate())})
 				if(hideDate.Code === 200){
-					let tmpHours = [0,1,2,3,4,5,6,7,8,9,10,11]
+					let tmpHours = this.hours
 					for(let i=0;i<hideDate.Data.length;i++){
 						// tmpHours.splice(tmpHours.indexOf(parseInt(hideDate.Data[i]['Hour'])),1)
 					}

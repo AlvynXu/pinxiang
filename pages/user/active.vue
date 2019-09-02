@@ -9,7 +9,7 @@
 					品象365天会员-全合成机油版
 				</view>
 				<view class="active-join-price-right">
-					<view>999</view>元
+					<view>880</view>元
 				</view>
 			</view>
 			<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
@@ -61,10 +61,19 @@
 		methods: {
 			getPhoneNumber(e){
 				let that = this
+				let userData = uni.getStorageSync('user_data')
+				if(userData === null || userData.length === 0){
+					wx.showModal({
+						title:"提示",
+						content:"未登录，请前往登录",
+					})
+					return false;
+				}
 				if(e.detail.errMsg === 'getPhoneNumber:ok'){
 					let wxOpenID = uni.getStorageSync('wxOpenID')
 					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
 						if(res.Code === 200){
+							that.phone = res.Data.Phone
 							changePhone({Phone:res.Data.Phone}).then(response =>{
 								if(response.Code === 200){
 									let userData = uni.getStorageSync('user_data')
@@ -147,8 +156,11 @@
 			}
 		
 		},
-		mounted(options) {
+		onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
+			if(userData === null || userData.length === 0){
+				return false;
+			}
 			userData = JSON.parse(userData)
 			if(userData['Phone'] !== ''){
 				this.phone = userData['Phone']

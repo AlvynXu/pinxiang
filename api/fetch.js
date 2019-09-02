@@ -18,6 +18,9 @@ uniRequest.interceptors.response.use(
 					confirmText:'前往',
 					success (res) {
 					    if (res.confirm) {
+							uni.switchTab({
+								url:"/pages/user/user"
+							})
 					      // window.location.href = '/login'
 					    } else if (res.cancel) {
 					      console.log('用户点击取消')

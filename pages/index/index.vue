@@ -3,7 +3,7 @@
 		<view class="store-swiper">
 			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image class="swiper-img" :src="val.src" mode="aspectFit"></image>
+					<image class="swiper-img" :src="val.src" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
 			<view class="store-search" @click="goSearch">
