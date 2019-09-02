@@ -176,9 +176,11 @@ export default {
       &.center {
         & .uni-popup__wrapper-box {
           position: relative;
-          max-width: 80%;
+          width:514upx;
           max-height: 80%;
           overflow-y: scroll;
+		  padding:0;
+		  border-radius::11upx;
         }
       }
 

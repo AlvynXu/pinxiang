@@ -33,7 +33,7 @@
 		<view class="gray"></view>
 		<view class="store-servince">
 			<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
-			<view v-if="TabCur===0">
+			<view class="ddx-servince-box" v-if="TabCur===0">
 				<view class="servince-list" ref="storeIndex" v-for="(val,key) in storeItem" :key="key">
 					<view class="servince-left" @click="openPopup(val.ID,val.Type)">
 						<view class="servince-img">
@@ -49,8 +49,26 @@
 							<view class="price-order">立即预约</view>
 						</view>
 					</view>
-					
 				</view>
+				<view class="servince-reply">
+					<view class="ddx-reply-title">消费评论</view>
+					<view class="ddx-reply-list" v-for="(val,key) in replyList" :key="key" v-show="key<num">
+						<view class="ddx-reply-left">
+							<image class="reply-avatar" :src="val.Avatar" mode="aspectFill"></image>
+						</view>
+						<view class="ddx-reply-right">
+							<view class="ddx-reply-name">{{val.Nickname}}</view>
+							<view class="ddx-reply-date">{{val.Date}}</view>
+							<view class="ddx-reply-reply">{{val.Reply}}</view>
+							<view class="ddx-reply-img" v-show="imgShow">
+								<view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
+									<image class="reply-image" :src="v" mode="aspectFill"></image>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="servince-list-button" @click="buyNow">立即预约</view>
 			</view>
 			<view class="ddx-information-box" v-if="TabCur===1">
 			    <view class="ddx-information-comment">
@@ -104,34 +122,27 @@
 						{{introduction}}
 					</view>
 				</view>
+				<view class="servince-list-button" @click="buyNow1">立即预约</view>
 			</view>
 			<view class="servince-notice" v-if="TabCur===2">
 				<view class="cover">
 					<image :src="tabList[TabCur].image"></image>
 				</view>
+				<view class="servince-list-button" @click="buyNow2">立即预约</view>
 			</view>
-			<view class="servince-reply" v-if="TabCur===3">
-				<view class="ddx-reply-list" v-for="(val,key) in replyList" :key="key" v-show="key<num">
-				      <view class="ddx-reply-left">
-						  <image class="reply-avatar" :src="val.Avatar" mode="aspectFill"></image>
-				      </view>
-				      <view class="ddx-reply-right">
-				        <view class="ddx-reply-name">{{val.Nickname}}</view>
-				        <view class="ddx-reply-date">{{val.Date}}</view>
-				        <view class="ddx-reply-reply">{{val.Reply}}</view>
-				        <view class="ddx-reply-img" v-show="imgShow">
-				          <view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
-							<image class="reply-image" :src="v" mode="aspectFill"></image>
-				          </view>
-				        </view>
-				      </view>
-				    </view>
 				    <!-- <view class="ddx-shop-more"  @click="showMore">
 				      <view>{{txt}}</view>
 					  <view class="vant-icon">&#xe60c;</view>
 				    </view> -->
-			</view>
 		</view>
+		<uni-popup class="uni-popup2" ref="popup2" type="center" style="z-index:1000;">
+			<view class="buy-title">请选择你要预约的项目</view>
+			<view class="servince-list">
+				<view class="servince-left" :class="{clean:isclean}" @click="clean()">洗车</view>
+				<view class="servince-right" :class="{clean:iscare}" @click="care()">保养</view>
+			</view>
+			<view class="buy-button" @click="onShowProduct(productID,productType)">立即预约</view>
+		</uni-popup>
 		<uni-popup class="uni-popup" ref="popup" type="bottom" style="z-index:1000;">
 			<view class="popup-detail">
 				<view class="servince-top">
@@ -185,6 +196,10 @@
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
+				productID:0,
+				productType:0,
+				isclean:false,
+				iscare:false,
 				latitude:'',
 				longitude:'',
 				id:0,
@@ -221,7 +236,6 @@
 						name: '服务须知',
 						image:'https://cdn.doudouxiongglobal.com/pinxiang/image/book/book.png'
 					},
-					{ name: '服务案例' },
 				],
 				storeItem:[],
 				itemDetail:[],
@@ -252,6 +266,42 @@
 		    }
 		},
 		methods:{
+			clean(){
+				this.isclean = true;
+				this.iscare = false;
+				this.productType = 0;
+				this.productID = 1
+			},
+			care(){
+				this.isclean = false;
+				this.iscare = true;
+				this.productType = 1;
+				this.productID = 2;
+			},
+			async onShowProduct(id,type){
+				console.log(type)
+				console.log(id)
+				let itemDetail = await getStoreItemDetail(id)
+				this.itemType = type
+				if(itemDetail.Code === 200){
+					this.itemDetail = itemDetail.Data
+					this.$refs.popup.open();
+					// const storeCur = id
+					// this.storeCur = storeCur;
+					uni.setStorageSync('store_id',parseInt(this.id))
+					uni.setStorageSync('store_item_id',id)
+					uni.setStorageSync('store_type',type)
+				}
+			},
+			buyNow(){
+				this.$refs.popup2.open();
+			},
+			buyNow1(){
+				this.TabCur = 0;
+			},
+			buyNow2(){
+				this.TabCur = 0;
+			},
 			tel(){
 				let phone = this.phone
 				if(phone === ''){
@@ -276,17 +326,9 @@
 			},
 			async tabChange(index) {
 				this.TabCur = index;
-				if(index === 3){
-					let replayData = await getStoreReply(this.id)
-					if(replayData.Code === 200){
-						console.log(replayData.Data)
-						this.replyList = replayData.Data
-						console.log(this.replyList.Image)
-						if(this.replyList.Image.length==0){
-							this.imgShow = false
-						}
-					}
-				}
+				// if(index === 3){
+				// 	
+				// }
 			},
 			
 			showMore(){
@@ -376,6 +418,15 @@
 			let id = options.id
 			this.id = id
 			let that = this
+			let replayData = await getStoreReply(that.id)
+			if(replayData.Code === 200){
+				console.log(replayData.Data)
+				that.replyList = replayData.Data
+				console.log(that.replyList)
+				if(JSON.stringify(that.replyList.Image)==='[]'){
+					that.imgShow = false
+				}
+			}
 			setTimeout(()=>{
 				let date = new Date();
 				let minute = date.getMinutes()
@@ -430,7 +481,7 @@
 	// margin-left: 23upx;
 }
 .wuc-tab /deep/ .wuc-tab-item{
-	width:130upx;
+	width:180upx;
 	font-size:25upx;
     height: 80upx;
     line-height: 80upx;
@@ -564,58 +615,70 @@
 	}
 	.store-servince{
 		width:750upx;
-		.servince-list{
-			width:667upx;
-			margin-left:33upx;
-			margin-top:40upx;
-			display: flex;
-			justify-content:flex-start;
-			.servince-left{
+		.ddx-servince-box{
+			.servince-list{
+				width:667upx;
+				margin-left:33upx;
+				margin-top:40upx;
 				display: flex;
 				justify-content:flex-start;
-				.servince-img{
-					width:132upx;
-					height:123upx;
-					image{
+				.servince-left{
+					display: flex;
+					justify-content:flex-start;
+					.servince-img{
 						width:132upx;
 						height:123upx;
+						image{
+							width:132upx;
+							height:123upx;
+						}
 					}
-				}
-				.servince-left-one{
-					margin-left:10upx;
-					.servince-name{
-						font-size:29upx;
-					}
-					.servince-price{
-						width:400upx;
-						height:50upx;
-						line-height: 50upx;
-						margin-top: 15upx;
-						display: flex;
-						justify-content:space-between;
-						.price-name{
-							color:#FE5101;
-							font-size:40upx;
+					.servince-left-one{
+						margin-left:10upx;
+						.servince-name{
+							font-size:29upx;
+						}
+						.servince-price{
+							width:400upx;
+							height:50upx;
+							line-height: 50upx;
+							margin-top: 15upx;
+							display: flex;
+							justify-content:space-between;
+							.price-name{
+								color:#FE5101;
+								font-size:40upx;
+							}
 						}
 					}
 				}
-			}
-			.servince-right{
-				margin-left: 20upx;
-				.price-order{
-					width:112upx;
-					height:36upx;
-					line-height:36upx;
-					color:#fff;
-					font-size:22upx;
-					background: #FE5100;
-					text-align: center;
-					border-radius:4upx;
-					margin-top: 50upx;
+				.servince-right{
+					margin-left: 20upx;
+					.price-order{
+						width:112upx;
+						height:36upx;
+						line-height:36upx;
+						color:#fff;
+						font-size:22upx;
+						background: #FE5100;
+						text-align: center;
+						border-radius:4upx;
+						margin-top: 50upx;
+					}
 				}
 			}
+			.servince-list-button{
+				width:750upx;
+				height:98upx;
+				line-height:98upx;
+				text-align: center;
+				background:#FE5100;
+				color:#fff;
+				position: fixed;
+				bottom:0upx;
+				left:0upx;
+			}
 		}
-		
 		.ddx-information-box{
 			width:667upx;
 			margin-left: 33upx;
@@ -762,7 +825,19 @@
 				}
 					
 			}
+			.servince-list-button{
+				width:750upx;
+				height:98upx;
+				line-height:98upx;
+				text-align: center;
+				background:#FE5100;
+				color:#fff;
+				position: fixed;
+				bottom:0upx;
+				left:0upx;
+			}
 		}
+		
 	}
 	.servince-notice{
 		width: 750upx;
@@ -778,12 +853,34 @@
 			}
 			
 		}
+		.servince-list-button{
+			width:750upx;
+			height:98upx;
+			line-height:98upx;
+			text-align: center;
+			background:#FE5100;
+			color:#fff;
+			position: fixed;
+			bottom:0upx;
+			left:0upx;
+		}
 	}
 	.servince-reply{
+		.ddx-reply-title{
+			width:667upx;
+			border-bottom: 2upx solid #f3f3f3;
+			font-size:29upx;
+			color:rgba(51,51,51,1);
+			line-height:72upx;
+			margin-left:33upx;
+			margin-top: 20upx;
+			height:72upx;
+		}
 		.ddx-reply-list{
 		  display: flex;
 		  justify-content: start;
 		  margin-bottom:20upx;
+		  margin-top:20upx;
 		  .ddx-reply-left{
 			margin-left:20upx;
 			.reply-avatar{
@@ -965,6 +1062,66 @@
 					}
 				}
 			}
+		}
+	}
+	.uni-popup2{
+		width:514upx!important;
+		height:397upx;
+		border-radius:11upx;
+		.buy-title{
+			width:514upx;
+			height:82upx;
+			line-height: 82upx;
+			text-align:center;
+			color:#fff;
+			font-size:27upx;
+			background:rgba(254,81,0,1);
+			border-radius:11upx 11upx 0upx 0upx;
+		}
+		
+		.servince-list{
+			font-size:33upx;
+			width:407upx;
+			margin:76upx auto 0 auto;
+			display: flex;
+			justify-content:space-between;
+			.servince-left{
+				width:145upx;
+				height:58upx;
+				line-height: 58upx;
+				background:rgba(164,164,164,0.2);
+				border-radius:29upx;
+				text-align: center;
+				font-size:29upx;
+				color:#A4A4A4;
+			}
+			.servince-right{
+				width:145upx;
+				height:58upx;
+				line-height: 58upx;
+				background:rgba(164,164,164,0.2);
+				border-radius:29upx;
+				text-align: center;
+				font-size:29upx;
+				color:#A4A4A4;
+			}
+			.clean{
+				background:rgba(254,81,0,0.2);
+			}
+			.care{
+				background:rgba(254,81,0,0.2);
+			}
+		}
+		.buy-button{
+			width:375upx;
+			height:67upx;
+			line-height: 67upx;
+			color:#fff;
+			text-align:center;
+			background:rgba(254,81,0,1);
+			border-radius:11px;
+			font-size:29upx;
+			margin:76upx auto 40upx auto;
 		}
 	}
 	.date-box{
