@@ -20,7 +20,7 @@
 					<view class="phone" v-if="phone">{{phone}}</view>
 				</view>
 			</view>
-			<view class="vip-tips">
+			<view class="vip-tips" @click="goActive">
 				{{endDate}}到期  品质养车，就在品象会员养车 VIP续费>
 			</view>
 		</view>
@@ -119,6 +119,15 @@
 					},
 				]
 			}
+		},
+		methods:{
+			goActive(){
+				let userData = uni.getStorageSync('user_data')
+				
+				uni.navigateTo({
+				    url: '../active'
+				});
+			},
 		}
 	}
 </script>

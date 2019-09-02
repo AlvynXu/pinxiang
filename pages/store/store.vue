@@ -162,6 +162,9 @@
 							</view>
 						</view>
 					</view>
+					<view class="oil-img" v-if="itemDetail.Type===1">
+						<image src="https://cdn.doudouxiongglobal.com/pinxiang/image/shop/tips.png"></image>
+					</view>
 				</view>
 			</view>
 			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
@@ -424,7 +427,7 @@
 }
 .wuc-tab{
 	width:667upx;
-	margin-left: 23upx;
+	// margin-left: 23upx;
 }
 .wuc-tab /deep/ .wuc-tab-item{
 	width:130upx;
@@ -432,7 +435,7 @@
     height: 80upx;
     line-height: 80upx;
     padding: 0 0upx;
-    margin: 0 25upx 0 25upx;
+    margin: 0 28upx 0 28upx;
 	color:#A4A4A4;
 	text-align: center;
 }
@@ -560,7 +563,7 @@
 		}
 	}
 	.store-servince{
-		width:723upx;
+		width:750upx;
 		.servince-list{
 			width:667upx;
 			margin-left:33upx;
@@ -762,12 +765,12 @@
 		}
 	}
 	.servince-notice{
-		width: 667upx;
+		width: 750upx;
 		margin-bottom:6upx;
 		margin:22upx auto;
 		.cover {
-			width:667upx;
-			height:1240.86742upx;
+			width:750upx;
+			height:1395.2781upx;
 			margin:0 auto;
 			image{
 				width:100%;
@@ -907,6 +910,15 @@
 							border-radius:11upx;
 						}
 					}
+				}
+			}
+			.oil-img{
+				width:667upx;
+				height:1090.54114upx;
+				margin-top:30upx;
+				image{
+					width:667upx;
+					height:1090.54114upx;
 				}
 			}
 		}

@@ -142,6 +142,7 @@
 				}
 				
 			},
+			// 跳转到会员协议
 			agreement(){
 				uni.navigateTo({
 					url:"/pages/user/vipAgreement"
@@ -150,9 +151,9 @@
 			selectVipCard(type){
 				this.vipSelected = type
 			},
+			// 点击同意条款
 			agreementRadio(){
 				this.agreementChecked = true
-				console.log(this.agreementChecked)
 			}
 		
 		},
