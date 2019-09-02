@@ -76,7 +76,7 @@
 		data() {
 			return {
 				isLogin:0,
-				avatar:"https://cdn.doudouxiongglobal.com/pinxiang/image/vip/VIP_cover.png",
+				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
 				phone:'',
 				vipList:[

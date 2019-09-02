@@ -161,7 +161,7 @@
 				this.type = 1
 			},
 			async submit(){
-				let result = await addReply({StoreID:this.storeID,ItemID:this.storeItemID,Reply:this.value,Image:this.imgList,Rate:this.rate})
+				let result = await addReply({StoreID:this.storeID,ItemID:this.storeItemID,Reply:this.value,Image:JSON.stringify(this.imgList),Rate:this.rate})
 				if(result.Code === 200){
 					wx.showToast({
 						title:"评价成功",
