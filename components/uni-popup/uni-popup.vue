@@ -190,6 +190,7 @@ export default {
           width: 100%;
           height: 83vh;
           overflow-y: scroll;
+		  padding:0;
 		  border-radius:11upx 11upx 0px 0px;
         }
       }

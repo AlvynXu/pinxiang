@@ -189,7 +189,7 @@
 			line-height:50upx;
 			text-align: center;
 			background:linear-gradient(90deg,rgba(254,81,0,1) 0%,rgba(254,140,0,1) 100%);
-			border-radius:14upx 14upx 0upx 14upx;
+			border-radius:14upx 14upx 0upx 0upx;
 			color:#fff;
 			font-size:24upx;
 		}

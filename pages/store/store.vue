@@ -141,7 +141,7 @@
 				<view class="servince-left" :class="{clean:isclean}" @click="clean()">洗车</view>
 				<view class="servince-right" :class="{clean:iscare}" @click="care()">保养</view>
 			</view>
-			<view class="buy-button" @click="onShowProduct(productID,productType)">立即预约</view>
+			<view class="buy-button" @click="onShowProduct(productID,productType,'datetime')">立即预约</view>
 		</uni-popup>
 		<uni-popup class="uni-popup" ref="popup" type="bottom" style="z-index:1000;">
 			<view class="popup-detail">
@@ -278,7 +278,7 @@
 				this.productType = 1;
 				this.productID =  this.storeItem[0].ID;
 			},
-			async onShowProduct(id,type){
+			async onShowProduct(id,type,time){
 				console.log(type)
 				console.log(id)
 				let itemDetail = await getStoreItemDetail(id)
@@ -286,12 +286,21 @@
 				if(itemDetail.Code === 200){
 					this.itemDetail = itemDetail.Data
 					this.$refs.popup.open();
+					this.$refs.popup2.close();
 					// const storeCur = id
 					// this.storeCur = storeCur;
 					uni.setStorageSync('store_id',parseInt(this.id))
 					uni.setStorageSync('store_item_id',id)
 					uni.setStorageSync('store_type',type)
 				}
+				let that=this
+				setTimeout(function()  {
+					that.type = time;
+					that.showPicker = true;
+					that.value = that[time];
+				}, 200);
+
+				
 			},
 			buyNow(){
 				this.$refs.popup2.open();
@@ -678,6 +687,90 @@
 				bottom:0upx;
 				left:0upx;
 			}
+			.servince-reply{
+				.ddx-reply-title{
+					width:667upx;
+					border-bottom: 2upx solid #f3f3f3;
+					font-size:29upx;
+					color:rgba(51,51,51,1);
+					line-height:72upx;
+					margin-left:33upx;
+					margin-top: 20upx;
+					height:72upx;
+				}
+				.ddx-reply-list{
+				  display: flex;
+				  justify-content: start;
+				  margin-bottom:20upx;
+				  margin-top:20upx;
+				  .ddx-reply-left{
+					margin-left:20upx;
+					.reply-avatar{
+					  width:51upx;
+					  height:51upx;
+					  margin-left:10upx;
+					  border-radius:51upx;
+					  overflow: hidden;
+					}
+				  }
+				  .ddx-reply-right{
+					margin-left:8upx;
+					width:610upx;
+					.ddx-reply-name{
+					  font-size:18upx;
+					  color: #A4A4A4;
+					}
+					.ddx-reply-date{
+					  font-size:14upx;
+					  color: #A4A4A4;
+					  margin-top: 6upx;
+					}
+					.ddx-reply-reply{
+					  font-size:18upx;
+					  margin-top: 10upx;
+					}
+					.ddx-reply-img{
+					  width:610upx;
+					  display: flex;
+					  justify-content: flex-start;
+					  .ddx-img-list{
+						width:199upx;
+						height:199upx;
+						margin-top:20upx;
+						margin-right:4upx;
+						.reply-image{
+						  width:199upx;
+						  height:199upx;
+						  img{
+							width:199upx;
+							height:199upx;  
+						  }
+						}
+					  }
+					}
+				  }
+				}
+				.ddx-shop-more{
+				  width:667upx;
+				  height:40upx;
+				  line-height: 40upx;
+				  font-size:25upx;
+				  color:#333333;
+				  margin-left:45upx;
+				  margin-top: 20upx;
+				  padding-bottom: 20upx;
+				  text-align: left;
+				  display: flex;
+				  justify-content: space-between;
+				  div{
+					width:200upx;
+				  }
+				  .van-icon{
+					margin-top:4px;
+				  }
+				}
+			}
+			
 		}
 		.ddx-information-box{
 			width:667upx;
@@ -865,89 +958,6 @@
 			left:0upx;
 		}
 	}
-	.servince-reply{
-		.ddx-reply-title{
-			width:667upx;
-			border-bottom: 2upx solid #f3f3f3;
-			font-size:29upx;
-			color:rgba(51,51,51,1);
-			line-height:72upx;
-			margin-left:33upx;
-			margin-top: 20upx;
-			height:72upx;
-		}
-		.ddx-reply-list{
-		  display: flex;
-		  justify-content: start;
-		  margin-bottom:20upx;
-		  margin-top:20upx;
-		  .ddx-reply-left{
-			margin-left:20upx;
-			.reply-avatar{
-			  width:51upx;
-			  height:51upx;
-			  margin-left:10upx;
-			  border-radius:51upx;
-			  overflow: hidden;
-			}
-		  }
-		  .ddx-reply-right{
-			margin-left:8upx;
-			width:610upx;
-			.ddx-reply-name{
-			  font-size:18upx;
-			  color: #A4A4A4;
-			}
-			.ddx-reply-date{
-			  font-size:14upx;
-			  color: #A4A4A4;
-			  margin-top: 6upx;
-			}
-			.ddx-reply-reply{
-			  font-size:18upx;
-			  margin-top: 10upx;
-			}
-			.ddx-reply-img{
-			  width:610upx;
-			  display: flex;
-			  justify-content: flex-start;
-			  .ddx-img-list{
-				width:199upx;
-				height:199upx;
-				margin-top:20upx;
-				margin-right:4upx;
-				.reply-image{
-				  width:199upx;
-				  height:199upx;
-				  img{
-					width:199upx;
-					height:199upx;  
-				  }
-				}
-			  }
-			}
-		  }
-		}
-		.ddx-shop-more{
-		  width:667upx;
-		  height:40upx;
-		  line-height: 40upx;
-		  font-size:25upx;
-		  color:#333333;
-		  margin-left:45upx;
-		  margin-top: 20upx;
-		  padding-bottom: 20upx;
-		  text-align: left;
-		  display: flex;
-		  justify-content: space-between;
-		  div{
-			width:200upx;
-		  }
-		  .van-icon{
-			margin-top:4px;
-		  }
-		}
-	}
 	.uni-popup{
 		width:750upx;
 		z-index:1000;
@@ -955,6 +965,7 @@
 			width:667upx;
 			margin:0 auto;
 			.servince-top{
+				margin-top:30upx;
 				width:667upx;
 				height:120upx;
 				background: #fff;
@@ -1020,13 +1031,15 @@
 			}
 		}
 		.popup-button{
-			margin-top: 14upx;
-			width:667upx;
+			width:750upx;
 			height:98upx;
 			line-height:98upx;
 			text-align: center;
 			background:#FE5100;
 			color:#fff;
+			position: fixed;
+			bottom:0;
+			left:0;
 		}
 		
 		.oil-title{
@@ -1107,9 +1120,11 @@
 			}
 			.clean{
 				background:rgba(254,81,0,0.2);
+				color:#FE5100;
 			}
 			.care{
 				background:rgba(254,81,0,0.2);
+				color:#FE5100;
 			}
 		}
 		.buy-button{
