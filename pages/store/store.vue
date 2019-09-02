@@ -717,7 +717,7 @@
 					margin-left:8upx;
 					width:610upx;
 					.ddx-reply-name{
-					  font-size:18upx;
+					  font-size:21upx;
 					  color: #A4A4A4;
 					}
 					.ddx-reply-date{
@@ -726,7 +726,7 @@
 					  margin-top: 6upx;
 					}
 					.ddx-reply-reply{
-					  font-size:18upx;
+					  font-size:22upx;
 					  margin-top: 10upx;
 					}
 					.ddx-reply-img{
@@ -1081,6 +1081,7 @@
 		width:514upx!important;
 		height:397upx;
 		border-radius:11upx;
+		padding-top:0;
 		.buy-title{
 			width:514upx;
 			height:82upx;
