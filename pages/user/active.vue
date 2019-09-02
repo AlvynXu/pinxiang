@@ -1,7 +1,11 @@
 <template>
 	<view class="active-box">
 		<view class="active-img-box">
-			<img class="active-img" :src="bgc"/>
+			<img class="active-img" style="height:700.4623upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-01.png"/>
+			<img class="active-img" style="height:992.7345upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-02.png"/>
+			<img class="active-img" style="height:710.3698upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-03.png"/>
+			<img class="active-img" style="height:1151.2549upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-04.png"/>
+			<img class="active-img" style="height:503.3025upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-05.png"/>
 		</view>
 		<view class="active-join">
 			<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
@@ -9,7 +13,7 @@
 					品象365天会员-全合成机油版
 				</view>
 				<view class="active-join-price-right">
-					<view>880</view>元
+					<view>599</view>元
 				</view>
 			</view>
 			<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
@@ -17,7 +21,7 @@
 					品象365天会员-半合成机油版
 				</view>
 				<view class="active-join-price-right">
-					<view>599</view>元
+					<view>399</view>元
 				</view>
 			</view>
 			<view class="active-join-tip">
@@ -179,7 +183,6 @@
 		margin-bottom:533upx;
 		.active-img{
 			width:750upx;
-			height:530.3592vw;
 		}
 	}
 	.active-join{

@@ -270,13 +270,13 @@
 				this.isclean = true;
 				this.iscare = false;
 				this.productType = 0;
-				this.productID = 1
+				this.productID = this.storeItem[1].ID
 			},
 			care(){
 				this.isclean = false;
 				this.iscare = true;
 				this.productType = 1;
-				this.productID = 2;
+				this.productID =  this.storeItem[0].ID;
 			},
 			async onShowProduct(id,type){
 				console.log(type)

@@ -50,11 +50,18 @@
 				<view class="vant-word">品象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
+			
 			<!-- <view class="prove-center list" @click="goGiftCard">
 				<view class="vant-icon">&#xe6a4;</view>
 				<view class="vant-word">赠卡中心</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view> -->
+			
+			<view  class="prove-credit list" style="position: relative;">
+				<button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;padding-right:0;line-height: 98upx;margin-right:0;"><image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/contact01.png" mode="aspectFit"></image></button>
+				<view class="vant-word"><button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;line-height: 98upx;">联系客服</button></view>
+				<view class="vant-icon"><button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;padding-right:0;line-height: 98upx;margin-right:0;" class="vant-icon">&#xe609;</button></view>
+			</view>
 		</view>
 	</view>
 </template>
