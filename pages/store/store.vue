@@ -107,7 +107,7 @@
 			</view>
 			<view class="servince-notice" v-if="TabCur===2">
 				<view class="cover">
-					<image :src="tabList[TabCur].image" mode="aspectFill"></image>
+					<image :src="tabList[TabCur].image"></image>
 				</view>
 			</view>
 			<view class="servince-reply" v-if="TabCur===3">
@@ -119,7 +119,7 @@
 				        <view class="ddx-reply-name">{{val.Nickname}}</view>
 				        <view class="ddx-reply-date">{{val.Date}}</view>
 				        <view class="ddx-reply-reply">{{val.Reply}}</view>
-				        <view class="ddx-reply-img">
+				        <view class="ddx-reply-img" v-show="imgShow">
 				          <view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
 							<image class="reply-image" :src="v" mode="aspectFill"></image>
 				          </view>
@@ -216,7 +216,7 @@
 					},
 					{ 
 						name: '服务须知',
-						image:'https://cdn.doudouxiongglobal.com/Default_imge/af49ffbdc907693a1b13c507a85384b.jpg'
+						image:'https://cdn.doudouxiongglobal.com/pinxiang/image/book/book.png'
 					},
 					{ name: '服务案例' },
 				],
@@ -235,7 +235,8 @@
 				isShow: true,
 				txt: '查看更多精彩评论',
 				num: 3,
-				itemType:0
+				itemType:0,
+				imgShow:true
 			};
 		},
 		onShareAppMessage(res) {
@@ -277,6 +278,10 @@
 					if(replayData.Code === 200){
 						console.log(replayData.Data)
 						this.replyList = replayData.Data
+						console.log(this.replyList.Image)
+						if(this.replyList.Image.length==0){
+							this.imgShow = false
+						}
 					}
 				}
 			},
@@ -556,7 +561,6 @@
 	}
 	.store-servince{
 		width:723upx;
-		margin-left: 27upx;
 		.servince-list{
 			width:667upx;
 			margin-left:33upx;
@@ -763,14 +767,20 @@
 		margin:22upx auto;
 		.cover {
 			width:667upx;
-			height:475upx;
+			height:1240.86742upx;
 			margin:0 auto;
+			image{
+				width:100%;
+				height: 100%;
+			}
+			
 		}
 	}
 	.servince-reply{
 		.ddx-reply-list{
 		  display: flex;
 		  justify-content: start;
+		  margin-bottom:20upx;
 		  .ddx-reply-left{
 			margin-left:20upx;
 			.reply-avatar{
@@ -800,11 +810,12 @@
 			.ddx-reply-img{
 			  width:610upx;
 			  display: flex;
-			  justify-content: space-around;
+			  justify-content: flex-start;
 			  .ddx-img-list{
 				width:199upx;
 				height:199upx;
-				margin:20upx auto;
+				margin-top:20upx;
+				margin-right:4upx;
 				.reply-image{
 				  width:199upx;
 				  height:199upx;
