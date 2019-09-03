@@ -8,20 +8,22 @@
 			<img class="active-img" style="height:503.3025upx;margin-top: -5px;" src="https://cdn.doudouxiongglobal.com/pinxiang/imagevip-05.png"/>
 		</view>
 		<view class="active-join">
-			<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
-				<view class="active-join-price-left">
-					品象365天会员-全合成机油版
+			<view class="active-join-top">
+				<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
+					<view class="active-join-price-left">
+						全合成机油版
+					</view>
+					<view class="active-join-price-right">
+						<view>599</view>元/年
+					</view>
 				</view>
-				<view class="active-join-price-right">
-					<view>599</view>元
-				</view>
-			</view>
-			<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
-				<view class="active-join-price-left">
-					品象365天会员-半合成机油版
-				</view>
-				<view class="active-join-price-right">
-					<view>399</view>元
+				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
+					<view class="active-join-price-left">
+						半合成机油版
+					</view>
+					<view class="active-join-price-right">
+						<view>399</view>元/年
+					</view>
 				</view>
 			</view>
 			<view class="active-join-tip">
@@ -191,59 +193,65 @@
 		left:0;
 		z-index:2;
 		width:750upx;
-		height:533upx;
+		height:319upx;
 		background: #fff;
-		.active-join-price{
-			width:668upx;
-			height:76upx;
-			line-height: 76upx;
-			margin:42upx auto 20upx auto;
-			background:rgba(254,81,0,0.15);
-			border-radius:7upx;
+		.active-join-top{
 			display: flex;
-			justify-content: space-between;
-			font-size:29upx;
-			.active-join-price-left{
-				margin-left: 42upx;
-			}
-			.active-join-price-right{
-				margin-right: 62upx;
+			justify-content:flex-start;
+			margin-top:16upx;
+			.active-join-price{
+				width:324upx;
+				height:76upx;
+				line-height: 76upx;
+				margin-left:40upx;
+				background:rgba(254,81,0,0.15);
+				border-radius:7upx;
 				display: flex;
-				justify-content: space-between;
-				view{
-					color:#FE5100;
+				justify-content: flex-start;
+				font-size:25upx;
+				.active-join-price-left{
+					margin-left: 14upx;
+				}
+				.active-join-price-right{
+					margin-left: 20upx;
+					display: flex;
+					font-size:29upx;
+					justify-content: space-between;
+					view{
+						color:#FE5100;
+					}
 				}
 			}
-		}
-		.active-join-price2{
-			width:668upx;
-			height:76upx;
-			line-height: 76upx;
-			margin:32upx auto 20upx auto;
-			background:rgba(254,81,0,0.15);
-			border-radius:7upx;
-			display: flex;
-			justify-content: space-between;
-			font-size:29upx;
-			.active-join-price-left{
-				margin-left: 42upx;
-			}
-			.active-join-price-right{
-				margin-right: 62upx;
+			.active-join-price2{
+				width:324upx;
+				height:76upx;
+				line-height: 76upx;
+				margin-left:40upx;
+				background:rgba(254,81,0,0.15);
+				border-radius:7upx;
 				display: flex;
-				justify-content: space-between;
-				view{
-					color:#FE5100;
+				justify-content: flex-start;
+				font-size:25upx;
+				.active-join-price-left{
+					margin-left: 14upx;
+				}
+				.active-join-price-right{
+					margin-left: 20upx;
+					display: flex;
+					font-size:29upx;
+					justify-content: space-between;
+					view{
+						color:#FE5100;
+					}
 				}
 			}
+			
 		}
 		.active-join-tip{
 			display: flex;
 			justify-content: flex-start;
 			width:668upx;
-			height:46upx;
-			line-height: 46upx;
-			margin:12upx auto 20upx auto;
+			margin:20upx auto 10upx auto;
 			.tip-left{
 				width:18upx;
 				height:18upx;
@@ -274,11 +282,11 @@
 			}
 		}
 		.active-join-button{
-			width:668upx;
+			width:750upx;
 			height:89upx;
-			margin:31upx auto;
+			margin:24upx auto;
 			background:#FE5100;
-			border-radius:11upx;
+			border-radius:0upx;
 			font-size:29upx;
 			color:#fff;
 			line-height:89upx;

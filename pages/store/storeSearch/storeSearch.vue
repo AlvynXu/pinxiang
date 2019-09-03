@@ -15,7 +15,10 @@
 			</view>
 		</view>
 		<view class="gray"></view>
-
+		<view class="search-none" v-if="serachNoneShow">
+			<view class="vant-icon">&#xe69f;</view>
+			<view>暂未搜索到门店</view>
+		</view>
 		<view v-for="(val,key) in storeList" :key="key">
 			<view class="store-list" @click="goStore(val.ID)">
 				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
@@ -47,6 +50,7 @@
 		components: {uniRate},
 		data() {
 			return {
+				serachNoneShow:false,
 				searchText:"",
 				vip:1,
 				storeList:[],
@@ -76,6 +80,7 @@
 				let value = e.detail.value
 				clearTimeout(that.timeout)
 				if(value === ''){
+					this.serachNoneShow = false
 					getStore().then(storeData => {
 						if(storeData.Code === 200){
 							that.storeList = storeData.Data
@@ -86,6 +91,12 @@
 						let storeData = await storeSearch({Name:value})
 						if(storeData.Code === 200){
 							that.storeList = storeData.Data
+							console.log(that.storeList)
+							if(that.storeList.length===0){
+								this.serachNoneShow = true
+							}else{
+								this.serachNoneShow = false
+							}
 						}
 					},300)
 				}
@@ -220,6 +231,18 @@
 					color:#fff;
 					text-align: center;
 				}
+			}
+		}
+		.search-none{
+			text-align: center;
+			.vant-icon{
+				color:#f3f3f3;
+				font-size:240upx;
+				margin-top: 300upx;
+			}
+			view{
+				color:#A4A4A4;
+				font-size:29upx;
 			}
 		}
 	}

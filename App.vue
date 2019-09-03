@@ -53,12 +53,12 @@ export default {
 	
 	@font-face {
 	  font-family: 'vant-icon';  /* project id 1363505 */
-	    src: url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.eot');
-	    src: url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.eot?#iefix') format('embedded-opentype'),
-	    url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.woff2') format('woff2'),
-	    url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.woff') format('woff'),
-	    url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.ttf') format('truetype'),
-	    url('//at.alicdn.com/t/font_1363505_f6fvgvra9mk.svg#iconfont') format('svg');
+		src: url('//at.alicdn.com/t/font_1363505_owwsbotd95f.eot');
+		src: url('//at.alicdn.com/t/font_1363505_owwsbotd95f.eot?#iefix') format('embedded-opentype'),
+		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.woff2') format('woff2'),
+		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.woff') format('woff'),
+		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.ttf') format('truetype'),
+		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.svg#iconfont') format('svg');
 	}
 	.vant-icon {
 		font-family:'vant-icon' !important;

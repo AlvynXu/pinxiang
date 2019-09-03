@@ -67,7 +67,7 @@
 						success() {
 						}
 					})
-					uni.navigateTo({
+					uni.redirectTo({
 						url: '../coupon/coupon?id='+result.Data.ID
 					})
 				}

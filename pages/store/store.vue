@@ -135,7 +135,7 @@
 					  <view class="vant-icon">&#xe60c;</view>
 				    </view> -->
 		</view>
-		<uni-popup class="uni-popup2" ref="popup2" type="center" style="z-index:1000;">
+		<uni-popup class="uni-popup2" ref="popup2" type="center" style="">
 			<view class="buy-title">请选择你要预约的项目</view>
 			<view class="servince-list">
 				<view class="servince-left" :class="{clean:isclean}" @click="clean()">洗车</view>

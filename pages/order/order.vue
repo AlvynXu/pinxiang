@@ -1,7 +1,11 @@
 <template>
 	<view class="content">
 		<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
-		<view v-for="(item,index) in orderList" :key="index" class="order-item">
+		<view class="order-none" v-if="orderNoneShow">
+			<view class="vant-icon">&#xe6a0;</view>
+			<view>暂无订单</view>
+		</view>
+		<view v-for="(item,index) in orderList" :key="index" class="order-item" v-if="orderShow">
 			<view class="i-top b-b">
 				<text>预约编号：</text>
 				<text>{{item.SerialNumber}}</text>
@@ -72,6 +76,8 @@
 		},
 		data() {
 			return {
+				orderNoneShow:true,
+				orderShow:false,
 				show:false,
 				items: [{
 						value: "0",
@@ -117,6 +123,13 @@
 			if(appointmentData.Code === 200){
 				this.orderList = appointmentData.Data
 				console.log(appointmentData.Data)
+				if(this.orderList.length === 0){
+					this.orderNoneShow = true
+					this.orderShow = false
+					return false
+				}
+				this.orderNoneShow = false
+				this.orderShow = true
 			}
 		},
 		
@@ -333,7 +346,7 @@
 			}
 			.popup-button{
 				margin-top: 111upx;
-				width:667upx;
+				width:750upx;
 				height:98upx;
 				line-height:98upx;
 				text-align: center;
@@ -344,6 +357,18 @@
 	
 	.uni-swiper-item{
 		height: auto;
+	}
+	.order-none{
+		text-align: center;
+		.vant-icon{
+			color:#f3f3f3;
+			font-size:240upx;
+			margin-top: 300upx;
+		}
+		view{
+			color:#A4A4A4;
+			font-size:29upx;
+		}
 	}
 	.order-item{
 		display: flex;
