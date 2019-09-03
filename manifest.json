@@ -82,8 +82,12 @@
             "es6" : true,
             "minified" : true
         },
-        "usingComponents" : true,
-        "permission" : {}
+        "usingComponents" : false,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于查找附近商户"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -93,5 +97,14 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ"
+                }
+            }
+        }
     }
 }

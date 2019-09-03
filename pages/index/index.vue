@@ -1,5 +1,16 @@
 <template>
 	<view class="store-box">
+		<view class="header-box">
+			<view class="status_bar">
+				<!-- 这里是状态栏 -->
+			</view>
+			<view class="header-address-box" @click="chooseArea">
+				<text class="vant-icon header-address-icon">&#xe68f;</text>
+				<text class="header-address-text">{{area}}</text>
+			</view>
+			<view class="header-box-title">品象养车</view>
+		</view>
+		<view style="height: 158upx;"></view>
 		<view class="store-swiper">
 			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
@@ -39,9 +50,10 @@
 				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
 				<view class="store-area">
 					<view class="vant-icon">&#xe68f;</view>
-					<view class="area-name">{{val.Area}}</view>
+					<view class="area-name">{{val.Area}} <text v-if="val.TradingArea"> · {{val.TradingArea}}</text></view>
 				</view>
 				<view class="store-name">{{val.Name}}</view>
+				<view class="store-distance">{{val.Distance}}</view>
 				<view class="store-address">{{val.Address}}
 					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
 				</view>
@@ -62,7 +74,7 @@
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
-	import {getStore} from "@/api/index.js"
+	import {getStore,getToken} from "@/api/index.js"
 	export default {
 		components: {uniRate},
 		data() {
@@ -77,19 +89,43 @@
 				circular:true,
 				duration: 500,
 				cover:'https://cdn.doudouxiongglobal.com/Default_image/city/hangzhou.jpg',
-				title: 'Hello',
-				area:'下城区 · 钱江世纪城',
-				storeName:'御驾汇汽车服务中心',
-				address:'秋涛北路72号杭州大厦501负2楼',
+				area:'',
+				storeName:'',
+				address:'',
+				lat:"",
+				lng:'',
 				vip:1,
 				storeList:[]
 			}
 		},
 		async onLoad() {
-			let storeData = await getStore();
-			if(storeData.Code === 200){
-				this.storeList = storeData.Data
-			}
+			let that = this
+			let tokenData = await getToken()
+			wx.getLocation({
+			 type: 'gcj02',
+			 success (res) {
+				that.lat = res.latitude
+				that.lng = res.longitude
+				uni.setStorageSync('geo',JSON.stringify({'lat':res.latitude,'lng':res.longitude}))
+				getStore({Lat:res.latitude,Lng:res.longitude}).then(storeData => {
+					if(storeData.Code === 200){
+						that.storeList = storeData.Data
+					}
+				});
+				
+				uni.request({
+					header:{
+						"Content-Type": "application/text"
+					},
+					url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
+					success(re) {
+						if(re.statusCode===200){
+							that.area = re.data.result.address_component.street
+						}
+					 }
+				});
+			 }
+			})
 		},
 		methods: {
 			goStore(id){
@@ -114,16 +150,73 @@
 				uni.navigateTo({
 				    url: '../store/storeSearch/storeSearch'
 				});
+			},
+			chooseArea(){
+				let that = this
+				wx.chooseLocation({
+					success(res) {
+						that.area = res.name
+						that.lat = res.latitude
+						that.lng = res.longitude
+						uni.setStorageSync('geo',JSON.stringify({'lat':res.latitude,'lng':res.longitude}))
+						getStore({Lat:res.latitude,Lng:res.longitude}).then(storeData => {
+							if(storeData.Code === 200){
+								that.storeList = storeData.Data
+							}
+						});
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.status_bar {
+		height: var(--status-bar-height);
+		width: 100%;
+	}
 	.gray{
 		width:750upx;
 		height:10upx;
 		background: #F3F3F3;
+	}
+	.header-box{
+		position:fixed;
+		top:0;
+		left:0;
+		width: 750upx;
+		height: 154upx;
+		background: #FCFCFC;
+		overflow: hidden;
+		z-index:100;
+	}
+	.header-box-title{
+		width: 100%;
+		line-height: 58upx;
+		font-size:33upx;
+		font-family:PingFangSC;
+		font-weight:400;
+		color:rgba(51,51,51,1);
+		text-align: center;
+		margin-top:32upx;
+	}
+	.header-address-box{
+		position: absolute;
+		left:10upx;
+		top:84upx;
+		z-index: 101;
+		.header-address-icon{
+			font-size:30upx;
+			color:#A4A4A4;
+			vertical-align: middle;
+		}
+		.header-address-text{
+			font-size:25upx;
+			line-height: 30upx;
+			color:#A4A4A4;
+			vertical-align: middle;
+		}
 	}
 	.store-box {
 		display: flex;
@@ -313,5 +406,15 @@
 				}
 			}
 		}
+	}
+	.store-distance{
+		position: absolute;
+		right:60upx;
+		bottom: 170upx;
+		font-size:29upx;
+		font-family:PingFangSC;
+		font-weight:400;
+		color:rgba(164,164,164,1);
+		line-height:40upx;
 	}
 </style>

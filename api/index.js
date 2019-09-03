@@ -513,3 +513,11 @@ export function addReply(params={}) {
 		data: params
 	})
 }
+
+export function getToken(params = {}) {
+	return fetch({
+		url: `${api.user}/token`,
+		method: 'get',
+		params: params
+	})
+}

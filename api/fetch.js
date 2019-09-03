@@ -11,7 +11,14 @@ uniRequest.interceptors.response.use(
 	response => {
 		if (parseInt(response.status) === 200) {
 			const code = response.data.Code;
+			if(parseInt(code)===80003){
+				uni.removeStorageSync('user_data')
+				uni.removeStorageSync('api_token')
+				return Promise.resolve(response.data);
+			}
 			if (parseInt(code) === 80002) {
+				uni.removeStorageSync('user_data')
+				uni.removeStorageSync('api_token')
 				wx.showModal({
 					title:'提醒',
 					content:'您未登陆，请完成登陆',

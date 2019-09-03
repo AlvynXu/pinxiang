@@ -19,9 +19,9 @@
 			<view class="store-icon">
 				<view class="vant-icon" @click="getArea">&#xe68f;</view>
 			</view>
-			<view class="store-area">
+			<view class="store-area" @click="getArea">
 				<view class="area-top">
-					<view class="area-name">{{area}}</view>
+					<view class="area-name">{{area}} <text v-if="tradingArea"> · {{tradingArea}}</text></view>
 					<uni-rate class="store-rate" :value="rate" size="12" :disabled="true"></uni-rate>
 				</view>
 				<view class="store-address">{{address}}</view>
@@ -196,6 +196,7 @@
 		components: {uniRate, WucTab,uniPopup,MxDatePicker},
 		data() {
 			return {
+				popup2Show:false,
 				productID:0,
 				productType:0,
 				isclean:false,
@@ -224,6 +225,7 @@
 				endTime:'',
 				introduction:'',
 				rate:0,
+				tradingArea:'',
 				tabList: [
 					{ 
 						name: '服务介绍',
@@ -262,7 +264,7 @@
 		    }
 		    return {
 		      title: '品象养车',
-		      path: '/pages/store/store'
+		      path: '/pages/store/store?id='+this.id
 		    }
 		},
 		methods:{
@@ -292,17 +294,21 @@
 					uni.setStorageSync('store_id',parseInt(this.id))
 					uni.setStorageSync('store_item_id',id)
 					uni.setStorageSync('store_type',type)
+					this.popup2Show = false
 				}
 				let that=this
 				setTimeout(function()  {
 					that.type = time;
-					that.showPicker = true;
+					this.$nextTick(function(){
+						that.showPicker = true;
+					})
 					that.value = that[time];
 				}, 200);
 
 				
 			},
 			buyNow(){
+				this.popup2Show = true
 				this.$refs.popup2.open();
 			},
 			buyNow1(){
@@ -330,7 +336,9 @@
 				   wx.openLocation({
 				     latitude,
 				     longitude,
-				     scale: 18
+				     scale: 18,
+					 name:that.storeName,
+					 address:that.address
 				   })
 			},
 			async tabChange(index) {
@@ -451,7 +459,8 @@
 			}else{
 				this.userData = JSON.parse(userData)
 			}
-			let storeData = await getStoreByID(id)
+			let geo = JSON.parse(uni.getStorageSync('geo'))
+			let storeData = await getStoreByID(id,{Lat:geo.lat,Lng:geo.lng})
 			if(storeData.Code === 200){
 				let store = storeData.Data[0]
 				this.cover = store.Image[0]
@@ -470,6 +479,8 @@
 				this.rate = store.Rate
 				this.latitude = parseFloat(store.Lat)
 				this.longitude =parseFloat(store.Lng)
+				this.tradingArea = store.TradingArea
+				this.distance = store.Distance
 				let storeItem = await getStoreItem(store.ID)
 				if(storeItem.Code === 200){
 					console.log(storeItem.Data)
