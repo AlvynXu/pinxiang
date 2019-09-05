@@ -60,6 +60,10 @@
 							<view class="ddx-reply-name">{{val.Nickname}}</view>
 							<view class="ddx-reply-date">{{val.Date}}</view>
 							<view class="ddx-reply-reply">{{val.Reply}}</view>
+							<view class="ddx-reply-rate">
+								<uni-rate class="uni-rate" :value="val.Rate" size="17" disabled="true"></uni-rate>
+								<view class="rateServince">服务项目：{{val.ID}}</view>
+							</view>
 							<view class="ddx-reply-img" v-show="imgShow">
 								<view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
 									<image class="reply-image" :src="v" mode="aspectFill"></image>
@@ -443,7 +447,8 @@
 			if(replayData.Code === 200){
 				console.log(replayData.Data)
 				that.replyList = replayData.Data
-				console.log(that.replyList)
+				that.replyRate = replayData.Data.Rate
+				console.log(that.replyList[0].Rate)
 				if(JSON.stringify(that.replyList.Image)==='[]'){
 					that.imgShow = false
 				}
@@ -703,6 +708,7 @@
 				left:0upx;
 			}
 			.servince-reply{
+				padding-bottom:100upx;
 				.ddx-reply-title{
 					width:667upx;
 					border-bottom: 2upx solid #f3f3f3;
@@ -743,6 +749,16 @@
 					.ddx-reply-reply{
 					  font-size:29upx;
 					  margin-top: 10upx;
+					}
+					.ddx-reply-rate{
+					  font-size:29upx;
+					  margin-top: 10upx;
+					  display: flex;
+					  justify-content: flex-start;
+					  .rateServince{
+						  margin-left: 20upx;
+						  color:#A4A4A0;
+					  }
 					}
 					.ddx-reply-img{
 					  width:610upx;
