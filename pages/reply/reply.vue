@@ -7,9 +7,11 @@
 			<view class="reply-rate">
 				<view class="reply-rate-name">
 					评分
-					<uni-rate class="star" :value="rate" size="18" @change="rateClick"></uni-rate>
+					<view style="margin-top:28upx;margin-left:10upx;">
+						<uni-rate class="star" :value="rate" size="18" @change="rateClick"></uni-rate>
+					</view>
 				</view>
-				<view class="reply-word">超赞</view>
+				<!-- <view class="reply-word">超赞</view> -->
 			</view>
 		</view>
 		<view class="reply-content">
@@ -27,7 +29,7 @@
 					<view class="delete-img" @click="deleteImage(key)">X</view>
 				</view>
 				<view class="create-top-img-left" @click="chooseImage" v-if="chooseImg">
-					<view class="vant-icon">&#xe6a4;</view>
+					<view class="vant-icon" style="width: 112upx;height: 105upx;margin:0 auto;"><image style="width: 100%;height: 100%;" mode="aspectFill" src="https://cdn.doudouxiongglobal.com/pinxiang/image/upload/uoload.pic.png"></image></view>
 					<view class="create-top-img-left-word">上传图片</view>
 				</view>
 				<view class="create-top-img-right" v-show="showWord">

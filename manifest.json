@@ -105,6 +105,9 @@
                     "key" : "QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ"
                 }
             }
+        },
+        "router" : {
+            "mode" : "hash"
         }
     }
 }

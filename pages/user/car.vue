@@ -4,8 +4,8 @@
 		<view class="car-num">
 			<view class="car-num-left">车牌号：</view>
 			<view class="car-num-right">
-				<input class="uni-input" v-show="type==3 || type==2" :value="carNumber" @input="carNumInput" placeholder="浙A123456" placeholder-style="color:#f3f3f3;" />
-				<input class="uni-input" v-show="type==1 || type==0" :value="carNumber" :disabled="true" />
+				<input class="uni-input" v-if="type==3 || type==2" :value="carNumber" @input="carNumInput" placeholder="浙A123456" placeholder-style="color:#f3f3f3;" />
+				<input class="uni-input" v-if="type==1 || type==0" :value="carNumber" :disabled="true" />
 			</view>
 		</view>
 		<view class="car-img">
@@ -90,10 +90,10 @@ export default {
 		let uptoken = await h5UploadKey({key:key,bucket:'doudouxiong'})
 		let driverData = await getDriver({});
 		if(driverData.Code === 200){
-			if(driverData.Data.length>0){
+			if(JSON.stringify(driverData.Data) !== '[]'){
 				console.log(1)
 				let data = driverData.Data
-				this.type = parseInt(data.Status)
+				this.type = data.Status
 				this.driverLicense = data.DriverLicense
 				this.dLSubPage = data.DLSubPage
 				this.carImg = data.CarImage
@@ -470,10 +470,10 @@ export default {
 	}
 	.shenhe-mask {
 		width: 504upx;
-		height: 200upx;
+		height: 114upx;
 		margin: 50upx auto;
 		border-radius: 14upx;
-		line-height: 200upx;
+		line-height: 114upx;
 		background: rgba(164, 164, 164, 1);
 		text-align: center;
 		font-size: 29upx;

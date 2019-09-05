@@ -135,6 +135,9 @@
 					  <view class="vant-icon">&#xe60c;</view>
 				    </view> -->
 		</view>
+		
+		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="false" :storeID="id" @confirm="onSelected" @cancel="onCancel" />
+		
 		<uni-popup class="uni-popup2" ref="popup2" type="center" style="">
 			<view class="buy-title">请选择你要预约的项目</view>
 			<view class="servince-list">
@@ -143,6 +146,7 @@
 			</view>
 			<view class="buy-button" @click="onShowProduct(productID,productType,'datetime')">立即预约</view>
 		</uni-popup>
+		
 		<uni-popup class="uni-popup" ref="popup" type="bottom" style="z-index:1000;">
 			<view class="popup-detail">
 				<view class="servince-top">
@@ -151,13 +155,13 @@
 					</view>
 					<view class="tips">仅限5座及其以下车辆</view>
 				</view>
-				<view style="overflow-y: scroll;height:62vh;-webkit-overflow-scrolling: touch;">
+				<view style="overflow-y: scroll;height:63vh;-webkit-overflow-scrolling: touch;">
 					<image class="popup-img" :src="itemDetail.Image" mode="aspectFill"></image>
 					<view class="popup-servince">
 						<view class="servince-title">服务内容</view>
 						<view class="servince-box">
 							<view class="servince-lists" v-for="(val,key) in itemDetail.Service" :key="key">
-								<view class="servince-list">{{val.Name}}</view>
+								<view class="servince-list-label">{{val.Name}}</view>
 							</view>
 						</view>
 					</view>
@@ -180,9 +184,6 @@
 			</view>
 			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
 		</uni-popup>
-		<mx-date-picker class="date-box" :show="showPicker" :type="type" :value="value" :show-seconds="false" :storeID="id" @confirm="onSelected" @cancel="onCancel" />
-		
-		
 	</view>
 </template>
 
@@ -264,7 +265,7 @@
 		    }
 		    return {
 		      title: '品象养车',
-		      path: '/pages/store/store?id='+this.id
+		      path: '/pages/index/index'
 		    }
 		},
 		methods:{
@@ -430,6 +431,9 @@
 				    url: 'appointment/appointment'
 				});
 			}
+		},
+		onShow() {
+			
 		},
 		async onLoad(options) {
 			let id = options.id
@@ -728,16 +732,16 @@
 					margin-left:8upx;
 					width:610upx;
 					.ddx-reply-name{
-					  font-size:21upx;
+					  font-size:29upx;
 					  color: #A4A4A4;
 					}
 					.ddx-reply-date{
-					  font-size:14upx;
+					  font-size:20upx;
 					  color: #A4A4A4;
 					  margin-top: 6upx;
 					}
 					.ddx-reply-reply{
-					  font-size:22upx;
+					  font-size:29upx;
 					  margin-top: 10upx;
 					}
 					.ddx-reply-img{
@@ -976,9 +980,9 @@
 			width:667upx;
 			margin:0 auto;
 			.servince-top{
-				margin-top:30upx;
+				margin-top:2vh;
 				width:667upx;
-				height:120upx;
+				height:10vh;
 				background: #fff;
 				border-radius:11upx 11upx 0px 0px;
 				.popup-title{
@@ -1020,7 +1024,8 @@
 					justify-content: space-between;
 					.servince-lists{
 						margin-top:10upx;
-						.servince-list{
+						margin-bottom:20upx;
+						.servince-list-label{
 							text-align: center;
 							width:150upx;
 							font-size:25upx;
@@ -1034,7 +1039,7 @@
 			.oil-img{
 				width:667upx;
 				height:1090.54114upx;
-				margin-top:30upx;
+				margin-bottom:30upx;
 				image{
 					width:667upx;
 					height:1090.54114upx;
@@ -1043,8 +1048,8 @@
 		}
 		.popup-button{
 			width:750upx;
-			height:98upx;
-			line-height:98upx;
+			height:8vh;
+			line-height:8vh;
 			text-align: center;
 			background:#FE5100;
 			color:#fff;
@@ -1088,7 +1093,7 @@
 			}
 		}
 	}
-	.uni-popup2{
+	.uni-popup{
 		width:514upx!important;
 		height:397upx;
 		border-radius:11upx;

@@ -4,11 +4,11 @@
 			<view class="status_bar">
 				<!-- 这里是状态栏 -->
 			</view>
-			<view class="header-address-box" @click="chooseArea">
+			<view class="header-box-title" :style="{bottom:bottom}">品象养车</view>
+			<view class="header-address-box" @click="chooseArea" :style="{bottom:areaBottom}">
 				<text class="vant-icon header-address-icon">&#xe68f;</text>
 				<text class="header-address-text">{{area}}</text>
 			</view>
-			<view class="header-box-title">品象养车</view>
 		</view>
 		<view style="height: 158upx;"></view>
 		<view class="store-swiper">
@@ -19,7 +19,7 @@
 			</swiper>
 			<view class="store-search" @click="goSearch">
 				<view class="store-search-input">
-					<view class="input">输入小区、写字楼或门店信息</view>
+					<view class="input">输入门店信息</view>
 				</view>
 				<view class="vant-icon">&#xe692;</view>
 			</view>
@@ -40,7 +40,7 @@
 				附近商户
 			</view>
 			<view class="nearby-bot">
-				平安出行，优享生活
+				品象养车，会员畅养
 			</view>
 		</view>
 		<view class="gray"></view>
@@ -69,6 +69,8 @@
 				<view class="gray"></view>
 			</view>
 		</view>
+		
+		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;">产品公测，10月1日全城百家门店统一上线</view>
 	</view>
 </template>
 
@@ -95,19 +97,41 @@
 				lat:"",
 				lng:'',
 				vip:1,
-				storeList:[]
+				storeList:[],
+				platform: '',
+				bottom: '8rpx',
+				areaBottom: '10rpx'
 			}
+		},
+		onShareAppMessage(res) {
+		    return {
+		      title: '品象养车',
+		      path: '/pages/index/index'
+		    }
 		},
 		async onLoad() {
 			let that = this
+			wx.getSystemInfo({
+				success:function(res){
+					if(res.platform == "devtools"){
+					}else if(res.platform == "ios"){
+						that.bottom = '8rpx'
+						that.areaBottom = '15rpx'
+					}else if(res.platform == "android"){
+						that.bottom = '12rpx'
+						that.areaBottom = '21rpx'
+					}
+				}
+			})
 			let tokenData = await getToken()
 			wx.getLocation({
 			 type: 'gcj02',
 			 success (res) {
+				 console.log(res)
 				that.lat = res.latitude
 				that.lng = res.longitude
 				uni.setStorageSync('geo',JSON.stringify({'lat':res.latitude,'lng':res.longitude}))
-				getStore({Lat:res.latitude,Lng:res.longitude}).then(storeData => {
+				getStore({'Lat':res.latitude,'Lng':res.longitude}).then(storeData => {
 					if(storeData.Code === 200){
 						that.storeList = storeData.Data
 					}
@@ -139,6 +163,15 @@
 					wx.showModal({
 						title:"提示",
 						content:"未登录，请前往登录",
+						success: function (res) {
+						            if (res.cancel) {
+						               //点击取消,默认隐藏弹框
+						            } else {
+						              uni.switchTab({
+						              	url:"/pages/user/user"
+						              })
+						            }
+						         },
 					})
 					return false;
 				}
@@ -192,6 +225,7 @@
 		z-index:100;
 	}
 	.header-box-title{
+		position: absolute;
 		width: 100%;
 		line-height: 58upx;
 		font-size:33upx;
@@ -199,21 +233,27 @@
 		font-weight:400;
 		color:rgba(51,51,51,1);
 		text-align: center;
-		margin-top:32upx;
+		left:0;
+		z-index:101;
 	}
 	.header-address-box{
 		position: absolute;
-		left:10upx;
-		top:84upx;
-		z-index: 101;
+		left:20upx;
+		z-index: 102;
 		.header-address-icon{
-			font-size:30upx;
+			font-size:33upx;
 			color:#A4A4A4;
 			vertical-align: middle;
 		}
 		.header-address-text{
-			font-size:25upx;
+			display:inline-block;
+			margin-left:-10upx;
+			font-size:30upx;
 			line-height: 30upx;
+			width: 150upx;
+			overflow: hidden;/*超出部分隐藏*/
+			text-overflow:ellipsis;/* 超出部分显示省略号 */
+			white-space: nowrap;/*规定段落中的文本不进行换行 */
 			color:#A4A4A4;
 			vertical-align: middle;
 		}

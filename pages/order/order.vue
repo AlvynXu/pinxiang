@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" @change="tabChange"></wuc-tab>
+		<wuc-tab class="wuc-tab" :tab-list="tabList" :tabCur.sync="TabCur" :selectClass="'text-orange'" @change="tabChange"></wuc-tab>
 		<view class="order-none" v-if="orderNoneShow">
 			<view class="vant-icon">&#xe6a0;</view>
 			<view>暂无订单</view>
@@ -11,7 +11,7 @@
 				<text>{{item.SerialNumber}}</text>
 			</view>
 			
-			<view class="goods-box" @click="goStoreDetail(item.ID)">
+			<view class="goods-box" @click="goStoreDetail(item.ID,item.Status)">
 				<view class="goods-item">
 					<image class="goods-img" :src="item.Image" mode="aspectFill"></image>
 				</view>
@@ -138,11 +138,13 @@
 		},
 		 
 		methods: {
-			goStoreDetail(id){
-				uni.navigateTo({
-				    url: `../store/coupon/coupon?id=${id}`,
-					
-				});
+			goStoreDetail(id,type){
+				if(type === 1 || type === 2){
+					uni.navigateTo({
+					    url: `../store/coupon/coupon?id=${id}`,
+						
+					});
+				}
 			},
 			goReply(storeID,storeItemID){
 				uni.navigateTo({

@@ -27,13 +27,17 @@
 					<view class="area-name">{{val.Area}}</view>
 				</view>
 				<view class="store-name">{{val.Name}}</view>
+				<view class="store-distance">{{val.Distance}}</view>
 				<view class="store-address">{{val.Address}}
 					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
 				</view>
 				<view class="store-tips">
-					<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
-						<view class="tip">{{v}}</view>
+					<view class="store-label">
+						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
+							<view class="tip">{{v}}</view>
+						</view>
 					</view>
+					
 					<view class="store-buy" v-if="vip===0">会员免费</view>
 					<view class="store-buy" v-if="vip===1">立即预约</view>
 				</view>
@@ -59,7 +63,8 @@
 			}
 		},
 		async onLoad() {
-			let storeData = await getStore();
+			let geo = JSON.parse(uni.getStorageSync('geo'))
+			let storeData = await getStore({Lat:geo.lat,Lng:geo.lng});
 			if(storeData.Code === 200){
 				this.storeList = storeData.Data
 			}
@@ -245,5 +250,19 @@
 				font-size:29upx;
 			}
 		}
+	}
+	.store-distance{
+		position: absolute;
+		right:60upx;
+		bottom: 170upx;
+		font-size:29upx;
+		font-family:PingFangSC;
+		font-weight:400;
+		color:rgba(164,164,164,1);
+		line-height:40upx;
+	}
+	.store-label{
+		display:inline-flex;
+		justify-content: flex-start;
 	}
 </style>

@@ -2,8 +2,9 @@
   <scroll-view class="wuc-tab" :class="tabClass" :style="tabStyle" scroll-with-animation scroll-x :scroll-left="scrollLeft">
     <div v-if="!textFlex">
       <div class="wuc-tab-item" :class="[index === tabCur ? selectClass + ' cur':'']" v-for="(item,index) in tabList" :key="index" :id="index" @tap="tabSelect(index,$event)">
-        <text :class="item.icon"></text>
+        <!-- <text :class="item.icon"></text> -->
         <span>{{item.name}}</span>
+		<label :class="[index === tabCur ? 'selected-border':'']"></label>
       </div>
     </div>
 
@@ -55,7 +56,7 @@ export default {
         selectClass: {
             type: String,
             default() {
-                return 'text-blue';
+                return 'text-orange';
             }
         }
     },
@@ -81,17 +82,24 @@ swiper {
 }
 .wuc-tab {
     white-space: nowrap;
+	margin: 0 auto;
 }
 .wuc-tab-item {
     height: 90upx;
-    display: inline-block;
+    display: inline-flex;
+	flex-flow: column;
+	align-items: center;
     line-height: 90upx;
     margin: 0 10upx;
     padding: 0 20upx;
+	font-size: 26upx;
+	position: relative;
+	text-align: center;
+	color:#A4A4A4;
 }
 
 .wuc-tab-item.cur {
-    border-bottom: 4upx solid;
+    /* border-bottom: 4upx solid; */
 }
 
 .wuc-tab.fixed {
@@ -100,6 +108,12 @@ swiper {
 	top: 0;
 	z-index: 1024;
 	box-shadow: 0 1upx 6upx rgba(0, 0, 0, 0.1);
+}
+.selected-border{
+	height:4upx;
+	width: 80upx;
+	background: #FE5100;
+	margin-top: -18upx;
 }
 
 .flex {
@@ -124,7 +138,8 @@ swiper {
     background-color: #0081ff;
 }
 .text-orange{
-  color: #f37b1d
+  color: #333333;
+  font-size: 28upx;
 }
 
 .text-xl {

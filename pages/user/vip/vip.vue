@@ -58,7 +58,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="vip-help">
+		<view class="vip-help" @click="goHelp">
 			<view class="vip-help-icon">
 				<view class="vant-icon">&#xe688;</view>
 			</view>
@@ -128,6 +128,11 @@
 				    url: '../active'
 				});
 			},
+			goHelp(){
+				uni.navigateTo({
+					url:"/pages/user/vip/help"
+				})
+			}
 		}
 	}
 </script>

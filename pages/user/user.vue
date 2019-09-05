@@ -81,6 +81,15 @@
 				vipData:[]
 			}
 		},
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+		    return {
+		      title: '品象养车',
+		      path: '/pages/index/index'
+		    }
+		},
 		methods: {
 			//打开弹出层
 			goActive(){
@@ -179,7 +188,7 @@
 			    console.log(e.detail.encryptedData)
 			}
 		},
-		onLoad(options) {
+		onShow() {
 			let userData = uni.getStorageSync('user_data')
 			let that = this
 			if(userData.length > 0){
@@ -197,6 +206,25 @@
 					}
 				})
 			}
+		},
+		onLoad(options) {
+			// let userData = uni.getStorageSync('user_data')
+			// let that = this
+			// if(userData.length > 0){
+			// 	userData = JSON.parse(userData)
+			// 	console.log(userData)
+			// 	this.avatar = userData.Avatar,
+			// 	this.nickname = userData.Nickname,
+			// 	this.phone = userData.Phone
+			// 	this.isLogin = 1
+			// 	if(userData.Vip === 1) this.vip = 1
+			// 	getVip({}).then((res)=>{
+			// 		console.log(res)
+			// 		if(res.Code === 200){
+			// 			that.vipData = res.Data
+			// 		}
+			// 	})
+			// }
 			this.redirect = getApp().globalData.redirect
 		}
 	}

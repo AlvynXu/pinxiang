@@ -3,14 +3,16 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "品象",
-				"backgroundColor":"#f3f3f3"
+				"navigationBarTitleText": "品象养车",
+				"backgroundColor":"#f3f3f3",
+				"navigationStyle":"custom"
 			}
 		}
         ,{
             "path" : "pages/user/user",
             "style" : {
-					"navigationBarTitleText": "我的"
+					"navigationBarTitleText": "我的",
+					"navigationStyle":"default"
 			}
         },{
             "path" : "pages/user/car",
@@ -29,11 +31,7 @@
 					}
         },{
             "path" : "pages/store/store",
-			"permission": {
-			    "scope.userLocation": {
-			      "desc": "你的位置信息将用于小程序位置接口的效果展示" // 高速公路行驶持续后台定位
-			    }
-			}
+			"style": {}
         },{
             "path" : "pages/order/order",
             "style" : {}
@@ -70,11 +68,17 @@
         ,{
             "path" : "pages/user/vipAgreement",
             "style" : {}
+        },
+		{
+            "path" : "pages/user/vip/help",
+            "style" : {
+            		"navigationBarTitleText": "会员帮助"
+            		}
         }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "品象",
+		"navigationBarTitleText": "品象养车",
 		"navigationBarBackgroundColor": "#FCFCFC",
 		"backgroundColor": "#FCFCFC",
 		"navigationBarShadow":"grey",
