@@ -62,7 +62,7 @@
 							<view class="ddx-reply-reply">{{val.Reply}}</view>
 							<view class="ddx-reply-rate">
 								<uni-rate class="uni-rate" :value="val.Rate" size="17" disabled="true"></uni-rate>
-								<view class="rateServince">服务项目：{{val.ID}}</view>
+								<view class="rateServince">服务项目：{{val.ServiceZH}}</view>
 							</view>
 							<view class="ddx-reply-img" v-show="imgShow">
 								<view class="ddx-img-list" v-for="(v,k) in val.Image" :key="k">
