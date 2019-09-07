@@ -1037,10 +1037,11 @@
 					margin-top:20upx;
 					display: flex;
 					flex-wrap: wrap;
-					justify-content: space-between;
+					justify-content: flex-start;
 					.servince-lists{
 						margin-top:10upx;
 						margin-bottom:20upx;
+						margin-right:7upx;
 						.servince-list-label{
 							text-align: center;
 							width:150upx;
