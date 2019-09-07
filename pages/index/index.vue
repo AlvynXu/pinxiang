@@ -70,7 +70,7 @@
 			</view>
 		</view>
 		
-		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;">产品公测，10月1日全城百家门店统一上线</view>
+		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;">门店持续更新中</view>
 	</view>
 </template>
 
@@ -109,7 +109,7 @@
 		      path: '/pages/index/index'
 		    }
 		},
-		async onLoad() {
+		async onShow() {
 			let that = this
 			wx.getSystemInfo({
 				success:function(res){
@@ -150,6 +150,9 @@
 				});
 			 }
 			})
+		},
+		async onLoad() {
+			
 		},
 		methods: {
 			goStore(id){

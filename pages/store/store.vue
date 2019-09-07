@@ -175,7 +175,7 @@
 							<image class="oil-img" :src="val.Image" mode="aspectFill"></image>
 							<view class="oil-content">
 								<view>{{val.Brand}}</view>
-								<view>SN: {{val.SN}}</view>
+								<view>{{val.SN}}</view>
 								<view>{{val.Type}}   {{val.Capacity}}L</view>
 								<view>适合{{val.Distance}}km/{{val.Time}}</view>
 							</view>
@@ -304,7 +304,7 @@
 				let that=this
 				setTimeout(function()  {
 					that.type = time;
-					this.$nextTick(function(){
+					that.$nextTick(function(){
 						that.showPicker = true;
 					})
 					that.value = that[time];

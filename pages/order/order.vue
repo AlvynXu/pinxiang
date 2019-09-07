@@ -36,7 +36,7 @@
 				<button class="action-btn recom" @click="goReply(item.StoreID,item.SID)" v-if="item.Status === 3">写评价</button>
 				<button class="action-btn recom" v-if="item.Status === 4">已逾期</button>
 				<button class="action-btn" @click="openPopup(index,item.ID)" v-if="item.Status === 1">取消</button>
-				<button class="action-btn recom" v-if="item.Status === 1" @click="goStore">已预约</button>
+				<button class="action-btn recom" v-if="item.Status === 1" @click="goStoreDetail(item.ID,item.Status)">已预约</button>
 			</view>
 			<view class="action-bot" v-if="item.Status === 5">取消原因：{{item.CancelReason}}</view>
 		</view>
