@@ -74,6 +74,18 @@
             "style" : {
             		"navigationBarTitleText": "会员帮助"
             		}
+        },
+		{
+            "path" : "pages/login/login",
+            "style" : {
+            		"navigationBarTitleText": "登录"
+            		}
+        },
+		{
+            "path" : "pages/retail/retail",
+            "style" : {
+            		"navigationBarTitleText": "分销"
+            		}
         }
     ],
 	"globalStyle": {
@@ -114,7 +126,7 @@
 		"list": [
 			{
 				"name": "", //模式名称
-				"path": "pages/reply/reply", //启动页面，必选
+				"path": "pages/login/login", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]

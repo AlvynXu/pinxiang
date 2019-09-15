@@ -26,7 +26,7 @@ uniRequest.interceptors.response.use(
 					success (res) {
 					    if (res.confirm) {
 							uni.switchTab({
-								url:"/pages/user/user"
+								url:"/pages/login/login"
 							})
 					      // window.location.href = '/login'
 					    } else if (res.cancel) {

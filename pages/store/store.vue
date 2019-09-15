@@ -446,12 +446,15 @@
 			let replayData = await getStoreReply(that.id)
 			if(replayData.Code === 200){
 				console.log(replayData.Data)
-				that.replyList = replayData.Data
-				that.replyRate = replayData.Data.Rate
-				console.log(that.replyList[0].Rate)
-				if(JSON.stringify(that.replyList.Image)==='[]'){
-					that.imgShow = false
+				if(JSON.stringify(replayData.Data)!=='[]'){
+					that.replyList = replayData.Data
+					that.replyRate = replayData.Data.Rate
+					console.log(that.replyList[0].Rate)
+					if(JSON.stringify(that.replyList.Image)==='[]'){
+						that.imgShow = false
+					}
 				}
+				
 			}
 			setTimeout(()=>{
 				let date = new Date();

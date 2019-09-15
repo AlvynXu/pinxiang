@@ -1,10 +1,10 @@
 <template>
 	<view class="user-box">
 		<view class="user-login" v-if="isLogin===0">
-			<view class="login-white">
+			<view class="login-white" @click="goLogin">
 				<view class="vant-icon">&#xe691;</view>
 				<view class="login">
-					<button class="login-button" plain="true" lang="zh_CN" open-type="getUserInfo" @getuserinfo="onGotUserInfo">立即登录</button>
+					<button class="login-button" plain="true" lang="zh_CN">立即登录</button>
 				</view>
 			</view>
 			<view class="user-join" @click="goActive">
@@ -85,10 +85,11 @@
 		    if (res.from === 'button') {// 来自页面内分享按钮
 		      console.log(res.target)
 		    }
-		    return {
-		      title: '品象养车',
-		      path: '/pages/index/index'
-		    }
+			let referrer = uni.getStorageSync('ReferrerCode')
+			return {
+			  title: '品象养车',
+			  path: '/pages/index/index?code='+referrer
+			}
 		},
 		methods: {
 			//打开弹出层
@@ -148,7 +149,7 @@
 					'Sex': userData.userInfo.gender === 1 ? 0 : 1,
 					'Province': userData.userInfo.province,
 					'City':userData.userInfo.city,
-					'Referrer':0
+					'ReferrerCode':uni.getStorageSync('ReferrerCode')
 				}).then((res)=>{
 					if(res.Code === 200)
 					{
@@ -186,6 +187,11 @@
 			    console.log(e.detail.errMsg)
 			    console.log(e.detail.iv)
 			    console.log(e.detail.encryptedData)
+			},
+			goLogin(){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
 			}
 		},
 		onShow() {
@@ -225,6 +231,16 @@
 			// 		}
 			// 	})
 			// }
+			let userData = uni.getStorageSync('user_data')
+			let that = this
+			if(userData.length > 0){
+				this.login({userInfo:{
+					nickName: userData.Nickname,
+					gender:userData.Sex,
+					province:userData.Province,
+					city:userData.City
+				}})
+			}
 			this.redirect = getApp().globalData.redirect
 		}
 	}

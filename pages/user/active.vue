@@ -1,7 +1,7 @@
 <template>
 	<view class="active-box">
 		<view class="active-img-box">
-			<img class="active-img" style="height:4061.5942upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/image/vip/aboutvip.png"/>
+			<img class="active-img" style="height:4061.5942upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/image/vip/aboutvip.png?201909072247"/>
 			<view>
 				<view class="active-content-box">
 					<view class="active-title">★关于信任</view>
@@ -80,7 +80,7 @@
 						全合成机油版
 					</view>
 					<view class="active-join-price-right">
-						<view>599</view>元/年
+						<view>799</view>元/年
 					</view>
 				</view>
 				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
@@ -88,7 +88,7 @@
 						半合成机油版
 					</view>
 					<view class="active-join-price-right">
-						<view>399</view>元/年
+						<view>599</view>元/年
 					</view>
 				</view>
 			</view>
@@ -142,8 +142,8 @@
 						            if (res.cancel) {
 						               //点击取消,默认隐藏弹框
 						            } else {
-						              uni.switchTab({
-						              	url:"/pages/user/user"
+						              uni.navigateTo({
+						              	url:"/pages/login/login"
 						              })
 						            }
 						         },
@@ -192,7 +192,7 @@
 					    success: function (res) {
 					        console.log('success:' + JSON.stringify(res));
 							if(res.errMsg=='requestPayment:ok'){
-								payVip({OrderNo:detail.Data.order_number,VipType:that.vipSelected}).then(response=>{
+								payVip({OrderNo:detail.Data.order_number,VipType:that.vipSelected,o2w:uni.getStorageSync('ReferrerCode')}).then(response=>{
 									if(response.Code === 200){
 										let userData = uni.getStorageSync('user_data')
 										userData = JSON.parse(userData)
@@ -238,15 +238,19 @@
 			}
 		
 		},
-		onLoad(options) {
+		onShow(){
 			let userData = uni.getStorageSync('user_data')
 			if(userData === null || userData.length === 0){
 				return false;
 			}
 			userData = JSON.parse(userData)
+			console.log(userData)
 			if(userData['Phone'] !== ''){
 				this.phone = userData['Phone']
 			}
+		},
+		onLoad(options) {
+			
 			// this.redirect = options.redirect
 		}
 	}

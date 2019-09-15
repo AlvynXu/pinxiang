@@ -14,7 +14,7 @@
 		<view class="store-swiper">
 			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image class="swiper-img" :src="val.src" mode="aspectFill"></image>
+					<image class="swiper-img" :src="val.Image" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
 			<view class="store-search" @click="goSearch">
@@ -76,7 +76,7 @@
 
 <script>
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
-	import {getStore,getToken} from "@/api/index.js"
+	import {getStore,getToken,getBanner} from "@/api/index.js"
 	export default {
 		components: {uniRate},
 		data() {
@@ -104,13 +104,18 @@
 			}
 		},
 		onShareAppMessage(res) {
+			let referrer = uni.getStorageSync('Referrer')
 		    return {
 		      title: '品象养车',
-		      path: '/pages/index/index'
+		      path: '/pages/index/index?referrer='+referrer
 		    }
 		},
 		async onShow() {
 			let that = this
+			let bannerData = await getBanner({})
+			if(bannerData.Code === 200){
+				this.swiperList = bannerData.Data
+			}
 			wx.getSystemInfo({
 				success:function(res){
 					if(res.platform == "devtools"){

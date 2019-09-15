@@ -1,7 +1,13 @@
 <script>
 import { getOpenID, login } from '@/api/index.js';
 export default {
-	onLaunch: function() {
+	onLaunch: function(options) {
+		console.log(options.query.code)
+		if(options.query.code!==undefined){
+			uni.setStorageSync('ReferrerCode',options.query.code)
+		}else{
+			uni.setStorageSync('ReferrerCode',0)
+		}
 		uni.checkSession({
 			success() {
 				//session_key 未过期，并且在本生命周期一直有效
@@ -53,12 +59,12 @@ export default {
 	
 	@font-face {
 	  font-family: 'vant-icon';  /* project id 1363505 */
-		src: url('//at.alicdn.com/t/font_1363505_owwsbotd95f.eot');
-		src: url('//at.alicdn.com/t/font_1363505_owwsbotd95f.eot?#iefix') format('embedded-opentype'),
-		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.woff') format('woff'),
-		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_1363505_owwsbotd95f.svg#iconfont') format('svg');
+		src: url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.eot');
+		  src: url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.eot?#iefix') format('embedded-opentype'),
+		  url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.woff2') format('woff2'),
+		  url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.woff') format('woff'),
+		  url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.ttf') format('truetype'),
+		  url('//at.alicdn.com/t/font_1363505_se4bokc1p0l.svg#iconfont') format('svg');
 	}
 	.vant-icon {
 		font-family:'vant-icon' !important;

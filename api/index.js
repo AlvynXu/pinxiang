@@ -521,3 +521,11 @@ export function getToken(params = {}) {
 		params: params
 	})
 }
+
+export function getBanner(params={}) {
+	return fetch({
+		url: `${api.base}/banner`,
+		method: 'get',
+		params: params
+	})
+}
