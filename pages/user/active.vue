@@ -6,7 +6,7 @@
 				<view class="question-one" @click="question1Func"><text>我们如何去控制品质？</text><text class="vant-icon">&#xe6b4;</text></view>
 				<view class="question-one-image-box" v-if="question1">
 					<img class="question-one-image" style="height:2162.1376upx" src="https://cdn.doudouxiongglobal.com/store/vip/about-us-1.png.png"/>
-					<img class="question-one-image" style="height:2483.6956upx;margin-top:-10upx;" src="https://cdn.doudouxiongglobal.com/store/vip/about-us-2.png"/>
+					<img class="question-one-image" style="height:2483.6956upx;margin-top:-20upx;" src="https://cdn.doudouxiongglobal.com/store/vip/about-us-2.png"/>
 				</view>
 			</view>
 			<view class="question-two-box">
@@ -25,15 +25,16 @@
 					<view v-if="vipSelected==0" class="selected-icon vant-icon">&#xe6b2;</view>
 				</view>
 				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
-					半合成机油版 <text class="active-amount">599</text>元/年
+					半合成机油 <text class="active-amount">599</text>元/年
 					<view v-if="vipSelected==1" class="selected-icon vant-icon">&#xe6b2;</view>
 				</view>
 			</view>
 			<view class="active-join-agree">
 				<view class="agree-box" @click="agreementRadio">
 					<radio class="agree-check" :checked="agreementChecked" color="#FE5100"></radio>
-					<text>开通会员需同意</text>
+					<text>开通会员即表示同意</text>
 					<text class="agree-color" @click="agreement">《会员协议》</text>
+					<text style="color:#A4A4A4">&nbsp;&nbsp;营运车辆暂不可用</text>
 				</view>
 			</view>
 			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -55,7 +56,7 @@
 				phone : '',
 				redirect:'',
 				vipSelected:0,
-				agreementChecked:false,
+				agreementChecked:true,
 				vip:0,
 				question1:false,
 				question2:false
