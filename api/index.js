@@ -529,3 +529,11 @@ export function getBanner(params={}) {
 		params: params
 	})
 }
+
+export function getUserByCode(code,params={}) {
+	return fetch({
+		url: `${api.user}/code/${code}`,
+		method: 'get',
+		params: params
+	})
+}

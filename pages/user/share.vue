@@ -5,14 +5,14 @@
 		<image class="share-button" @click="goRedPack" src="https://cdn.doudouxiongglobal.com/store/vip/re-acvt.png"/>
 		<view class="user-box">
 			<image class="user-avatar" :src="avatar"></image>
-			<view class="user-phone">{{phone}}</view>
+			<view class="user-phone">您的好友{{phone}}送您一份</view>
 		</view>
 		<view class="share-hint">25元会员红包</view>
 	</view>
 </template>
 
 <script>
-	import {decryptPhone,changePhone,payDetail,payVip,login,getVip} from '../../api/index.js'
+	import {decryptPhone,changePhone,payDetail,payVip,login,getVip,getUserByCode} from '../../api/index.js'
 	export default {
 		data() {
 			return {
@@ -119,19 +119,15 @@
 			if(userData === null || userData.length === 0){
 				return false;
 			}
-			userData = JSON.parse(userData)
-			console.log(userData)
-			if(userData['Phone'] !== ''){
-				this.phone = userData['Phone']
-				this.avatar = userData['Avatar']
-			}
+			
 		},
 		onLoad(options) {
 			console.log(options.code)
 			if(options.code!=undefined){
 				uni.setStorageSync('ReferrerCode',options.code)
+				var referrerCode = options.code
 			}else{
-				let referrerCode = uni.getStorageSync('ReferrerCode')
+				var referrerCode = uni.getStorageSync('ReferrerCode')
 				if(referrerCode===null || referrerCode.length===0){
 					uni.setStorageSync('ReferrerCode',0)
 				}
@@ -148,6 +144,16 @@
 					city:userData.City
 				}})
 			}
+			let that = this
+			if(referrerCode!==0){
+				getUserByCode(referrerCode,{}).then(res=>{
+					if(res.Code === 200){
+						that.avatar = res.Data.Avatar
+						that.phone = res.Data.Phone
+					}
+				})
+			}
+			
 			// this.redirect = options.redirect
 		}
 	}
@@ -168,6 +174,13 @@
 		margin-left:-167.5upx;
 		left:50%;
 		z-index:99;
+		animation: heart-break 1s;
+		-moz-animation: heart-break 1s;	/* Firefox */
+		-webkit-animation: heart-break 1s;	/* Safari 和 Chrome */
+		-o-animation: heart-break 1s;
+		animation-iteration-count:infinite;
+		-webkit-animation-iteration-count:infinite;
+		
 	}
 	.user-box{
 		width: 100%;
@@ -197,6 +210,94 @@
 		font-weight:500;
 		color:rgba(51,51,51,1);
 		line-height:67upx;
+	}
+	
+	@keyframes heart-break
+	{
+	0%   {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	50% {
+		width: 380upx;
+		height:380upx;
+		margin-top:-22.5upx;
+		margin-left:-190upx;
+		}
+	100% {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	}
+	
+	@-moz-keyframes heart-break
+	{
+	0%   {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	50% {
+		width: 380upx;
+		height:380upx;
+		margin-top:-22.5upx;
+		margin-left:-190upx;
+		}
+	100% {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	}
+	
+	@-webkit-keyframes heart-break
+	{
+	0%   {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	50% {
+		width: 380upx;
+		height:380upx;
+		margin-top:-22.5upx;
+		margin-left:-190upx;
+		}
+	100% {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	}
+	
+	@-o-keyframes heart-break
+	{
+	0%   {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
+	50% {
+		width: 380upx;
+		height:380upx;
+		margin-top:-22.5upx;
+		margin-left:-190upx;
+		}
+	100% {
+		width: 335upx;
+		height:335upx;
+		margin-top:0;
+		margin-left:-167.5upx;
+		}
 	}
 }
 </style>
