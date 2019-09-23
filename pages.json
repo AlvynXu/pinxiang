@@ -86,6 +86,12 @@
             "style" : {
             		"navigationBarTitleText": "分销"
             		}
+        },
+		{
+            "path" : "pages/user/share",
+            "style" : {
+            		"navigationBarTitleText": "品象养车"
+            		}
         }
     ],
 	"globalStyle": {

@@ -36,8 +36,11 @@
 		</view>
 		<view class="gray"></view>
 		<view class="store-nearby">
-			<view class="nearby-top">
+			<view class="nearby-top" v-if="storeList.length!==0">
 				附近商户
+			</view>
+			<view class="nearby-top" v-if="storeList.length===0">
+				逛一逛
 			</view>
 			<view class="nearby-bot">
 				品象养车，会员畅养
@@ -70,7 +73,31 @@
 			</view>
 		</view>
 		
-		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;">门店持续更新中</view>
+		<view v-for="(val,key) in recommend" :key="key">
+			<view class="store-list" @click="goStore(val.ID)">
+				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
+				<view class="store-area">
+					<view class="vant-icon">&#xe68f;</view>
+					<view class="area-name">{{val.City}} · {{val.Area}}</text></view>
+				</view>
+				<view class="store-name">{{val.Name}}</view>
+				<view class="store-distance">{{val.Distance}}</view>
+				<view class="store-address">{{val.Address}}
+					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
+				</view>
+				<view class="store-tips">
+					<view class="store-tip-list">
+						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
+							<view class="tip">{{v}}</view>
+						</view>
+					</view>
+					<view class="store-buy" v-if="vip===0">会员免费</view>
+					<view class="store-buy" v-if="vip===1">立即预约</view>
+				</view>
+				<view class="gray"></view>
+			</view>
+		</view>
+		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;" v-if="storeList.length!==0">门店持续更新中</view>
 	</view>
 </template>
 
@@ -86,7 +113,7 @@
 					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner1.png"},
 					{src:"https://cdn.doudouxiongglobal.com/pinxiang/image/banner/banner2.png"}
 					],
-				autoplay: false,
+				autoplay: true,
 				interval: 2000,
 				circular:true,
 				duration: 500,
@@ -98,16 +125,19 @@
 				lng:'',
 				vip:1,
 				storeList:[],
+				recommend:[],
 				platform: '',
 				bottom: '8rpx',
 				areaBottom: '10rpx'
 			}
 		},
 		onShareAppMessage(res) {
-			let referrer = uni.getStorageSync('Referrer')
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			let referrer = userData['SerialCode']
 		    return {
 		      title: '品象养车',
-		      path: '/pages/index/index?referrer='+referrer
+		      path: '/pages/index/index'
 		    }
 		},
 		async onShow() {
@@ -129,18 +159,16 @@
 				}
 			})
 			let tokenData = await getToken()
+			
+		},
+		async onLoad() {
+			let that = this
 			wx.getLocation({
 			 type: 'gcj02',
 			 success (res) {
 				 console.log(res)
 				that.lat = res.latitude
-				that.lng = res.longitude
-				uni.setStorageSync('geo',JSON.stringify({'lat':res.latitude,'lng':res.longitude}))
-				getStore({'Lat':res.latitude,'Lng':res.longitude}).then(storeData => {
-					if(storeData.Code === 200){
-						that.storeList = storeData.Data
-					}
-				});
+				that.lng = res.longitude				
 				
 				uni.request({
 					header:{
@@ -150,14 +178,31 @@
 					success(re) {
 						if(re.statusCode===200){
 							that.area = re.data.result.address_component.street
+							uni.setStorageSync('geo',JSON.stringify({
+								'lat':res.latitude,
+								'lng':res.longitude,
+								'province':re.data.result.address_component.province,
+								'city':re.data.result.address_component.city,
+								'area':re.data.result.address_component.district,
+								'address':re.data.result.address
+							}))
+							getStore({'Lat':res.latitude,'Lng':res.longitude,'City':re.data.result.address_component.city}).then(storeData => {
+								if(storeData.Code === 200){
+									if(storeData.Data.StoreData.length === 0){
+										uni.showToast({
+											icon:"none",
+											title:"该地区门店正在更新中"
+										})
+									}
+									that.storeList = storeData.Data.StoreData
+									that.recommend = storeData.Data.RecommendData
+								}
+							});
 						}
 					 }
 				});
 			 }
 			})
-		},
-		async onLoad() {
-			
 		},
 		methods: {
 			goStore(id){
@@ -175,8 +220,8 @@
 						            if (res.cancel) {
 						               //点击取消,默认隐藏弹框
 						            } else {
-						              uni.switchTab({
-						              	url:"/pages/user/user"
+						              uni.navigateTo({
+						              	url:"/pages/login/login"
 						              })
 						            }
 						         },
@@ -196,15 +241,42 @@
 				let that = this
 				wx.chooseLocation({
 					success(res) {
+						console.log(res)
 						that.area = res.name
 						that.lat = res.latitude
 						that.lng = res.longitude
-						uni.setStorageSync('geo',JSON.stringify({'lat':res.latitude,'lng':res.longitude}))
-						getStore({Lat:res.latitude,Lng:res.longitude}).then(storeData => {
-							if(storeData.Code === 200){
-								that.storeList = storeData.Data
-							}
+						uni.request({
+							header:{
+								"Content-Type": "application/text"
+							},
+							url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
+							success(re) {
+								if(re.statusCode===200){
+									console.log(re)
+									uni.setStorageSync('geo',JSON.stringify({
+										'lat':res.latitude,
+										'lng':res.longitude,
+										'province':re.data.result.address_component.province,
+										'city':re.data.result.address_component.city,
+										'area':re.data.result.address_component.district,
+										'address':re.data.result.address
+									}))
+									getStore({'Lat':res.latitude,'Lng':res.longitude,'City':re.data.result.address_component.city}).then(storeData => {
+										if(storeData.Code === 200){
+											if(storeData.Data.StoreData.length === 0){
+												uni.showToast({
+													icon:"none",
+													title:"该地区门店正在更新中"
+												})
+											}
+											that.storeList = storeData.Data.StoreData
+											that.recommend = storeData.Data.RecommendData
+										}
+									});
+								}
+							 }
 						});
+						
 					}
 				})
 			}

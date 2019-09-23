@@ -50,6 +50,11 @@
 				<view class="vant-word">品象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
+			<view class="prove-credit list" @click="goRetail">
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/retail.png" mode="aspectFit"></image>
+				<view class="vant-word">分销中心</view>
+				<view class="vant-icon">&#xe609;</view>
+			</view>
 			
 			<!-- <view class="prove-center list" @click="goGiftCard">
 				<view class="vant-icon">&#xe6a4;</view>
@@ -59,8 +64,19 @@
 			
 			<view  class="prove-credit list" style="position: relative;">
 				<button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;padding-right:0;line-height: 98upx;margin-right:0;"><image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/contact01.png" mode="aspectFit"></image></button>
-				<view class="vant-word"><button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;line-height: 98upx;">联系客服</button></view>
+				<view class="vant-word"><button open-type="contact" plain="false" style="font-size:29upx;background: white;border:none;text-align: left;padding-left:0;line-height: 98upx;">联系客服</button></view>
 				<view class="vant-icon"><button open-type="contact" plain="false" style="background: white;border:none;text-align: left;padding-left:0;padding-right:0;line-height: 98upx;margin-right:0;" class="vant-icon">&#xe609;</button></view>
+			</view>
+		</view>
+		<view class="redpack-box" v-if="buiedVip">
+			<view class="redpack-box-content">
+				<view class="redpack-bg" @click="closeRedPack"></view>
+				<view class="redpack">
+					<view class="redpack-title">送你25元现金红包</view>
+					<view class="redpack-hint">邀好友加入会员各得25元红包</view>
+					<image class="redpack-image" mode="aspectFit" src="https://cdn.doudouxiongglobal.com/store/vip/buy_vip_re.png"></image>
+					<button class="redpack-share" open-type="share">分享领现金红包</button>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -78,20 +94,28 @@
 				phone:'',
 				vip : 0,
 				redirect:'',
-				vipData:[]
+				vipData:[],
+				buiedVip:false
 			}
 		},
 		onShareAppMessage(res) {
 		    if (res.from === 'button') {// 来自页面内分享按钮
 		      console.log(res.target)
 		    }
-			let referrer = uni.getStorageSync('ReferrerCode')
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			let referrer = userData['SerialCode']
+			this.buiedVip = false
 			return {
-			  title: '品象养车',
-			  path: '/pages/index/index?code='+referrer
+			  title: '【25元红包】加入会员，全年不限次数免费保养',
+			  imageUrl:'https://cdn.doudouxiongglobal.com/pinxiang/image/share/lALPDgQ9rBP3f8PNAyDNA-g_1000_800.png_620x10000q90g.jpg',
+			  path: '/pages/user/share?code='+referrer
 			}
 		},
 		methods: {
+			closeRedPack(){
+				this.buiedVip = false;
+			},
 			//打开弹出层
 			goActive(){
 				let userData = uni.getStorageSync('user_data')
@@ -137,6 +161,11 @@
 				    url: 'giftCard/giftCard'
 				});
 			},
+			goRetail(){
+				uni.navigateTo({
+				    url: '/pages/retail/retail'
+				});
+			},
 			login(userData){
 				console.log(userData)
 				let that = this
@@ -161,13 +190,15 @@
 						that.isLogin = 1
 						// let userData = uni.getStorageSync('user_data')
 						// console.log(userData)
-						if(res.Data.user.Vip === 1) that.vip = 1
-						getVip({}).then((res)=>{
-							console.log(res)
-							if(res.Code === 200){
-								that.vipData = res.Data
-							}
-						})
+						if(res.Data.user.Vip === 1) {
+							that.vip = 1
+							getVip({}).then((res)=>{
+								console.log(res)
+								if(res.Code === 200){
+									that.vipData = res.Data
+								}
+							})
+						}
 						if(that.redirect!=''){
 							console.log(that.redirect)
 							getApp().globalData.redirect=''
@@ -214,23 +245,10 @@
 			}
 		},
 		onLoad(options) {
-			// let userData = uni.getStorageSync('user_data')
-			// let that = this
-			// if(userData.length > 0){
-			// 	userData = JSON.parse(userData)
-			// 	console.log(userData)
-			// 	this.avatar = userData.Avatar,
-			// 	this.nickname = userData.Nickname,
-			// 	this.phone = userData.Phone
-			// 	this.isLogin = 1
-			// 	if(userData.Vip === 1) this.vip = 1
-			// 	getVip({}).then((res)=>{
-			// 		console.log(res)
-			// 		if(res.Code === 200){
-			// 			that.vipData = res.Data
-			// 		}
-			// 	})
-			// }
+			console.log(options)
+			if(options.status=='buied'){
+				this.buiedVip = true;
+			}
 			let userData = uni.getStorageSync('user_data')
 			let that = this
 			if(userData.length > 0){
@@ -241,7 +259,7 @@
 					city:userData.City
 				}})
 			}
-			this.redirect = getApp().globalData.redirect
+			// this.redirect = getApp().globalData.redirect
 		}
 	}
 </script>
@@ -301,6 +319,8 @@
 			width:667upx;
 			height:313upx;
 			background:linear-gradient(134deg,rgba(254,81,0,1) 0%,rgba(254,140,0,1) 100%);
+			// background-image: url('https://cdn.doudouxiongglobal.com/pinxiang/image/cardBg2.png');
+			// background-size:100% 100%;
 			border-radius:11upx;
 			margin-left: 42upx;
 			top:232upx;
@@ -400,6 +420,72 @@
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:31upx;
+	}
+}
+.redpack-box{
+	position:absolute;
+	top:0;left:0;
+	width: 100vw;
+	height:100vh;
+	.redpack-box-content{
+		width: 100%;
+		height:100%;
+		position:relative;
+		.redpack-bg{
+			position:absolute;
+			width: 100%;
+			height:100%;
+			z-index:100;
+			background:rgba(0,0,0,0.3);
+		}
+		.redpack{
+			position: absolute;
+			width:663upx;
+			height:585upx;
+			background:rgba(255,255,255,1);
+			border-radius:14upx;
+			z-index:101;
+			top:50%;
+			left:50%;
+			margin-top:-292.5upx;
+			margin-left:-331.5upx;
+			.redpack-title{
+				width: 100%;
+				text-align: center;
+				margin-top:47upx;
+				font-size:38upx;
+				font-weight:500;
+				color:rgba(254,81,0,1);
+				line-height:53upx;
+				letter-spacing:5upx;
+			}
+			.redpack-hint{
+				width: 100%;
+				text-align: center;
+				margin-top:9upx;
+				font-size:22upx;
+				font-weight:400;
+				color:rgba(164,164,164,1);
+				line-height:31upx;
+			}
+			.redpack-image{
+				margin-left:168.5upx;
+				width: 326upx;
+				height:326upx;
+				margin-top:-10upx;
+				margin-bottom:-10upx;
+			}
+			.redpack-share{
+				width:576upx;
+				height:82upx;
+				background:rgba(254,81,0,1);
+				border-radius:41upx;
+				color:white;
+				font-size:33upx;
+				font-weight:500;
+				letter-spacing:5px;
+			}
+		}
 	}
 }
 </style>

@@ -88,6 +88,7 @@
 		async onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
 			let that = this
+			
 			if(userData.length > 0){
 				userData = JSON.parse(userData)
 				this.avatar = userData.Avatar,

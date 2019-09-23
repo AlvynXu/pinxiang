@@ -267,9 +267,11 @@
 		    if (res.from === 'button') {// 来自页面内分享按钮
 		      console.log(res.target)
 		    }
+			let referrer = uni.getStorageSync('ReferrerCode')
 		    return {
-		      title: '品象养车',
-		      path: '/pages/index/index'
+		      title: this.storeName+"【品象养车】",
+		      imageUrl:this.cover,
+		      path: '/pages/store/store?id='+this.id
 		    }
 		},
 		methods:{
@@ -916,6 +918,7 @@
 				  .information-detail-foot{
 					width:667upx;
 					display: flex;
+					flex-wrap: wrap;
 					justify-content: space-between;
 					margin-top: 20upx;
 					padding-bottom: 20upx;

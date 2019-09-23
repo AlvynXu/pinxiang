@@ -20,12 +20,27 @@
 				top:0
 			};
 		},
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			let referrer = userData['SerialCode']
+			console.log(referrer)
+			return {
+			  title: '【25元红包】加入会员，全年不限次数免费保养',
+			  imageUrl:'https://cdn.doudouxiongglobal.com/pinxiang/image/share/lALPDgQ9rBP3f8PNAyDNA-g_1000_800.png_620x10000q90g.jpg',
+			  path: '/pages/user/share?code='+referrer
+			}
+		},
 	
 		methods: {
 			
 		},
 		onShow() {
-			
+			let token = uni.getStorageSync('api_token')
+			this.src = `https://retail.quchebang.cn/pages/distribution/distribution?token=${token}&v=`+Math.random()
 		},
 		onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
@@ -45,6 +60,7 @@
 				})
 				return false;
 			}
+			console.log(1)
 			// #ifdef APP-PLUS
 			var currentWebview = this.$mp.page.$getAppWebview() //获取当前页面的webview对象
 			console.log(currentWebview)
@@ -56,8 +72,9 @@
 			}, 1000); //如果是页面初始化调用时，需要延时一下
 			// #endif
 			let token = uni.getStorageSync('api_token')
-			this.src = `https://retail.quchebang.cn?token=${token}`
-			console.log(options.src)
+			this.src = `https://retail.quchebang.cn/pages/distribution/distribution?token=${token}`
+			// this.src = `http://localhost:8080/pages/distribution/distribution?token=${token}`
+			
 		}
 	};
 </script>

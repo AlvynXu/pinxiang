@@ -101,16 +101,17 @@
 								that.vipData = res.Data
 							}
 						})
+						wx.showToast({
+							title:"登陆成功"
+						})
 						if(that.redirect!=''){
 							console.log(that.redirect)
-							getApp().globalData.redirect=''
-							wx.navigateTo({
+							wx.redirectTo({
 								url:that.redirect
 							})
+						}else{
+							uni.navigateBack({})	
 						}
-						uni.navigateBack({
-							
-						})
 					}
 				})
 				console.log(openID)
@@ -171,7 +172,10 @@
 					city:userData.City
 				}})
 			}
-			this.redirect = getApp().globalData.redirect
+			console.log(options)
+			if(options.redirect!==undefined){
+				this.redirect = options.redirect
+			}
 		}
 	}
 </script>
