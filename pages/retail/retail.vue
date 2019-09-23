@@ -40,7 +40,7 @@
 		},
 		onShow() {
 			let token = uni.getStorageSync('api_token')
-			this.src = `https://retail.quchebang.cn/pages/distribution/distribution?token=${token}&v=`+Math.random()
+			this.src = `http:/127.0.0.1:8081/pages/distribution/distribution?token=${token}&v=`+Math.random()
 		},
 		onLoad(options) {
 			let userData = uni.getStorageSync('user_data')
@@ -72,7 +72,7 @@
 			}, 1000); //如果是页面初始化调用时，需要延时一下
 			// #endif
 			let token = uni.getStorageSync('api_token')
-			this.src = `https://retail.quchebang.cn/pages/distribution/distribution?token=${token}`
+			this.src = `http:/127.0.0.1:8081/pages/distribution/distribution?token=${token}`
 			// this.src = `http://localhost:8080/pages/distribution/distribution?token=${token}`
 			
 		}

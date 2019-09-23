@@ -8,9 +8,19 @@
 				</view>
 			</view>
 			<view class="user-join" @click="goActive">
-				<view class="join-name">加入会员</view>
-				<view class="join-word">尊享全年免费保养特权</view>
-				<view class="join-button">立即领取特权</view>
+				<view class="join-name">
+					<view class="vant-icon">&#xe6b1;</view>
+					<!-- <i class="van-icon van-icon-pinzhi"></i> -->
+					<view>加入会员</view>
+				</view>
+				<view class="join-word">会员养车·全年免费</view>
+				<view class="join-words">开卡赠送12次洗车服务</view>
+				<view class="join-buy">
+					<view style="margin-left: 10upx;">已有108人购买</view>
+					<view class="join-buy-icon">立即开通
+						<view class="vant-icon">&#xe65c;</view>
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="user-login" v-if="isLogin===1">
@@ -21,7 +31,37 @@
 					<view class="phone" v-if="phone">{{phone}}</view>
 				</view>
 			</view>
+			
 			<view class="user-join" @click="goActive">
+				<view v-show="vip===0">
+					<view class="join-name">
+						<view class="vant-icon">&#xe6b1;</view>
+						<!-- <i class="van-icon van-icon-pinzhi"></i> -->
+						<view>加入会员</view>
+					</view>
+					<view class="join-word">会员养车·全年免费</view>
+					<view class="join-words">开卡赠送12次洗车服务</view>
+					<view class="join-buy">
+						<view style="margin-left: 10upx;">已有108人购买</view>
+						<view class="join-buy-icon">立即开通
+							<view class="vant-icon">&#xe65c;</view>
+						</view>
+					</view>
+				</view>
+				<view v-show="vip===1">
+					<view class="join-name">
+						<view class="vant-icon">&#xe6b1;</view>
+						<!-- <i class="van-icon van-icon-pinzhi"></i> -->
+						<view>品象会员</view>
+						<view class="join-date">{{vipData.EndDate}}到期</view>
+					</view>
+					<view class="join-word">会员养车·全年免费</view>
+					<view class="join-buy2">
+						<view>{{vipData.VipNo}}</view>
+					</view>
+				</view>
+			</view>
+			<!-- <view class="user-join" @click="goActive">
 				<view v-show="vip===0">
 					<view class="join-name">加入会员</view>
 					<view class="join-word">尊享全年免费保养特权</view>
@@ -32,7 +72,7 @@
 					<view class="vip-endtime">{{vipData.EndDate}} 到期</view>
 					<view class="vip-number">{{vipData.VipNo}}</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
 		<view class="user-prove">
 			<view class="prove-car list" @click="goCar">
@@ -92,7 +132,7 @@
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
 				phone:'',
-				vip : 0,
+				vip : 1,
 				redirect:'',
 				vipData:[],
 				buiedVip:false
@@ -318,9 +358,8 @@
 			position: absolute;
 			width:667upx;
 			height:313upx;
-			background:linear-gradient(134deg,rgba(254,81,0,1) 0%,rgba(254,140,0,1) 100%);
-			// background-image: url('https://cdn.doudouxiongglobal.com/pinxiang/image/cardBg2.png');
-			// background-size:100% 100%;
+			background:url("https://cdn.doudouxiongglobal.com/pinxiang/image/bg.png");
+			background-size:100% 100%;
 			border-radius:11upx;
 			margin-left: 42upx;
 			top:232upx;
@@ -328,26 +367,87 @@
 			.join-name{
 				font-size:29upx;
 				margin-left:20upx;
-				margin-top:34upx;
+				margin-top:25upx;
 				color:#fff;
+		        display: flex;
+		        justify-content: start;
+		        .van-icon{
+					font-size:40upx;
+					margin-left:20upx;
+					margin-right:0;
+					color:#fff;
+				}
+				view{
+				  height:40upx;
+				  line-height:40upx;
+				  margin-left:10upx;
+				}
+				.join-date{
+					margin-left: 70px;
+					font-size:22upx;
+				}
 			}
 			.join-word{
-				margin-left:20upx;
-				font-size:40upx;
-				color:#fff;
-				margin-top:27upx;
-			}
-			.join-button{
-				font-size:33upx;
-				color:#FE5100;
-				width:620upx;
-				height:83upx;
-				margin-top:31upx;
-				line-height:83upx;
-				margin-left:20upx;
+				font-size:51upx;
+				color:#FCF5D4;
+				margin-top:42upx;
 				text-align: center;
-				background: #fff;
-				border-radius: 11upx;
+				font-weight:500;
+			}
+			.join-words{
+				font-size:29upx;
+				color:#fff;
+				margin-top:9upx;
+				color:#F7B500;
+				text-align: center;
+			}
+			.join-buy{
+				width:553upx;
+				height:47upx;
+				line-height:47upx;
+				background:rgba(252,245,212,1);
+				border-radius:5upx;
+				opacity:0.8;
+				margin:0 auto;
+				font-size:29upx;
+				color:#4B2A00;
+				margin-top:25upx;
+				display: flex;
+				justify-content: space-between;
+				text-align: center;
+				.join-buy-icon{
+					display: flex;
+					justify-content: flex-start;
+					.van-icon{
+					  font-size:30upx;
+					  margin-left:0;
+					  margin-right:10upx;
+					}
+				}
+			}
+			.join-buy2{
+				width:553upx;
+				height:47upx;
+				line-height:47upx;
+				border-radius:5upx;
+				opacity:0.8;
+				margin-left:30upx;
+				font-size:22upx;
+				color:#4B2A00;
+				margin-top:85upx;
+				display: flex;
+				justify-content: space-between;
+				text-align: center;
+				color:#fff;
+				.join-buy-icon{
+					display: flex;
+					justify-content: flex-start;
+					.van-icon{
+					  font-size:30upx;
+					  margin-left:0;
+					  margin-right:10upx;
+					}
+				}
 			}
 		}
 	}

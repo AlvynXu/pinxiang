@@ -840,7 +840,7 @@
 					justify-content: flex-start;
 					margin-top: 20upx;
 					padding-bottom: 20upx;
-					font-size:25upx;
+					font-size:27upx;
 					justify-content: space-between;
 					color:#979797;
 					.comment-foot-left{
@@ -870,7 +870,7 @@
 					width:160px;
 					margin-top: 13px;
 					padding-bottom: 10px;
-					font-size:12px;
+					font-size:27upx;
 					display: flex;
 					justify-content: space-between;
 					.van-icon-wifi{
@@ -922,8 +922,13 @@
 					justify-content: space-between;
 					margin-top: 20upx;
 					padding-bottom: 20upx;
-					font-size:25upx;
+					font-size:27upx;
 					border-bottom: 2upx solid #f3f3f3;
+					.information-detail-list{
+						width:150upx;
+						text-align: left;
+						margin-bottom: 10upx;
+					}
 				  }
 				}
 			}
