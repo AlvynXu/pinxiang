@@ -1,14 +1,14 @@
 <template>
 	<view class="active-box">
 		<view class="uni-padding-wrap">
-			<view class="page-section swiper">
+			<view class="page-section">
 				<view class="page-section-spacing">
 					<swiper class="swiper" circular :indicator-dots="indicatorDots" indicator-color="rgba(0,0,0,0.5)" indicator-active-color="#fff" :autoplay="autoplay" :interval="interval" :duration="duration">
 						<swiper-item>
-							<image class="swiper-img" mode="aspectFill" src="https://cdn.doudouxiongglobal.com/store/active/banner1.png"></image>
+							<image class="swiper-img" mode="aspectFit" src="https://cdn.doudouxiongglobal.com/store/active/banner1.png"></image>
 						</swiper-item>
 						<swiper-item>
-							<image class="swiper-img" mode="aspectFill" src="https://cdn.doudouxiongglobal.com/store/active/banner2.png"></image>
+							<image class="swiper-img" mode="aspectFit" src="https://cdn.doudouxiongglobal.com/store/active/banner2.png"></image>
 						</swiper-item>
 					</swiper>
 				</view>
@@ -60,10 +60,10 @@
 				<view class="vant-icon finger large" v-if="isLogin===1">&#xe6b8;</view>
 			</view>
 			<view class="active-join-lists" v-if="moreShow">
-				<view class="active-join-list" v-for="(val,key) in activeList.CodeList" :key="key" v-show="key<num">
+				<view class="active-join-list" v-for="(val,key) in codeList" :key="key" v-show="key<num">
 					·{{val}}
 				</view>
-				<view class="showMore" @click="showMore">
+				<view class="showMore" @click="showMore" v-if="lookShow">
 					{{txt}}
 					<view class="vant-icon" v-if="isShow===true">&#xe60c;</view>
 					<view class="vant-icon top" v-if="isShow===false">&#xe6b4;</view>
@@ -213,6 +213,7 @@
 				canvasFlag: true,
 				posterData:{},
 				moreShow:true,
+				lookShow:false,
 				isLogin:1,
 	            indicatorDots: true,
 	            autoplay: true,
@@ -535,7 +536,7 @@
 			}
 			userData = JSON.parse(userData)
 			this.vip = userData.Vip
-			console.log(this.vip)
+			// console.log(this.vip)
 			this.phone = userData.Phone
 			if(userData['Phone'] !== ''){
 				this.avatar = userData['Avatar']
@@ -543,7 +544,6 @@
 			let that = this
 			let winListData = await getWinList()
 			if(winListData.Code === 200){
-				console.log(winListData.Data)
 				that.winList = winListData.Data
 				if(winListData.Data.isWinner === 0){
 					that.popupShow = true
@@ -551,30 +551,33 @@
 			}
 			let activeData = await getActive()
 			if(activeData.Code === 200){
-				console.log(activeData.Data)
 				if(JSON.stringify(activeData.Data)!=='[]'){
 					that.activeList = activeData.Data
-					console.log(that.activeList)
 					that.isLogin= that.activeList.IsLogin
-					if(that.isLogin ===0){
-						wx.showModal({
-							title:'提醒',
-							content:'您未登陆，请完成登陆',
-							confirmText:'前往',
-							success (res) {
-							    if (res.confirm) {
-									uni.navigateTo({
-										url:"/pages/login/login"
-									})
-							      // window.location.href = '/login'
-							    } else if (res.cancel) {
-							      console.log('用户点击取消')
-							    }
-							}
-						})
-					}
-					if(that.activeList.CodeList.length ===0){
+					// console.log(that.isLogin)
+					// if(that.isLogin ===0){
+					// 	wx.showModal({
+					// 		title:'提醒',
+					// 		content:'您未登陆，请完成登陆',
+					// 		confirmText:'前往',
+					// 		success (res) {
+					// 		    if (res.confirm) {
+					// 				uni.navigateTo({
+					// 					url:"/pages/login/login"
+					// 				})
+					// 		      // window.location.href = '/login'
+					// 		    } else if (res.cancel) {
+					// 		      console.log('用户点击取消2')
+					// 		    }
+					// 		}
+					// 	})
+					// }
+					that.codeList = that.activeList.CodeList
+					console.log(that.codeList.length)
+					if(that.codeList.length ===0){
 						that.moreShow = false
+					}else if(that.codeList.length >7){
+						that.lookShow = true
 					}else{
 						that.code = that.activeList.CodeList[0]
 					}
@@ -582,7 +585,7 @@
 			}
 		},
 		async onLoad(options) {
-			console.log(options.code)
+			// console.log(options.code)
 			if(options.code!=undefined){
 				uni.setStorageSync('ReferrerCode',options.code)
 			}else{
@@ -594,31 +597,35 @@
 			let that = this
 			let activeData = await getActive()
 			if(activeData.Code === 200){
-				console.log(activeData.Data)
+				// console.log(activeData.Data)
 				if(JSON.stringify(activeData.Data)!=='[]'){
 					that.activeList = activeData.Data
-					console.log(that.activeList)
+					// console.log(that.activeList)
 					that.isLogin= that.activeList.IsLogin
-					if(that.isLogin ===0){
-						wx.showModal({
-							title:'提醒',
-							content:'您未登陆，请完成登陆',
-							confirmText:'前往',
-							success (res) {
-							    if (res.confirm) {
-									uni.navigateTo({
-										url:"/pages/login/login"
-									})
-							      // window.location.href = '/login'
-							    } else if (res.cancel) {
-							      console.log('用户点击取消')
-							    }
-							}
-						})
-					}
+					// console.log(that.isLogin)
+					// if(that.isLogin ===0){
+					// 	wx.showModal({
+					// 		title:'提醒',
+					// 		content:'您未登陆，请完成登陆',
+					// 		confirmText:'前往',
+					// 		success (res) {
+					// 		    if (res.confirm) {
+					// 				uni.navigateTo({
+					// 					url:"/pages/login/login"
+					// 				})
+					// 		      // window.location.href = '/login'
+					// 		    } else if (res.cancel) {
+					// 		      console.log('用户点击取消3')
+					// 		    }
+					// 		}
+					// 	})
+					// }
 					that.codeList = that.activeList.CodeList
+					console.log(that.codeList.length)
 					if(that.codeList.length ===0){
 						that.moreShow = false
+					}else if(that.codeList.length >7){
+						that.lookShow = true
 					}else{
 						that.code = that.codeList[0]
 					}
@@ -725,9 +732,13 @@
 	height:11upx;
 	background: #f3f3f3;
 }
+.swiper{
+	width:750upx;
+	height:350upx;
+}
 .swiper-img{
 	width:750upx;
-	height:310upx;
+	height:350upx;
 }
 .active-tips{
 	height:125upx;
@@ -841,7 +852,7 @@
 }
 .active-scan{
 	width:750upx;
-	height:670upx;
+	// height:670upx;
 	.code-img{
 		width:284upx;
 		height:284upx;
@@ -922,7 +933,7 @@
 		flex-wrap: wrap;
 		.active-join-list{
 			margin-right:20upx;
-			margin-left: 5upx;
+			margin-left: 3upx;
 			width:147upx;
 			height:38upx;
 			line-height: 38upx;
