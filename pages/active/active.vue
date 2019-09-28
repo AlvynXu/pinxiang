@@ -39,8 +39,8 @@
 		</view>	
 		<view class="active-code">
 			<image class="code-img" src="https://cdn.doudouxiongglobal.com/store/active/bg-code2.png" mode="aspectFill"></image>
-			<view class="active-code-word" v-if="vip===0">等待开奖</view>
-			<view class="active-code-word" v-if="vip===1">未中奖</view>
+			<view class="active-code-word" v-if="winList.isWinner===undefind">等待开奖</view>
+			<view class="active-code-word" v-if="winList.isWinner===0">未中奖</view>
 			<view class="active-code-word2">抽奖码</view>
 			<view class="active-code-word3" v-if="code!=''">{{code}}</view>
 			<view class="active-code-word4" v-if="code===''">*********</view>
@@ -199,7 +199,7 @@
 <script>
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import hchPoster from '../../components/hch-poster/hch-poster.vue'
-	import {getWinninCode,getActive,decryptPhone,changePhone} from '../../api/index.js'
+	import {getWinninCode,getActive,decryptPhone,changePhone,getWinList} from '../../api/index.js'
 	export default {
 		components: {hchPoster,uniPopup},
 	    data() {
@@ -224,7 +224,8 @@
 				avatar:"",
 				phone:'',
 				codeList:[],
-				code:''
+				code:'',
+				winList:[]
 	        }
 	    },
 	    methods: {
@@ -529,6 +530,15 @@
 				this.avatar = userData['Avatar']
 			}
 			let that = this
+			
+			let winListData = await getWinList()
+			if(winListData.Code === 200){
+				console.log(winListData.Data)
+				that.winList = winListData.Data
+				if(winListData.Data.isWinner === 0){
+					that.popupShow = true
+				}
+			}
 			let activeData = await getActive()
 			if(activeData.Code === 200){
 				console.log(activeData.Data)
@@ -593,6 +603,13 @@
 					}else{
 						that.code = that.codeList[0]
 					}
+				}
+			}
+			let winListData = await getWinList()
+			if(winListData.Code === 200){
+				console.log(winListData.Data)
+				if(winListData.Data.isWinner === 0){
+					that.popupShow = true
 				}
 			}
 			let userData = uni.getStorageSync('user_data')

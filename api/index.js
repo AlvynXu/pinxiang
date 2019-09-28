@@ -552,3 +552,10 @@ export function getWinninCode(params={}) {
 		data: params
 	})
 }
+export function getWinList(code,params={}) {
+	return fetch({
+		url: `${api.active}/result/20191001`,
+		method: 'get',
+		params: params
+	})
+}

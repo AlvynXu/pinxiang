@@ -55,16 +55,16 @@
 					中奖码
 				</view>
 			</view>
-			<view class="active-rule-lists" v-for="(val,key) in winList" :key="key">
+			<view class="active-rule-lists" v-for="(val,key) in winList.Winner" :key="key">
 				<view class="active-rule-list-left">
-					<image class="active-rule-list-img" :src="avatar" mode="aspectFill"></image>
-					<view class="active-rule-list-word">{{val.name}}</view>
+					<image class="active-rule-list-img" :src="val.Avatar" mode="aspectFill"></image>
+					<view class="active-rule-list-word">{{val.Nickname}}</view>
 				</view>
 				<view class="active-rule-list-center">
-					{{val.phone}}
+					{{val.Phone}}
 				</view>
 				<view class="active-rule-list-right">
-					{{val.winCode}}
+					{{val.Code}}
 				</view>
 			</view>
 		</view>
@@ -75,7 +75,7 @@
 <script>
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import hchPoster from '../../components/hch-poster/hch-poster.vue'
-	import {getWinninCode,getActive} from '../../api/index.js'
+	import {getWinninCode,getActive,getWinList} from '../../api/index.js'
 	export default {
 		components: {hchPoster,uniPopup},
 	    data() {
@@ -85,22 +85,7 @@
 	            interval: 3000,
 	            duration: 500,
 				activeList:[],
-				bgCode:"https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png",
-				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_08.png",
-				winList:[
-					{
-						name:'大好多阿达',
-						phone:'17225445484',
-						winCode:'SADAS7845'
-						
-					},
-					{
-						name:'大好多阿达',
-						phone:'17225445484',
-						winCode:'SADAS7845'
-						
-					}
-				]
+				winList:[]
 	        }
 	    },
 	    methods: {
@@ -117,16 +102,17 @@
 				}
 				
 			}
+			let winListData = await getWinList()
+			if(winListData.Code === 200){
+				console.log(winListData.Data)
+				if(JSON.stringify(winListData.Data)!=='[]'){
+					that.winList = winListData.Data
+					console.log(that.winList)
+				}
+				
+			}
 		},
 		onShow(){
-			// console.log(this.name.length)
-			let phone =  this.phone.substr(0,3) + '****' + this.phone.substr(7,4)
-			this.phone = phone
-			if(this.name.length>2){
-				let name =  this.name.substr(0,2) + '****' 
-				this.name = name
-			}
-			console.log(phone)
 		},
 	}
 </script>
