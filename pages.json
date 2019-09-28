@@ -97,6 +97,10 @@
             "path" : "pages/active/active",
             "style" : {}
         }
+        ,{
+            "path" : "pages/winList/winList",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

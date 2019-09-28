@@ -25,7 +25,7 @@ uniRequest.interceptors.response.use(
 					confirmText:'前往',
 					success (res) {
 					    if (res.confirm) {
-							uni.switchTab({
+							uni.navigateTo({
 								url:"/pages/login/login"
 							})
 					      // window.location.href = '/login'

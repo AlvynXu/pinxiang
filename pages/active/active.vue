@@ -34,12 +34,13 @@
 				<view>{{activeList.SurplusHour}}</view>:<view>{{activeList.SurplusMinutes}}</view>:<view>{{activeList.SurplusSecond}}</view>
 			</view>
 			<view class="active-time-right">
-				已有<view>3878157</view>人参与
+				已有<view>{{activeList.NumberOfParticipants}}</view>人参与
 			</view>
 		</view>	
 		<view class="active-code">
 			<image class="code-img" src="https://cdn.doudouxiongglobal.com/store/active/bg-code2.png" mode="aspectFill"></image>
-			<view class="active-code-word">等待开奖</view>
+			<view class="active-code-word" v-if="vip===0">等待开奖</view>
+			<view class="active-code-word" v-if="vip===1">未中奖</view>
 			<view class="active-code-word2">抽奖码</view>
 			<view class="active-code-word3" v-if="isLogin===1">{{code}}</view>
 			<view class="active-code-word4" v-if="isLogin===0">*********</view>
@@ -51,8 +52,10 @@
 			<view class="vant-icon">&#xe6b7;</view>
 			<view class="scan-word1">抽奖码列表</view>
 			<view class="scan-join">
-				<view class="scan-join-word" v-if="isLogin===0" @click="getCode">参与活动</view>
-				<view class="scan-join-word2" v-if="isLogin===1" @tap="createCanvasImageEvn">获得更多抽奖码</view>
+				<view class="scan-join-word" v-if="isLogin===0">参与抽奖</view>
+				<button class="scan-join-word" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">参与抽奖</button>
+				<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
+				<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view>
 				<view class="vant-icon finger samll" v-if="isLogin===0">&#xe6b8;</view>
 				<view class="vant-icon finger large" v-if="isLogin===1">&#xe6b8;</view>
 			</view>
@@ -74,15 +77,17 @@
 				<view class="rule-line right"></view>
 			</view>
 			<view class="active-rule-content">
-				1. 活动时间：2019年9月27日—2019年10月7日
-				</br>
-				2. 参与方式：点击授权手机号码，获取抽奖码 
-				</br>
-				3. 活动规则：在活动期间参与活动，可通过本人参与、受邀、邀请好友三种方式参与活动 
-				</br>
-				1)首次进入活动，参与活动后获得一个抽奖码； 
-				</br>
-				2)每次被邀请人接受邀请，发起人和被邀请人双方各自可获得1个抽奖码
+				<view>1.活动时间:2019年9月27日—2019年10月7日；</view>
+				<view>2.参与方式:点击「参与活动」授权手机号码，获取抽奖码；</view>
+				<view>3.活动规则：活动期间用户首次登录并授权手机号码后可获得1个抽奖码，同时用户将活动分享给好友且好友成功参与后可继续获得抽奖码，同时若好友通过分享购买会员，将会优惠25元同时用户获得25元现金红包；</view>
+				<view>4.开奖说明：平台将在抽奖时间（10月7日 10:00）从所有抽奖码中随机抽取70个抽奖码为中奖号码，并于该获得页面公示中奖信息，中奖用户可获得品象养车提供的全年无限制免费保养全合成机油版会员卡一张。</view>
+				<view>
+					注意事项：
+					</br> 
+					1.若平台发现用户存在批量注册、恶意刷奖等行为平台有权取消其中奖资格且不予兑换；
+					</br> 
+					2.因需要对中奖用户发送相关通知与确认用户的真实性，故要求用户授权手机号码。
+				</view>
 			</view>
 		</view>
 		<view class="gray"></view>
@@ -127,6 +132,23 @@
 				<image class="gift-image" src="https://cdn.doudouxiongglobal.com/store/vip/re-vip.png" mode=""></image>
 			</view>
 		</view>
+		
+			<!-- <view class="scan-join-word" v-if="isLogin===0">参与抽奖</view>
+			<button class="scan-join-word" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">参与抽奖</button>
+			<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
+			<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view> -->
+		<view class="code-box" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">
+			获得更多抽奖码
+		</view>
+		<view class="code-box" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">
+			参与抽奖
+		</view>
+		<button class="code-box" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
+			参与抽奖
+		</button>
+		<view class="code-box" v-if="isLogin===0">
+			参与抽奖
+		</view>
 		<view class="content">
 			<!-- <button class="share-btn" @tap="createCanvasImageEvn">分享</button> -->
 			<view v-if="deliveryFlag" style="position: fixed;top:0;left:0;width: 100vw;height: 100vh;">
@@ -158,18 +180,32 @@
 		
 				</view>
 			</view>
-			
 		</view> 
+		
+		<view class="uni-popup"  style="" v-show="popupShow">
+			<view class="popup-detail">
+				<view class="uni-img">
+					<image src="https://cdn.doudouxiongglobal.com/pinxiang/image/shop/cry_bg.png" mode="aspectFit" class="img"></image>
+				</view>
+				<view class="uni-word">很抱歉，您未中奖</view>
+				<view class="uni-word2">感谢您的参与</br> 我们将赠送您50元购卡红包</view>
+				<view class="uni-button">立即开卡，全年免费保养</view>
+				<view class="uni-list" @click="goList">查看中奖名单</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import hchPoster from '../../components/hch-poster/hch-poster.vue'
-	import {getWinninCode,getActive} from '../../api/index.js'
+	import {getWinninCode,getActive,decryptPhone,changePhone} from '../../api/index.js'
 	export default {
-		components: {hchPoster},
+		components: {hchPoster,uniPopup},
 	    data() {
 	        return {
+				popupShow:false,
+				vip:0,
 				deliveryFlag: false,
 				canvasFlag: true,
 				posterData:{},
@@ -185,10 +221,16 @@
 				activeList:[],
 				bgCode:"https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png",
 				bgImg:'https://cdn.doudouxiongglobal.com/pinxiang/image/poster.jpg',
-				avatar:""
+				avatar:"",
+				phone:''
 	        }
 	    },
 	    methods: {
+			goList(){
+				uni.navigateTo({
+				    url: `../winList/winList`
+				});
+			},
 			createCanvasImageEvn(){
 				// 这个是固定写死的小程序码
 				let that = this
@@ -305,7 +347,8 @@
 					success(res2) {
 						wx.hideLoading();
 						uni.showToast({title: '图片保存成功，可以去分享啦~', duration: 2000})
-						_this.canvasCancel();
+						_this.deliveryFlag = false;
+						_this.canvasFlag = true;
 					},
 					fail() {
 						uni.showToast({title: '保存失败，稍后再试', duration: 2000,icon:'none'})
@@ -339,43 +382,265 @@
 				this.num = this.isShow? 7: this.codeList.length;
 				this.txt = this.isShow?  '查看更多':'收起'
 			},
-			async getCode(){
+			// async  getCode(){
+			// 	let that = this
+			// 	let codeData = await getWinninCode()
+			// 	if(codeData.Code === 200){
+			// 		console.log(codeData.Data)
+			// 		that.code = codeData.Data
+					
+			// 	}
+			// },
+			async getPhoneNumber(e){
+				console.log(1)
 				let that = this
-				let codeData = await getWinninCode()
+				let userData = uni.getStorageSync('user_data')
+				if(userData === null || userData.length === 0){
+					wx.showModal({
+						title:"提示",
+						content:"未登录，请前往登录",
+						success: function (res) {
+						            if (res.cancel) {
+						               //点击取消,默认隐藏弹框
+						            } else {
+						              uni.navigateTo({
+						              	url:"/pages/login/login"
+						              })
+						            }
+						         },
+					})
+					return false;
+				}
+				if(e.detail.errMsg === 'getPhoneNumber:ok'){
+					let wxOpenID = uni.getStorageSync('wxOpenID')
+					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
+						if(res.Code === 200){
+							that.phone = res.Data.Phone
+							changePhone({Phone:res.Data.Phone}).then(response =>{
+								if(response.Code === 200){
+									let userData = uni.getStorageSync('user_data')
+									userData = JSON.parse(userData)
+									userData['Phone'] = res.Data.Phone
+									uni.setStorageSync('user_data',JSON.stringify(userData))
+									// that.getCodeFunc()
+									getWinninCode('',{}).then(res=>{
+										console.log(res)
+									})
+								}
+							})
+						}
+					})
+				}
+			},
+			async getCodeFunc(){
+				console.log(3)
+				let codeData = await getWinninCode({})
 				if(codeData.Code === 200){
 					console.log(codeData.Data)
 					that.code = codeData.Data
 					
 				}
-			}
-			
+			},
+			login(userData){
+				console.log(userData)
+				let that = this
+				that.$refs.popup.open();
+				let openID = uni.getStorageSync('wxOpenID')
+				login({
+					'Type':'WECHAT',
+					'OpenID': openID,
+					'Nickname': userData.userInfo.nickName,
+					'Avatar':userData.userInfo.avatarUrl,
+					'Sex': userData.userInfo.gender === 1 ? 0 : 1,
+					'Province': userData.userInfo.province,
+					'City':userData.userInfo.city,
+					'ReferrerCode':uni.getStorageSync('ReferrerCode')
+				}).then((res)=>{
+					if(res.Code === 200)
+					{
+						uni.setStorageSync('api_token',res.Data.access_token)
+						uni.setStorageSync('user_data',JSON.stringify(res.Data.user))
+						that.avatar = res.Data.user.Avatar,
+						that.nickname = res.Data.user.Nickname,
+						that.phone = res.Data.user.Phone
+						that.isLogin = 1
+						// let userData = uni.getStorageSync('user_data')
+						// console.log(userData)
+						if(res.Data.user.Vip === 1){
+							that.vip = 1
+							getVip({}).then((res)=>{
+								console.log(res)
+								if(res.Code === 200){
+									that.vipData = res.Data
+								}
+							})
+						}
+						
+						if(that.redirect!=''){
+							console.log(that.redirect)
+							getApp().globalData.redirect=''
+							wx.navigateTo({
+								url:that.redirect
+							})
+						}
+						
+					}
+				})
+				console.log(openID)
+			},
 	    },
-		onShow() {
-			let userData =JSON.parse(uni.getStorageSync('user_data'));
+		async onShow() {
+			let userData = uni.getStorageSync('user_data')
+			if(userData === null || userData.length === 0){
+				return false;
+			}
+			userData = JSON.parse(userData)
 			console.log(userData)
-			this.avatar = userData.Avatar
-			console.log(this.avatar)
-		},
-		async onLoad() {
+			this.phone = userData.Phone
+			if(userData['Phone'] !== ''){
+				this.avatar = userData['Avatar']
+			}
 			let that = this
-			
 			let activeData = await getActive()
 			if(activeData.Code === 200){
 				console.log(activeData.Data)
 				if(JSON.stringify(activeData.Data)!=='[]'){
 					that.activeList = activeData.Data
 					console.log(that.activeList)
+					that.isLogin= that.activeList.IsLogin
+					if(that.isLogin ===0){
+						wx.showModal({
+							title:'提醒',
+							content:'您未登陆，请完成登陆',
+							confirmText:'前往',
+							success (res) {
+							    if (res.confirm) {
+									uni.navigateTo({
+										url:"/pages/login/login"
+									})
+							      // window.location.href = '/login'
+							    } else if (res.cancel) {
+							      console.log('用户点击取消')
+							    }
+							}
+						})
+					}
 					if(that.activeList.CodeList.length ===0){
 						that.moreShow = false
 					}
 				}
-				
+			}
+		},
+		async onLoad() {
+			let that = this
+			let activeData = await getActive()
+			if(activeData.Code === 200){
+				console.log(activeData.Data)
+				if(JSON.stringify(activeData.Data)!=='[]'){
+					that.activeList = activeData.Data
+					console.log(that.activeList)
+					that.isLogin= that.activeList.IsLogin
+					if(that.isLogin ===0){
+						wx.showModal({
+							title:'提醒',
+							content:'您未登陆，请完成登陆',
+							confirmText:'前往',
+							success (res) {
+							    if (res.confirm) {
+									uni.navigateTo({
+										url:"/pages/login/login"
+									})
+							      // window.location.href = '/login'
+							    } else if (res.cancel) {
+							      console.log('用户点击取消')
+							    }
+							}
+						})
+					}
+					if(that.activeList.CodeList.length ===0){
+						that.moreShow = false
+					}
+				}
+			}
+			let userData = uni.getStorageSync('user_data')
+			
+			if(userData === null || userData.length === 0){
+				return false;
+			}
+			userData = JSON.parse(userData)
+			that.phone = userData['Phone']
+			console.log(that.phone)
+			if(userData.length > 0){
+				this.login({userInfo:{
+					nickName: userData.Nickname,
+					gender:userData.Sex,
+					province:userData.Province,
+					city:userData.City
+				}})
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+.uni-popup{
+	width:750upx;
+	z-index:1000;
+	padding-top:50upx;
+	background: rgba(0,0,0,0.5);
+	.popup-detail{
+		width:681upx;
+		height:961upx;
+		margin-left:34upx;
+		margin-top:100upx;
+		background:#fff;
+		.uni-img{
+			width:341upx;
+			height:341upx;
+			margin-left:178upx;
+			padding-top:71upx;
+			.img{
+				width:341upx;
+				height:341upx;
+			}
+		}
+		.uni-word{
+			font-size:29upx;
+			margin-top: 29upx;
+			text-align: center;
+			color:rgba(51,51,51,1);
+		}
+		.uni-word2{
+			font-size:36upx;
+			font-weight:500;
+			margin-top: 29upx;
+			text-align: center;
+			color:rgba(51,51,51,1);
+		}
+		.uni-button{
+			width:466upx;
+			height:111upx;
+			line-height: 111upx;
+			background:rgba(254,81,0,1);
+			border-radius:14upx;
+			margin:54upx auto;
+			color:#fff;
+			text-align: center;
+		}
+		.uni-list{
+			width:241upx;
+			height:60upx;
+			line-height: 60upx;
+			font-size:36upx;
+			font-weight:500;
+			text-align: center;
+			margin: 107upx auto;
+			border-bottom: 2upx solid #A4A4A4;
+			
+		}
+	}
+	
+}
 .gray{
 	width:750upx;
 	height:11upx;
@@ -538,9 +803,18 @@
 			font-size:33upx;
 			margin-left: 60upx;
 		}
+		/deep/ button{
+			font-size:31upx;
+			width: 100%;
+			height:58upx;
+			margin-left:0 !important;
+			color:#fff;
+			line-height: 58upx;
+		}
 		.scan-join-word2{
 			font-size:31upx;
 			margin-left: 25upx;
+			color:#fff;
 		}
 		.vant-icon{
 			position: absolute;
@@ -623,7 +897,10 @@
 	.active-rule-content{
 		width:667upx;
 		padding:24upx 36upx;
-		font-size:29upx;
+		font-size:25upx;
+		view{
+			margin-bottom: 10upx;
+		}
 	}
 }
 .active-gift{
@@ -700,11 +977,24 @@
 	}
 	.gift-img{
 		margin-top:24upx;
+		margin-bottom:95upx;
 		.gift-image{
 			width:750upx;
 			height:1835.1449upx;
 		}
 	}
+}
+.code-box{
+	width:750upx;
+	height:109upx;
+	line-height:109upx;
+	background:rgba(254,81,0,1);
+	color:#fff;
+	text-align: center;
+	position: fixed;
+	bottom:0;
+	left:0;
+	letter-spacing: 2upx;
 }
 @keyframes heart-break
 	{
