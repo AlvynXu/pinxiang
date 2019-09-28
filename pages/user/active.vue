@@ -59,7 +59,8 @@
 				agreementChecked:true,
 				vip:0,
 				question1:false,
-				question2:false
+				question2:false,
+				type:''
 			}
 		},
 		methods: {
@@ -117,7 +118,8 @@
 				
 				let detail =  await payDetail({
 					OpenID: uni.getStorageSync('wxOpenID'),
-					VipType : this.vipSelected
+					VipType : this.vipSelected,
+					Type : this.type
 				})
 				if(detail.Code === 200){
 					uni.requestPayment({
@@ -242,6 +244,9 @@
 				if(referrerCode===null || referrerCode.length===0){
 					uni.setStorageSync('ReferrerCode',0)
 				}
+			}
+			if(options.type!=undefined){
+				this.type = options.type
 			}
 			let userData = uni.getStorageSync('user_data')
 			if(userData === null || userData.length === 0){

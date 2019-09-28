@@ -189,7 +189,7 @@
 				</view>
 				<view class="uni-word">很抱歉，您未中奖</view>
 				<view class="uni-word2">感谢您的参与</br> 我们将赠送您50元购卡红包</view>
-				<view class="uni-button">立即开卡，全年免费保养</view>
+				<view class="uni-button" @click="goBuyVip">立即开卡，全年免费保养</view>
 				<view class="uni-list" @click="goList">查看中奖名单</view>
 			</view>
 		</view>
@@ -427,7 +427,9 @@
 				}
 			},
 			async getCodeFunc(){
-				let codeData = await getWinninCode({})
+				let code = uni.getStorageSync('ReferrerCode')
+				let data = code === 0 ? {} : {code:code}
+				let codeData = await getWinninCode(data)
 				let that = this
 				if(codeData.Code === 200){
 					// console.log(codeData.Data)
@@ -517,6 +519,11 @@
 				})
 				console.log(openID)
 			},
+			goBuyVip(){
+				uni.navigateTo({
+					url:"/pages/user/active?type=active20191001"
+				})
+			}
 	    },
 		async onShow() {
 			let userData = uni.getStorageSync('user_data')
@@ -571,7 +578,16 @@
 				}
 			}
 		},
-		async onLoad() {
+		async onLoad(options) {
+			console.log(options.code)
+			if(options.code!=undefined){
+				uni.setStorageSync('ReferrerCode',options.code)
+			}else{
+				let referrerCode = uni.getStorageSync('ReferrerCode')
+				if(referrerCode===null || referrerCode.length===0){
+					uni.setStorageSync('ReferrerCode',0)
+				}
+			}
 			let that = this
 			let activeData = await getActive()
 			if(activeData.Code === 200){
