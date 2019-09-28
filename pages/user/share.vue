@@ -86,9 +86,9 @@
 					{
 						uni.setStorageSync('api_token',res.Data.access_token)
 						uni.setStorageSync('user_data',JSON.stringify(res.Data.user))
-						that.avatar = res.Data.user.Avatar,
-						that.nickname = res.Data.user.Nickname,
-						that.phone = res.Data.user.Phone
+						// that.avatar = res.Data.user.Avatar,
+						// that.nickname = res.Data.user.Nickname,
+						// that.phone = res.Data.user.Phone
 						that.isLogin = 1
 						// let userData = uni.getStorageSync('user_data')
 						// console.log(userData)
@@ -147,6 +147,7 @@
 			let that = this
 			if(referrerCode!==0){
 				getUserByCode(referrerCode,{}).then(res=>{
+					console.log(res)
 					if(res.Code === 200){
 						that.avatar = res.Data.Avatar
 						that.phone = res.Data.Phone

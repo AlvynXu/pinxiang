@@ -14,7 +14,7 @@
 		<view class="store-swiper">
 			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image class="swiper-img" :src="val.Image" mode="aspectFill"></image>
+					<image class="swiper-img" :src="val.Image" mode="aspectFill" :lazy-load="true"></image>
 				</swiper-item>
 			</swiper>
 			<view class="store-search" @click="goSearch">
@@ -50,7 +50,7 @@
 
 		<view v-for="(val,key) in storeList" :key="key">
 			<view class="store-list" @click="goStore(val.ID)">
-				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
+				<image class="cover" :src="val.Image[0]" mode="aspectFill" :lazy-load="true"></image>
 				<view class="store-area">
 					<view class="vant-icon">&#xe68f;</view>
 					<view class="area-name">{{val.Area}} <text v-if="val.TradingArea"> · {{val.TradingArea}}</text></view>
@@ -75,7 +75,7 @@
 		
 		<view v-for="(val,key) in recommend" :key="key">
 			<view class="store-list" @click="goStore(val.ID)">
-				<image class="cover" :src="val.Image[0]" mode="aspectFill"></image>
+				<image class="cover" :src="val.Image[0]" mode="aspectFill" :lazy-load="true"></image>
 				<view class="store-area">
 					<view class="vant-icon">&#xe68f;</view>
 					<view class="area-name">{{val.City}} · {{val.Area}}</text></view>
@@ -140,12 +140,14 @@
 		      path: '/pages/index/index'
 		    }
 		},
-		async onShow() {
+		onShow() {
 			let that = this
-			let bannerData = await getBanner({})
-			if(bannerData.Code === 200){
-				this.swiperList = bannerData.Data
-			}
+			getBanner({}).then(bannerData=>{
+				if(bannerData.Code === 200){
+					that.swiperList = bannerData.Data
+				}
+			})
+			
 			wx.getSystemInfo({
 				success:function(res){
 					if(res.platform == "devtools"){
@@ -158,15 +160,37 @@
 					}
 				}
 			})
-			let tokenData = await getToken()
+			// let tokenData = await getToken()
 			
 		},
 		async onLoad() {
 			let that = this
+			uni.getStorage({
+				key:"geo",
+				success(res) {
+					console.log(res.data)
+					if(res.data!=undefined){
+						res = JSON.parse(res.data)
+						getStore({'Lat':res.lat,'Lng':res.lng,'City':res.city}).then(storeData => {
+							if(storeData.Code === 200){
+								if(storeData.Data.StoreData.length === 0){
+									uni.showToast({
+										icon:"none",
+										title:"该地区门店正在更新中"
+									})
+								}
+								that.storeList = storeData.Data.StoreData
+								that.recommend = storeData.Data.RecommendData
+							}
+						});
+					}
+					
+				}
+			})
 			wx.getLocation({
 			 type: 'gcj02',
 			 success (res) {
-				 console.log(res)
+				 console.log("定位",(new Date).getMilliseconds())
 				that.lat = res.latitude
 				that.lng = res.longitude				
 				
@@ -177,6 +201,7 @@
 					url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
 					success(re) {
 						if(re.statusCode===200){
+							console.log("位置",(new Date).getMilliseconds())
 							that.area = re.data.result.address_component.street
 							uni.setStorageSync('geo',JSON.stringify({
 								'lat':res.latitude,

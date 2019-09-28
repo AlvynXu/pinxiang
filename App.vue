@@ -2,8 +2,7 @@
 import { getOpenID, login } from '@/api/index.js';
 export default {
 	onLaunch: function(options) {
-		console.log(options.scene)
-		console.log(options.query.code)
+		console.log("App OnLaunch",(new Date).getMilliseconds())
 		if(options.query.code!==undefined){
 			uni.setStorageSync('ReferrerCode',options.query.code)
 		}else{
@@ -41,6 +40,7 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
+		console.log("App Show",(new Date).getMilliseconds())
 	},
 	onHide: function() {
 		console.log('App Hide');
