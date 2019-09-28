@@ -537,3 +537,17 @@ export function getUserByCode(code,params={}) {
 		params: params
 	})
 }
+export function getActive(code,params={}) {
+	return fetch({
+		url: `${api.active}/20191001`,
+		method: 'get',
+		params: params
+	})
+}
+export function getWinninCode(code,params={}) {
+	return fetch({
+		url: `${api.active}/20191001`,
+		method: 'POST',
+		data: params
+	})
+}

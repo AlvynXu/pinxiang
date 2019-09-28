@@ -93,6 +93,10 @@
             		"navigationBarTitleText": "品象养车"
             		}
         }
+        ,{
+            "path" : "pages/active/active",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
