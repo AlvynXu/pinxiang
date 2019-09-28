@@ -39,7 +39,7 @@
 		</view>	
 		<view class="active-code">
 			<image class="code-img" src="https://cdn.doudouxiongglobal.com/store/active/bg-code2.png" mode="aspectFill"></image>
-			<view class="active-code-word" v-if="winList.isWinner===undefind">等待开奖</view>
+			<view class="active-code-word" v-if="winList.isWinner===undefined">等待开奖</view>
 			<view class="active-code-word" v-if="winList.isWinner===0">未中奖</view>
 			<view class="active-code-word2">抽奖码</view>
 			<view class="active-code-word3" v-if="code!=''">{{code}}</view>
@@ -94,10 +94,10 @@
 		<view class="active-gift">
 			<view class="active-rule-top">
 				<view class="rule-line left"></view>
-				<view class="rule-word">活动规则</view>
+				<view class="rule-word">国庆献礼</view>
 				<view class="rule-line right"></view>
 			</view>
-			<view class="active-gift-img">
+			<view class="active-gift-img"  @click="goBuyVip">
 				<image class="active-gift-image" src="https://cdn.doudouxiongglobal.com/store/active/zhekou.png" mode="aspectFill"></image>
 			</view>
 			
@@ -184,12 +184,15 @@
 		
 		<view class="uni-popup"  style="" v-show="popupShow">
 			<view class="popup-detail">
-				<view class="uni-img">
+				<view class="uni-img2" v-if="vip===1">
+					<image src="https://cdn.doudouxiongglobal.com/pinxiang/image/shop/cry_bg.png" mode="aspectFit" class="img"></image>
+				</view>
+				<view class="uni-img" v-if="vip===0">
 					<image src="https://cdn.doudouxiongglobal.com/pinxiang/image/shop/cry_bg.png" mode="aspectFit" class="img"></image>
 				</view>
 				<view class="uni-word">很抱歉，您未中奖</view>
-				<view class="uni-word2">感谢您的参与</br> 我们将赠送您50元购卡红包</view>
-				<view class="uni-button" @click="goBuyVip">立即开卡，全年免费保养</view>
+				<view class="uni-word2" v-if="vip===0">感谢您的参与</br> 我们将赠送您50元购卡红包</view>
+				<view class="uni-button" v-if="vip===0"  @click="goBuyVip">立即开卡，全年免费保养</view>
 				<view class="uni-list" @click="goList">查看中奖名单</view>
 			</view>
 		</view>
@@ -531,13 +534,13 @@
 				return false;
 			}
 			userData = JSON.parse(userData)
-			console.log(userData)
+			this.vip = userData.Vip
+			console.log(this.vip)
 			this.phone = userData.Phone
 			if(userData['Phone'] !== ''){
 				this.avatar = userData['Avatar']
 			}
 			let that = this
-			
 			let winListData = await getWinList()
 			if(winListData.Code === 200){
 				console.log(winListData.Data)
@@ -665,6 +668,16 @@
 			height:341upx;
 			margin-left:178upx;
 			padding-top:71upx;
+			.img{
+				width:341upx;
+				height:341upx;
+			}
+		}
+		.uni-img2{
+			width:341upx;
+			height:341upx;
+			margin-left:178upx;
+			padding-top:151upx;
 			.img{
 				width:341upx;
 				height:341upx;
