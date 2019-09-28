@@ -1,11 +1,15 @@
 <template>
 	<!-- 海报(想让海报显示隐藏要用hidden，v-if关闭后没办法在完整的出来海报) 保存海报按钮和关闭按钮 在html代码中写出来 绑定点击方法然后透明 再用canvas 覆盖 -->
 	<view class="canvas_box" :hidden="canvasFlag">
-		<!-- <view class="canvas_box_mask" @tap="canvasCancelEvn"></view><!-- 遮罩 --> -->
-		<!-- <icon type="cancel" class="canvas_close_btn" size="60" @tap="canvasCancelEvn" color="transparent" /><!-- 关闭 --> -->
+		<!-- <view class="canvas_box_mask" @tap="canvasCancelEvn"></view><!-- 遮罩 --> 
+		<!-- <icon type="cancel" class="canvas_close_btn" size="60" @tap="canvasCancelEvn" color="transparent" /><!-- 关闭 --> 
 		<view class="button-wrapper">
 			<!-- 保存海报按钮 -->
+			<!-- <cover-image :src="tmpImage"></cover-image> -->
 			<cover-view class="save_btn" @tap="saveCanvasImage"></cover-view>
+		</view>
+		<view :hidden="canvasFlag"><!-- 海报 要放外面放组件里面 会找不到 canvas-->
+			<canvas class="canvas" :style="canvasStyle" canvas-id="myCanvas" ref="myCanvas"></canvas><!-- 海报 -->
 		</view>
 	</view>
 </template>
@@ -14,7 +18,10 @@
 	export default {
 		data() {
 			return {
-
+				canvasW : 0,
+				canvasH : 0,
+				canvasStyle:'',
+				tmpImage:''
 			}
 		},
 		props: {
@@ -133,265 +140,133 @@
 				}
 				return row;
 			},
-			// 获取海报的小程序码
-			// codeImg(){
-			// 	return new Promise((resolve,reject)=>{
-			// 		request({
-			// 			method: 'get',
-			// 			url:'/spSupport/getwxacodeunlimit',
-			// 			header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-			// 			data: {
-			// 				version:this.$parent.globalData.version,
-			// 				scene:`sku=${this.sku}`,
-			// 				page:"pages/product/detail",
-			// 				width:"128px",
-			// 			},
-			// 		}).then((res)=>{
-			// 			if (res.data.code==0) {
-			// 			const fsm = wx.getFileSystemManager();
-			// 				const FILE_BASE_NAME = 'tmp_img_src';
-			// 				let filePath = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.jpg`;
-			// 				fsm.writeFile({
-			// 					filePath,
-			// 					data: res.data.data,
-			// 					encoding: 'binary',
-			// 					success() {
-			// 						resolve(filePath)
-			// 					},
-			// 					fail() {
-			// 						this.canvasFlag=true;
-			// 						uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-			// 					},
-			// 				});
-			// 			} else {
-			// 				uni.showToast({title: res.data.message, icon: 'none',duration: 2000,icon:'none'})
-			// 			}
-			// 		}).catch(()=>{
-			// 			this.canvasFlag=true;
-			// 			uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-			// 		})
-			// 	})
-			// },
 
 
 			// 生成海报
 			createCanvasImage() {
-				console.log(this.posterObj, 'posterObj')
 				// this.canvasFlag=false;
 				// this.deliveryFlag = false;//关闭分享的弹窗
-				console.log("海报生成中")
 				wx.showLoading({
 					title: '海报生成中...'
 				})
 				let _this = this;
 				let phoneData = wx.getSystemInfoSync();
-				_this.phoneH = phoneData.windowHeight;
-				_this.phoneW = phoneData.windowWidth;
-				let scaleW = _this.phoneW / 375; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
-				let scaleH = _this.phoneH / 667; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
-				console.log(_this.phoneH, _this.phoneW)
-				const ctx = wx.createCanvasContext('myCanvas');
-				let url = _this.posterObj.url; //商品主图
-				let zpPriceIcon = _this.posterObj.icon //图标
-				let code = _this.posterObj.code
-				let closeBtn = 'https://imgzuipin.oss-cn-hangzhou.aliyuncs.com/mp_zuipin/poster/close_btn.png'
-				console.log(ctx)
-				console.log(_this)
-
-				ctx.draw() //清空原来的画图内容
-				ctx.save();
-				// _this.roundRect(ctx, 35, 40, 300, 430, 10, '#fff', '#fff'); //绘制海报圆角背景白色的
-				ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
-				ctx.save();
-				// this.roundRect(ctx,50,40,(this.phoneW-100), 400,10,'#f7f7f7','#f7f7f7');//绘制海报圆角背景 上半截灰色的
-				ctx.restore();
-				//将网络图片转成本地路径 商品图片
-				wx.downloadFile({
-						url: url,
-						success(res) {
-							if (res.statusCode === 200) {
-								let filePath = res.tempFilePath
-								// wx.getImageInfo({
-								// 	src: filePath,
-								// 	success(res){
-								ctx.save();
-								//覆盖绘制
-								//问题：在微信小程序使用canvas绘制圆角图片时，微信调试工具正常显示，android真机都不显示。
-								// 原因：因为ctx.clip()剪切区域使用的填充颜色是透明的，所以图片没出来。
-								// 解决方案：将剪切区域设置成实体颜色就好了。
-								// _this.roundRect(ctx, 50, 55, (_this.phoneW - 100), 405, 10, '#f7f7f7', '#f7f7f7') //绘制图片圆角背景
-								ctx.drawImage(filePath, 0, 0, (_this.phoneW - 100), 405, 1, 1); //绘制图
-								ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
-								ctx.draw(true)
-								wx.downloadFile({
-									url: code,
-									success(res) {
-										if (res.statusCode === 200) {
-											let filePath = res.tempFilePath
-											// wx.getImageInfo({
-											//        src: filePath,
-											//        success(res) {
+				wx.getImageInfo({
+					src:_this.posterObj.url,
+					success:(res)=>{
+						console.log(res)
+						let imageW = res.width
+						let imageH = res.height
+						let phoneW = phoneData.windowWidth;
+						let phoneH = phoneData.windowHeight;
+						let canvasW = Math.floor(phoneW * 0.7);
+						let canvasH = Math.floor(canvasW * imageH / imageW)
+						_this.canvasW = canvasW
+						_this.canvasH = canvasH
+						console.log(canvasW,canvasH)
+						console.log(phoneW,phoneH)
+						let left = (phoneW-canvasW)/2
+						let top = ((phoneH-(Math.floor(phoneW*240/750)))-canvasH)/2
+						_this.canvasStyle = `width:${canvasW}px !important; height:${canvasH}px !important; left:${left}px !important;top:${top}px !important;`
+						const ctx = wx.createCanvasContext('myCanvas');
+						let url = _this.posterObj.url; //商品主图
+						let zpPriceIcon = _this.posterObj.icon //图标
+						let code = _this.posterObj.code
+						let closeBtn = 'https://imgzuipin.oss-cn-hangzhou.aliyuncs.com/mp_zuipin/poster/close_btn.png'
+						
+						ctx.draw() //清空原来的画图内容
+						ctx.save();
+						// _this.roundRect(ctx, 35, 40, 300, 430, 10, '#fff', '#fff'); //绘制海报圆角背景白色的
+						ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
+						ctx.save();
+						// this.roundRect(ctx,50,40,(this.phoneW-100), 400,10,'#f7f7f7','#f7f7f7');//绘制海报圆角背景 上半截灰色的
+						ctx.restore();
+						wx.downloadFile({
+							url: url,
+							success(res) {
+								if (res.statusCode === 200) {
+									let filePath = res.tempFilePath
+									// wx.getImageInfo({
+									// 	src: filePath,
+									// 	success(res){
+									ctx.save();
+									//覆盖绘制
+									//问题：在微信小程序使用canvas绘制圆角图片时，微信调试工具正常显示，android真机都不显示。
+									// 原因：因为ctx.clip()剪切区域使用的填充颜色是透明的，所以图片没出来。
+									// 解决方案：将剪切区域设置成实体颜色就好了。
+									// _this.roundRect(ctx, 50, 55, (_this.phoneW - 100), 405, 10, '#f7f7f7', '#f7f7f7') //绘制图片圆角背景
+									ctx.drawImage(filePath, 0, 0, _this.canvasW, _this.canvasH, 1, 1); //绘制图
+									ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
+									ctx.draw(true)
+									
+									const [, format, bodyData] = /data:image\/(\w+);base64,(.*)/.exec(code) || [];
+									if (!format) {
+										
+									}
+									const FILE_BASE_NAME = 'tmp_img_src';
+									const filePathCode = `${wx.env.USER_DATA_PATH}/${FILE_BASE_NAME}.${format}`;
+									const buffer = wx.base64ToArrayBuffer(bodyData);
+									wx.getFileSystemManager().writeFile({
+										filePath:filePathCode,
+										data: buffer,
+										encoding: 'binary',
+										success() {
+											_this.tmpImage = filePathCode
 											ctx.save();
-											//覆盖绘制
-											//问题：在微信小程序使用canvas绘制圆角图片时，微信调试工具正常显示，android真机都不显示。
-											// 原因：因为ctx.clip()剪切区域使用的填充颜色是透明的，所以图片没出来。
-											// 解决方案：将剪切区域设置成实体颜色就好了。
-											// _this.roundRect(ctx,50,300,50,50,10,'#f7f7f7','#f7f7f7')//绘制图片圆角背景
-											ctx.drawImage(filePath, 50, 280, 50, 50, 1, 1); //绘制图
-											ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
+											// //覆盖绘制
+											// //问题：在微信小程序使用canvas绘制圆角图片时，微信调试工具正常显示，android真机都不显示。
+											// // 原因：因为ctx.clip()剪切区域使用的填充颜色是透明的，所以图片没出来。
+											// // 解决方案：将剪切区域设置成实体颜色就好了。
+											// // _this.roundRect(ctx,50,300,50,50,10,'#f7f7f7','#f7f7f7')//绘制图片圆角背景
+											let codeTop = _this.canvasH*0.708
+											let codeLeft = _this.canvasW*0.15
+											let codeW = _this.canvasW*0.173
+											let codeH = codeW
+											ctx.drawImage(filePathCode, codeLeft, codeTop, codeW, codeH, 1, 1); //绘制图
+											// // ctx.restore(); //恢复之前保存的绘图上下文 恢复之前保存的绘图上下午即状态 可以继续绘制
 											ctx.draw(true)
-											// ctx.drawImage(res.path,50,200,50,50,1,1)
-											// ctx.draw(true)
-											//       },
-											// 		fail(){
-											// 			_this.canvasFlag=true;
-											// 			uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-
-											// 		}
-											// 	})
+										},
+										fail() {
+										},
+									});
+									
+									
+									// wx.downloadFile({
+									// 	url: code,
+									// 	success(res) {
+									// 		if (res.statusCode === 200) {
+												
+									// 		}
+									// 	}
+									// })
+									
+									wx.downloadFile({
+										url: zpPriceIcon,
+										success(res) {
+											if (res.statusCode === 200) {
+												let filePath = res.tempFilePath
+												let avatarW = Math.floor(_this.canvasW*0.13)
+												let left = (_this.canvasW-_this.canvasW*0.76-_this.canvasW*0.033)/2+_this.canvasW*0.76-avatarW/2
+												ctx.drawImage(filePath, left, 21, avatarW, avatarW, 1, 1)
+												ctx.draw(true)
+											}
 										}
-									}
-								})
-
-								wx.downloadFile({
-									url: zpPriceIcon,
-									success(res) {
-										if (res.statusCode === 200) {
-											let filePath = res.tempFilePath
-											// wx.getImageInfo({
-											//          src: filePath,
-											//          success(res) {
-											ctx.drawImage(filePath, 218, 17, 30, 30, 1, 1)
-											ctx.draw(true)
-											//       } ,
-											// 		fail(){
-											// 			_this.canvasFlag=true;
-											// 			uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-											// 		}
-											// 	})
-										}
-									}
-								})
-
-
+									})
+						
+						
+								}
 							}
-							// })
-						}
-
-
-					// },
-					// fail() {
-					// 	_this.canvasFlag = true;
-					// 	uni.showToast({
-					// 		title: '海报生成失败',
-					// 		duration: 2000,
-					// 		icon: 'none'
-					// 	});
-					// }
+						
+						})
+						wx.hideLoading();
+					}
 				})
-			// 关闭按钮
-			// wx.downloadFile({
-			// 	url: closeBtn,
-			// 	success(res) {
-			// 		if (res.statusCode === 200) {
-			// 			let filePath = res.tempFilePath
-			// 			// 	wx.getImageInfo({
-			// 			//         src: filePath,
-			// 			//         success(res) {
-			// 			ctx.drawImage(filePath, 50 + (_this.phoneW - 100) + 15, 20, 24, 24)
-			// 			ctx.draw(true)
-			// 			//       }  ,
-			// 			// 		fail(){
-			// 			// 			_this.canvasFlag=true;
-			// 			// 			uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-			// 			// 		}
-			// 			// })
-			// 		}
-			// 	}
-			// })
-
-			// 关闭按钮 end
-			// 海报商品title
-			// setTimeout(()=>{
-			// 	ctx.setGlobalAlpha(1)//不透明
-			// 	ctx.setFillStyle('#1c1c1c')//文字颜色：默认黑色
-			// 	ctx.setFontSize(14)//设置字体大小，默认10
-			// 	ctx.font = 'normal bold 14px sans-serif';
-			// 	let text =this.posterObj.title;
-			// 	let row = this.canvasMultiLineText(ctx,text,(this.phoneW-130),2);//计算绘制的2行文本
-			// 	let contentTextY = 360; // 这段文字起始的y位置
-			// 	let leftSpace = 65; // 这段文字起始的X位置
-			// 	let textLineHeight = 18; // 一行文字加一行行间距
-			// 	for (let b = 0; b < row.length; b++) {//一行一行绘制文本
-			// 		ctx.fillText(row[b], leftSpace, (contentTextY+ textLineHeight * b-15)*scaleH, (this.phoneW-130));
-			// 		ctx.draw(true)
-			// 	}
-			// },500)
-			// 海报商品title end
-			// 会员价 图标
-			// 	wx.getImageInfo({
-			//          src: zpPriceIcon,
-			//          success(res) {
-			// 		ctx.drawImage(res.path,65,380*scaleH,44, 15)
-			// 		ctx.draw(true)
-			//       } ,
-			// 		fail(){
-			// 			_this.canvasFlag=true;
-			// 			uni.showToast({title:'海报生成失败',duration:2000,icon:'none'});
-			// 		}
-			// 	})
-			// 会员价 图标 end
-			//绘制价格
-			// 	ctx.setFontSize(12)//设置字体大小，默认10
-			// 	ctx.setFillStyle('#c00000')//文字颜色：默认黑色
-			// 	ctx.font = 'normal 12px sans-serif';
-			// 	ctx.fillText(110, 396*scaleH,60);
-			// 	ctx.setFontSize(16)//设置字体大小，默认10
-			// 	let zpPrice = this.posterObj.discountPrice;//会员价格
-			// 	let orignPrice = this.posterObj.orignPrice;//市场价
-
-			// 	let zpPriceW = ctx.measureText(zpPrice).width;//文本的宽度
-			// 	ctx.fillText(zpPrice, 120, 396*scaleH,zpPriceW);
-
-			// 	ctx.beginPath();//开始一个新的路径
-			// 	ctx.setFontSize(10)//设置字体大小，默认10
-			// 	ctx.setFillStyle('#999')//文字颜色：默认黑色
-			// 	let orignPriceW = ctx.measureText(orignPrice).width//去掉市场价
-			// 	ctx.fillText(`￥${orignPrice}`, 120+zpPriceW+5, 395*scaleH,orignPriceW); //5价格间距
-			// 	ctx.moveTo(120+zpPriceW+5,392*scaleH);//设置线条的起始路径坐标
-			// 	ctx.lineTo(120+zpPriceW+5+orignPriceW,392*scaleH);//设置线条的终点路径坐标
-			// 	ctx.setStrokeStyle('#999')
-			// 	ctx.stroke();//对当前路径进行描边
-			// 	ctx.closePath();//关闭当前路径
-			//绘制价格 end
-			// this.codeImg().then((res)=>{
-			// 小程序码
-
-			// });
-
-			// 小程序码end
-			// 小程序的名称
-			// ctx.setFontSize(14)
-			// ctx.setFillStyle('#2f1709')//文字颜色：默认黑色
-			// ctx.font = 'normal bold 14px sans-serif';
-			// ctx.fillText('小程序的名称', (_this.phoneW-90)/2, 530*scaleH,90);
-			// 小程序的名称end
-			// 长按/扫描识别查看商品
-			// ctx.setFontSize(14)
-			// ctx.setFillStyle('#ff5f33')//文字颜色：默认黑色
-			// ctx.font = 'normal 14px sans-serif';
-			// ctx.fillText('长按/扫描识别查看商品', (_this.phoneW-140)/2, 550*scaleH,140);
-			// 长按/扫描识别查看商品end
-			//绘制保存按钮
-			// ctx.save(); 
-			// this.roundRect(ctx,(this.phoneW-160)/2,(this.phoneH-105),160, 36,18,'#ff3600','#ff6a00','btn')
-			// ctx.restore(); 
-			// ctx.setFontSize(14)
-			// ctx.setFillStyle('#fff')//文字颜色：默认黑色
-			// ctx.font = 'normal bold 14px sans-serif';
-			// ctx.fillText('保存图片', (_this.phoneW-58)/2, (this.phoneH-83),58);
-			//绘制保存按钮 end
-			wx.hideLoading();
+				// let scaleW = _this.phoneW / 375; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
+				// let scaleH = _this.phoneH / 667; //按照苹果留 375*667比例 其他型号手机等比例缩放 显示
+				
+				//将网络图片转成本地路径 商品图片
+				
+			
 		},
 
 		// 保存到系统相册
@@ -459,24 +334,24 @@
 
 	.canvas_box {
 		.canvas_box_mask {
-			width: 100%;
-			height: 100%;
-			position: fixed;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			background: rgba(0, 0, 0, 0.5);
-			z-index: 1;
+			// width: 100%;
+			// height: 100%;
+			// position: fixed;
+			// top: 0;
+			// right: 0;
+			// bottom: 0;
+			// left: 0;
+			// background: rgba(0, 0, 0, 0.5);
+			// z-index: 1;
 		}
 
 		.canvas {
 			position: fixed !important;
-			top: 0 !important;
-			left: 0 !important;
+			// top: 0 !important;
+			// left: 0 !important;
 			display: block !important;
-			width: 100% !important;
-			height: 100% !important;
+			// width: 100% !important;
+			// height: 100% !important;
 			z-index: 9;
 		}
 

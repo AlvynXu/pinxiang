@@ -132,9 +132,7 @@
 			<view v-if="deliveryFlag" style="position: fixed;top:0;left:0;width: 100vw;height: 100vh;">
 				<view style="position: fixed;background: rgba(0,0,0,0.4);top:0;left:0;width: 100vw;height: 100vh;" @click="canvasCancel"></view>
 				<hchPoster ref="hchPoster" :canvasFlag.sync="canvasFlag" @cancel="canvasCancel" :posterObj.sync="posterData"/>
-				<view :hidden="canvasFlag"><!-- 海报 要放外面放组件里面 会找不到 canvas-->
-					<canvas class="canvas"  canvas-id="myCanvas" ></canvas><!-- 海报 -->
-				</view>
+				
 			</view>
 			
 			<!-- 分享弹窗-->
@@ -195,14 +193,13 @@
 				// 这个是固定写死的小程序码
 				let that = this
 				that.deliveryFlag = true;
+				console.log(that.bgCode)
+				
 				Object.assign(this.posterData,
 				{
 					url:that.bgImg,//商品主图
 					icon:that.avatar,//醉品价图标
-					title:"诗酒茶系列 武夷大红袍 2018年 花香型中火 一级 体验装 16g",//标题
-					discountPrice:"250.00",//折后价格
-					orignPrice:"300.00",//原价
-					code:that.bgCode,//小程序码
+					code:that.activeList.QrCode,//小程序码
 				})
 				that.$forceUpdate();//强制渲染数据
 				setTimeout(()=>{
@@ -294,12 +291,12 @@
 				let _this = this;
 				// 1-把画布转化成临时文件
 				uni.canvasToTempFilePath({
-				x: 50,
-				y: 40,
-				width:(this.phoneW-100),    // 画布的宽
-				height: (this.phoneH-120),   // 画布的高
-				destWidth: (this.phoneW-100)*5,
-				destHeight: (this.phoneH-120)*5,
+				x: 0,
+				y: 0,
+				// width:(this.phoneW-100),    // 画布的宽
+				// height: (this.phoneH-120),   // 画布的高
+				// destWidth: (this.phoneW-100)*5,
+				// destHeight: (this.phoneH-120)*5,
 				canvasId: 'myCanvas',
 				success(res) {
 					// 2-保存图片至相册
@@ -308,7 +305,7 @@
 					success(res2) {
 						wx.hideLoading();
 						uni.showToast({title: '图片保存成功，可以去分享啦~', duration: 2000})
-						_this.canvasCancelEvn();
+						_this.canvasCancel();
 					},
 					fail() {
 						uni.showToast({title: '保存失败，稍后再试', duration: 2000,icon:'none'})
@@ -353,12 +350,15 @@
 			}
 			
 	    },
-		async onLoad() {
-			let that = this
+		onShow() {
 			let userData =JSON.parse(uni.getStorageSync('user_data'));
 			console.log(userData)
 			this.avatar = userData.Avatar
 			console.log(this.avatar)
+		},
+		async onLoad() {
+			let that = this
+			
 			let activeData = await getActive()
 			if(activeData.Code === 200){
 				console.log(activeData.Data)
@@ -371,9 +371,6 @@
 				}
 				
 			}
-		},
-		onShow() {
-			console.log(1)
 		}
 	}
 </script>
@@ -824,7 +821,7 @@
 	    }
 	    .share-pro-dialog {
 	        width: 750rpx;
-	        height: 310rpx;
+	        height: 240rpx;
 	        overflow: hidden;
 	        background-color: #fff;
 	        border-radius: 24rpx 24rpx 0px 0px;
@@ -885,14 +882,14 @@
 	    }
 	
 	}
-	 .canvas{
-	    position: fixed !important;
-	    top: 110upx !important;
-	    left: 50% !important;
-	    display: block !important;
-	    width: 554upx !important;
-	    height: 800upx !important;
-		margin-left:-277upx;
-	    z-index: 10;
-	}
+	//  .canvas{
+	//     position: fixed !important;
+	//     top: 110upx !important;
+	//     left: 50% !important;
+	//     display: block !important;
+	//     width: 554upx !important;
+	//     height: 800upx !important;
+	// 	margin-left:-277upx;
+	//     z-index: 10;
+	// }
 </style>
