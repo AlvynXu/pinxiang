@@ -42,8 +42,8 @@
 			<view class="active-code-word" v-if="vip===0">等待开奖</view>
 			<view class="active-code-word" v-if="vip===1">未中奖</view>
 			<view class="active-code-word2">抽奖码</view>
-			<view class="active-code-word3" v-if="isLogin===1">{{code}}</view>
-			<view class="active-code-word4" v-if="isLogin===0">*********</view>
+			<view class="active-code-word3" v-if="code!=''">{{code}}</view>
+			<view class="active-code-word4" v-if="code===''">*********</view>
 		</view>
 		<view class="active-scan">
 			<image class="code-img" :src="activeList.QrCode" mode="aspectFill"></image>
@@ -54,8 +54,8 @@
 			<view class="scan-join">
 				<view class="scan-join-word" v-if="isLogin===0">参与抽奖</view>
 				<button class="scan-join-word" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">参与抽奖</button>
-				<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
-				<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view>
+				<view class="scan-join-word2" v-if="isLogin===1 && codeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
+				<view class="scan-join-word2" v-if="isLogin===1 && codeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view>
 				<view class="vant-icon finger samll" v-if="isLogin===0">&#xe6b8;</view>
 				<view class="vant-icon finger large" v-if="isLogin===1">&#xe6b8;</view>
 			</view>
@@ -137,10 +137,10 @@
 			<button class="scan-join-word" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">参与抽奖</button>
 			<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
 			<view class="scan-join-word2" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view> -->
-		<view class="code-box" v-if="isLogin===1 && activeList.CodeList.length>0" @tap="createCanvasImageEvn">
+		<view class="code-box" v-if="isLogin===1 && codeList.length>0" @tap="createCanvasImageEvn">
 			获得更多抽奖码
 		</view>
-		<view class="code-box" v-if="isLogin===1 && activeList.CodeList.length==0 && phone!==''" @tap="getCodeFunc">
+		<view class="code-box" v-if="isLogin===1 && codeList.length==0 && phone!==''" @tap="getCodeFunc">
 			参与抽奖
 		</view>
 		<button class="code-box" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -222,7 +222,9 @@
 				bgCode:"https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png",
 				bgImg:'https://cdn.doudouxiongglobal.com/pinxiang/image/poster.jpg',
 				avatar:"",
-				phone:''
+				phone:'',
+				codeList:[],
+				code:''
 	        }
 	    },
 	    methods: {
@@ -382,17 +384,8 @@
 				this.num = this.isShow? 7: this.codeList.length;
 				this.txt = this.isShow?  '查看更多':'收起'
 			},
-			// async  getCode(){
-			// 	let that = this
-			// 	let codeData = await getWinninCode()
-			// 	if(codeData.Code === 200){
-			// 		console.log(codeData.Data)
-			// 		that.code = codeData.Data
-					
-			// 	}
-			// },
+
 			async getPhoneNumber(e){
-				console.log(1)
 				let that = this
 				let userData = uni.getStorageSync('user_data')
 				if(userData === null || userData.length === 0){
@@ -422,10 +415,10 @@
 									userData = JSON.parse(userData)
 									userData['Phone'] = res.Data.Phone
 									uni.setStorageSync('user_data',JSON.stringify(userData))
-									// that.getCodeFunc()
-									getWinninCode('',{}).then(res=>{
-										console.log(res)
-									})
+									that.getCodeFunc()
+									// getWinninCode({}).then(res=>{
+									// 	console.log(res)
+									// })
 								}
 							})
 						}
@@ -433,12 +426,47 @@
 				}
 			},
 			async getCodeFunc(){
-				console.log(3)
 				let codeData = await getWinninCode({})
+				let that = this
 				if(codeData.Code === 200){
-					console.log(codeData.Data)
-					that.code = codeData.Data
-					
+					// console.log(codeData.Data)
+					wx.showToast({
+						title:"成功获取抽奖码",
+						icon:"none"
+					})
+					this.code = codeData.Data
+					let activeData = await getActive()
+					if(activeData.Code === 200){
+						console.log(activeData.Data)
+						if(JSON.stringify(activeData.Data)!=='[]'){
+							that.activeList = activeData.Data
+							console.log(that.activeList)
+							that.isLogin= that.activeList.IsLogin
+							if(that.isLogin ===0){
+								wx.showModal({
+									title:'提醒',
+									content:'您未登陆，请完成登陆',
+									confirmText:'前往',
+									success (res) {
+									    if (res.confirm) {
+											uni.navigateTo({
+												url:"/pages/login/login"
+											})
+									      // window.location.href = '/login'
+									    } else if (res.cancel) {
+									      console.log('用户点击取消')
+									    }
+									}
+								})
+							}
+							that.codeList = that.activeList.CodeList
+							if(that.codeList.length ===0){
+								that.moreShow = false
+							}else{
+								that.code = that.codeList[0]
+							}
+						}
+					}
 				}
 			},
 			login(userData){
@@ -527,6 +555,8 @@
 					}
 					if(that.activeList.CodeList.length ===0){
 						that.moreShow = false
+					}else{
+						that.code = that.activeList.CodeList[0]
 					}
 				}
 			}
@@ -557,8 +587,11 @@
 							}
 						})
 					}
-					if(that.activeList.CodeList.length ===0){
+					that.codeList = that.activeList.CodeList
+					if(that.codeList.length ===0){
 						that.moreShow = false
+					}else{
+						that.code = that.codeList[0]
 					}
 				}
 			}
@@ -812,8 +845,9 @@
 			line-height: 58upx;
 		}
 		.scan-join-word2{
+			width: 100%;
+			text-align: center;
 			font-size:31upx;
-			margin-left: 25upx;
 			color:#fff;
 		}
 		.vant-icon{

@@ -544,10 +544,11 @@ export function getActive(code,params={}) {
 		params: params
 	})
 }
-export function getWinninCode(code,params={}) {
+
+export function getWinninCode(params={}) {
 	return fetch({
 		url: `${api.active}/20191001`,
-		method: 'POST',
+		method: 'post',
 		data: params
 	})
 }
