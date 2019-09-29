@@ -24,7 +24,7 @@
 					<text class="time">{{item.CreatedDate}}</text>
 				</view>
 				<view class="price-box-price">
-					<text class="price">30.00</text>
+					<text class="price">{{item.Price}}</text>
 					<text class="num">会员免费</text>
 				</view>
 			</view>

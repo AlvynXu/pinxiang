@@ -52,18 +52,18 @@
 			<view class="vant-icon">&#xe6b7;</view>
 			<view class="scan-word1">抽奖码列表</view>
 			<view class="scan-join">
-				<view class="scan-join-word" v-if="isLogin===0">参与抽奖</view>
+				<view class="scan-join-word" v-if="isLogin===0" @tap="getCodeFunc">参与抽奖</view>
 				<button class="scan-join-word" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">参与抽奖</button>
 				<view class="scan-join-word2" v-if="isLogin===1 && codeList.length==0 && phone!==''" @tap="getCodeFunc">参与抽奖</view>
 				<view class="scan-join-word2" v-if="isLogin===1 && codeList.length>0" @tap="createCanvasImageEvn">获得更多抽奖码</view>
 				<view class="vant-icon finger samll" v-if="isLogin===0">&#xe6b8;</view>
 				<view class="vant-icon finger large" v-if="isLogin===1">&#xe6b8;</view>
 			</view>
-			<view class="active-join-lists" v-if="moreShow">
+			<view class="active-join-lists">
 				<view class="active-join-list" v-for="(val,key) in activeList.CodeList" :key="key" v-show="key<num">
 					·{{val}}
 				</view>
-				<view class="showMore" @click="showMore">
+				<view class="showMore" v-if="moreShow" @click="showMore">
 					{{txt}}
 					<view class="vant-icon" v-if="isShow===true">&#xe60c;</view>
 					<view class="vant-icon top" v-if="isShow===false">&#xe6b4;</view>
@@ -146,7 +146,7 @@
 		<button class="code-box" v-if="isLogin===1 && phone===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
 			参与抽奖
 		</button>
-		<view class="code-box" v-if="isLogin===0">
+		<view class="code-box" v-if="isLogin===0" @tap="getCodeFunc">
 			参与抽奖
 		</view>
 		<view class="content">
@@ -252,31 +252,8 @@
 				that.$forceUpdate();//强制渲染数据
 				setTimeout(()=>{
 					that.canvasFlag=false;//显示canvas海报
-					// that.deliveryFlag = false;//关闭分享弹窗
 					that.$refs.hchPoster.createCanvasImage();//调用子组件的方法
 				},500)
-				// 这个是固定写死的小程序码 end
-				// 以下是根据后端接口动态生成小程序码
-				// let code="https://img0.zuipin.cn/mp_zuipin/poster/hch-code.png";
-				// this.codeImg().then((res)=>{
-				// 	code = res;
-				// 	Object.assign(this.posterData,
-				// 	{
-				// 		url:'https://img0.zuipin.cn/mp_zuipin/poster/hch-pro.jpg',//商品主图
-				// 		icon:'https://img0.zuipin.cn/mp_zuipin/poster/hch-hyj.png',//醉品价图标
-				// 		title:"诗酒茶系列 武夷大红袍 2018年 花香型中火 一级 体验装 16g",//标题
-				// 		discountPrice:"250.00",//折后价格
-				// 		orignPrice:"300.00",//原价
-				// 		code:code,//小程序码
-				// 	})
-				// 	this.$forceUpdate();//强制渲染数据
-				// 	setTimeout(()=>{
-				// 		this.canvasFlag=false;//显示canvas海报
-				// 		this.deliveryFlag = false;//关闭分享弹窗
-				// 		this.$refs.hchPoster.createCanvasImage();//调用子组件的方法
-				// 	},500)
-				// })
-				// 以下是根据后端接口动态生成小程序码 end
 			},
 			
 			// 获取海报的小程序码
@@ -341,10 +318,6 @@
 				uni.canvasToTempFilePath({
 				x: 0,
 				y: 0,
-				// width:(this.phoneW-100),    // 画布的宽
-				// height: (this.phoneH-120),   // 画布的高
-				// destWidth: (this.phoneW-100)*5,
-				// destHeight: (this.phoneH-120)*5,
 				canvasId: 'myCanvas',
 				success(res) {
 					// 2-保存图片至相册
@@ -382,9 +355,7 @@
 				this.deliveryFlag = false;
 			},
 			showMore(){
-				console.log('1', this.isShow);
 				this.isShow = !this.isShow;
-				console.log('2', this.isShow);
 				this.num = this.isShow? 7: this.codeList.length;
 				this.txt = this.isShow?  '查看更多':'收起'
 			},
@@ -432,8 +403,8 @@
 			async getCodeFunc(){
 				let code = uni.getStorageSync('ReferrerCode')
 				let data = code === 0 ? {} : {code:code}
-				let codeData = await getWinninCode(data)
 				let that = this
+				let codeData = await getWinninCode(data)
 				if(codeData.Code === 200){
 					// console.log(codeData.Data)
 					wx.showToast({
@@ -470,6 +441,7 @@
 								that.moreShow = false
 							}else{
 								that.code = that.codeList[0]
+								that.moreShow = true
 							}
 						}
 					}
@@ -535,63 +507,22 @@
 			}
 			userData = JSON.parse(userData)
 			this.vip = userData.Vip
-			console.log(this.vip)
 			this.phone = userData.Phone
 			if(userData['Phone'] !== ''){
 				this.avatar = userData['Avatar']
 			}
+			
+			if(userData.length > 0){
+				this.login({userInfo:{
+					nickName: userData.Nickname,
+					gender:userData.Sex,
+					province:userData.Province,
+					city:userData.City
+				}})
+			}
+			
 			let that = this
-			let winListData = await getWinList()
-			if(winListData.Code === 200){
-				console.log(winListData.Data)
-				that.winList = winListData.Data
-				if(winListData.Data.isWinner === 0){
-					that.popupShow = true
-				}
-			}
-			let activeData = await getActive()
-			if(activeData.Code === 200){
-				console.log(activeData.Data)
-				if(JSON.stringify(activeData.Data)!=='[]'){
-					that.activeList = activeData.Data
-					console.log(that.activeList)
-					that.isLogin= that.activeList.IsLogin
-					if(that.isLogin ===0){
-						wx.showModal({
-							title:'提醒',
-							content:'您未登陆，请完成登陆',
-							confirmText:'前往',
-							success (res) {
-							    if (res.confirm) {
-									uni.navigateTo({
-										url:"/pages/login/login"
-									})
-							      // window.location.href = '/login'
-							    } else if (res.cancel) {
-							      console.log('用户点击取消')
-							    }
-							}
-						})
-					}
-					if(that.activeList.CodeList.length ===0){
-						that.moreShow = false
-					}else{
-						that.code = that.activeList.CodeList[0]
-					}
-				}
-			}
-		},
-		async onLoad(options) {
-			console.log(options.code)
-			if(options.code!=undefined){
-				uni.setStorageSync('ReferrerCode',options.code)
-			}else{
-				let referrerCode = uni.getStorageSync('ReferrerCode')
-				if(referrerCode===null || referrerCode.length===0){
-					uni.setStorageSync('ReferrerCode',0)
-				}
-			}
-			let that = this
+			
 			let activeData = await getActive()
 			if(activeData.Code === 200){
 				console.log(activeData.Data)
@@ -621,16 +552,87 @@
 						that.moreShow = false
 					}else{
 						that.code = that.codeList[0]
+						if(that.codeList.length>7){
+							that.moreShow = true
+						}else{
+							that.moreShow = false
+						}
 					}
 				}
 			}
-			let winListData = await getWinList()
-			if(winListData.Code === 200){
-				console.log(winListData.Data)
-				if(winListData.Data.isWinner === 0){
-					that.popupShow = true
+			
+			if(that.isLogin === 1){
+				let winListData = await getWinList()
+				if(winListData.Code === 200){
+					console.log(winListData.Data)
+					that.winList = winListData.Data
+					if(winListData.Data.isWinner === 0){
+						that.popupShow = true
+					}
 				}
 			}
+			
+		},
+		async onLoad(options) {
+			console.log(options.code)
+			if(options.code!=undefined){
+				uni.setStorageSync('ReferrerCode',options.code)
+			}else{
+				let referrerCode = uni.getStorageSync('ReferrerCode')
+				if(referrerCode===null || referrerCode.length===0){
+					uni.setStorageSync('ReferrerCode',0)
+				}
+			}
+			let that = this
+			
+			let activeData = await getActive()
+			if(activeData.Code === 200){
+				console.log(activeData.Data)
+				if(JSON.stringify(activeData.Data)!=='[]'){
+					that.activeList = activeData.Data
+					console.log(that.activeList)
+					that.isLogin= that.activeList.IsLogin
+					if(that.isLogin ===0){
+						wx.showModal({
+							title:'提醒',
+							content:'您未登陆，请完成登陆',
+							confirmText:'前往',
+							success (res) {
+							    if (res.confirm) {
+									uni.navigateTo({
+										url:"/pages/login/login"
+									})
+							      // window.location.href = '/login'
+							    } else if (res.cancel) {
+							      console.log('用户点击取消')
+							    }
+							}
+						})
+					}
+					that.codeList = that.activeList.CodeList
+					if(that.codeList.length ===0){
+						that.moreShow = false
+					}else{
+						if(that.codeList.length>7){
+							that.moreShow = true
+						}else{
+							that.moreShow = false
+						}
+						that.code = that.codeList[0]
+					}
+				}
+			}
+			if(that.isLogin === 1){
+				let winListData = await getWinList()
+				if(winListData.Code === 200){
+					console.log(winListData.Data)
+					if(winListData.Data.isWinner === 0){
+						that.popupShow = true
+					}
+				}
+			}
+			
+			
 			let userData = uni.getStorageSync('user_data')
 			
 			if(userData === null || userData.length === 0){
@@ -638,7 +640,6 @@
 			}
 			userData = JSON.parse(userData)
 			that.phone = userData['Phone']
-			console.log(that.phone)
 			if(userData.length > 0){
 				this.login({userInfo:{
 					nickName: userData.Nickname,
@@ -647,6 +648,7 @@
 					city:userData.City
 				}})
 			}
+			
 		}
 	}
 </script>
@@ -725,9 +727,13 @@
 	height:11upx;
 	background: #f3f3f3;
 }
+.swiper{
+	width:750upx;
+	height:350upx;
+}
 .swiper-img{
 	width:750upx;
-	height:310upx;
+	height:350upx;
 }
 .active-tips{
 	height:125upx;
