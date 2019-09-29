@@ -1,14 +1,14 @@
 <template>
 	<view class="active-box">
 		<view class="uni-padding-wrap">
-			<view class="page-section swiper">
+			<view class="page-section">
 				<view class="page-section-spacing">
 					<swiper class="swiper" circular :indicator-dots="indicatorDots" indicator-color="rgba(0,0,0,0.5)" indicator-active-color="#fff" :autoplay="autoplay" :interval="interval" :duration="duration">
 						<swiper-item>
-							<image class="swiper-img" mode="aspectFill" src="https://cdn.doudouxiongglobal.com/store/active/banner1.png"></image>
+							<image class="swiper-img" mode="aspectFit" src="https://cdn.doudouxiongglobal.com/store/active/banner1.png"></image>
 						</swiper-item>
 						<swiper-item>
-							<image class="swiper-img" mode="aspectFill" src="https://cdn.doudouxiongglobal.com/store/active/banner2.png"></image>
+							<image class="swiper-img" mode="aspectFit" src="https://cdn.doudouxiongglobal.com/store/active/banner2.png"></image>
 						</swiper-item>
 					</swiper>
 				</view>
@@ -213,6 +213,7 @@
 				canvasFlag: true,
 				posterData:{},
 				moreShow:true,
+				lookShow:false,
 				isLogin:1,
 	            indicatorDots: true,
 	            autoplay: true,
@@ -525,10 +526,8 @@
 			
 			let activeData = await getActive()
 			if(activeData.Code === 200){
-				console.log(activeData.Data)
 				if(JSON.stringify(activeData.Data)!=='[]'){
 					that.activeList = activeData.Data
-					console.log(that.activeList)
 					that.isLogin= that.activeList.IsLogin
 					if(that.isLogin ===0){
 						wx.showModal({
@@ -550,6 +549,8 @@
 					that.codeList = that.activeList.CodeList
 					if(that.codeList.length ===0){
 						that.moreShow = false
+					}else if(that.codeList.length >7){
+						that.lookShow = true
 					}else{
 						that.code = that.codeList[0]
 						if(that.codeList.length>7){
@@ -574,7 +575,7 @@
 			
 		},
 		async onLoad(options) {
-			console.log(options.code)
+			// console.log(options.code)
 			if(options.code!=undefined){
 				uni.setStorageSync('ReferrerCode',options.code)
 			}else{
@@ -587,31 +588,35 @@
 			
 			let activeData = await getActive()
 			if(activeData.Code === 200){
-				console.log(activeData.Data)
+				// console.log(activeData.Data)
 				if(JSON.stringify(activeData.Data)!=='[]'){
 					that.activeList = activeData.Data
-					console.log(that.activeList)
+					// console.log(that.activeList)
 					that.isLogin= that.activeList.IsLogin
-					if(that.isLogin ===0){
-						wx.showModal({
-							title:'提醒',
-							content:'您未登陆，请完成登陆',
-							confirmText:'前往',
-							success (res) {
-							    if (res.confirm) {
-									uni.navigateTo({
-										url:"/pages/login/login"
-									})
-							      // window.location.href = '/login'
-							    } else if (res.cancel) {
-							      console.log('用户点击取消')
-							    }
-							}
-						})
-					}
+					// console.log(that.isLogin)
+					// if(that.isLogin ===0){
+					// 	wx.showModal({
+					// 		title:'提醒',
+					// 		content:'您未登陆，请完成登陆',
+					// 		confirmText:'前往',
+					// 		success (res) {
+					// 		    if (res.confirm) {
+					// 				uni.navigateTo({
+					// 					url:"/pages/login/login"
+					// 				})
+					// 		      // window.location.href = '/login'
+					// 		    } else if (res.cancel) {
+					// 		      console.log('用户点击取消3')
+					// 		    }
+					// 		}
+					// 	})
+					// }
 					that.codeList = that.activeList.CodeList
+					console.log(that.codeList.length)
 					if(that.codeList.length ===0){
 						that.moreShow = false
+					}else if(that.codeList.length >7){
+						that.lookShow = true
 					}else{
 						if(that.codeList.length>7){
 							that.moreShow = true
@@ -847,7 +852,7 @@
 }
 .active-scan{
 	width:750upx;
-	height:670upx;
+	// height:670upx;
 	.code-img{
 		width:284upx;
 		height:284upx;
@@ -928,7 +933,7 @@
 		flex-wrap: wrap;
 		.active-join-list{
 			margin-right:20upx;
-			margin-left: 5upx;
+			margin-left: 3upx;
 			width:147upx;
 			height:38upx;
 			line-height: 38upx;
