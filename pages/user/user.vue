@@ -229,6 +229,7 @@
 						that.nickname = res.Data.user.Nickname,
 						that.phone = res.Data.user.Phone
 						that.isLogin = 1
+						// console.log(that.vip)
 						// let userData = uni.getStorageSync('user_data')
 						// console.log(userData)
 						if(res.Data.user.Vip === 1) {
@@ -266,7 +267,11 @@
 				})
 			}
 		},
-		onShow() {
+		async onShow() {
+			let countData = await getVipCount()
+			if(countData.Code === 200){
+				this.count = countData.Data
+			}
 			let userData = uni.getStorageSync('user_data')
 			let that = this
 			if(userData.length > 0){
@@ -276,13 +281,17 @@
 				this.nickname = userData.Nickname,
 				this.phone = userData.Phone
 				this.isLogin = 1
-				if(userData.Vip === 1) this.vip = 1
-				getVip({}).then((res)=>{
-					console.log(res)
-					if(res.Code === 200){
-						that.vipData = res.Data
-					}
-				})
+				that.vip = userData.Vip
+						// console.log(that.vip)
+				if(that.vip === 1) {
+					this.vip = 1
+					getVip({}).then((res)=>{
+						console.log(res)
+						if(res.Code === 200){
+							that.vipData = res.Data
+						}
+					})
+				}
 			}
 		},
 		async onLoad(options) {
