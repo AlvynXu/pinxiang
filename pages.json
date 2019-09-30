@@ -101,6 +101,10 @@
             "path" : "pages/winList/winList",
             "style" : {}
         }
+        ,{
+            "path" : "pages/winList/exchange/exchange",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
