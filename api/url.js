@@ -8,6 +8,7 @@ export default {
   store: 'https://api.quchebang.cn/store',
   order: 'https://api.quchebang.cn/order',
   pay: 'https://api.quchebang.cn/pay',
+  vip: 'https://api.quchebang.cn/vip',
   active: 'https://api.quchebang.cn/active'
   
   // base: 'http://api.dev.doudouxiongglobal.com',

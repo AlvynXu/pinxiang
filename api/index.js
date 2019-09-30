@@ -96,7 +96,6 @@ export function getVideo(id, params = {}) {
 		params: params
 	})
 }
-
 export function blogLike(id, params = {}) {
 	return fetch({
 		url: `${api.blog}/like/${id}`,
@@ -427,7 +426,13 @@ export function appointment(params={}) {
 		data: params
 	})
 }
-
+export function getVipCount(params={}) {
+	return fetch({
+		url: `${api.vip}/count`,
+		method: 'get',
+		params: params
+	})
+}
 export function getAppointmentDetail(id,params={}) {
 	return fetch({
 		url: `${api.store}/appointment/${id}`,

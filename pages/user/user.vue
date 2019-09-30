@@ -16,7 +16,7 @@
 				<view class="join-word">会员养车·全年免费</view>
 				<view class="join-words">开卡赠送12次洗车服务</view>
 				<view class="join-buy">
-					<view style="margin-left: 10upx;">已有108人购买</view>
+					<view style="margin-left: 10upx;">已有{{count}}人购买</view>
 					<view class="join-buy-icon">立即开通
 						<view class="vant-icon">&#xe65c;</view>
 					</view>
@@ -42,7 +42,7 @@
 					<view class="join-word">会员养车·全年免费</view>
 					<view class="join-words">开卡赠送12次洗车服务</view>
 					<view class="join-buy">
-						<view style="margin-left: 10upx;">已有108人购买</view>
+						<view style="margin-left: 10upx;">已有{{count}}人购买</view>
 						<view class="join-buy-icon">立即开通
 							<view class="vant-icon">&#xe65c;</view>
 						</view>
@@ -123,7 +123,7 @@
 </template>
 
 <script>
-	import {login,getVip} from '@/api/index.js'
+	import {login,getVip,getVipCount} from '@/api/index.js'
 	export default {
 		data() {
 			return {
@@ -135,6 +135,7 @@
 				vip : 1,
 				redirect:'',
 				vipData:[],
+				count:0,
 				buiedVip:false
 			}
 		},
@@ -284,8 +285,13 @@
 				})
 			}
 		},
-		onLoad(options) {
+		async onLoad(options) {
 			console.log(options)
+			let countData = await getVipCount()
+			if(countData.Code === 200){
+				this.count = countData.Data
+			}
+			console.log(this.count)
 			if(options.status=='buied'){
 				this.buiedVip = true;
 			}
