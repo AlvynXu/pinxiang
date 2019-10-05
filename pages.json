@@ -105,6 +105,10 @@
             "path" : "pages/winList/exchange/exchange",
             "style" : {}
         }
+	,{
+			"path" : "pages/user/wallet/wallet",
+			"style" : {}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
