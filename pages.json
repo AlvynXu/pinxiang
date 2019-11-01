@@ -52,6 +52,10 @@
 		{
 		    "path" : "pages/user/active",
 		    "style" : {}
+        }
+		,{
+			"path" : "pages/user/wallet/wallet",
+			"style" : {}
 		}
     ],
 	"subPackages":[
