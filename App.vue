@@ -1,5 +1,5 @@
 <script>
-import { getOpenID, login } from '@/api/index.js';
+import { getOpenID, login, getSessionID } from '@/api/index.js';
 export default {
 	onLaunch: function(options) {
 		console.log("App OnLaunch",(new Date).getMilliseconds())
@@ -7,6 +7,14 @@ export default {
 			uni.setStorageSync('ReferrerCode',options.query.code)
 		}else{
 			uni.setStorageSync('ReferrerCode',0)
+		}
+		
+		if(options.query.openID!==undefined){
+			uni.setStorageSync('openID',options.query.openID)
+		}else{
+			uni.removeStorage({
+				key:'openID'
+			})
 		}
 		uni.checkSession({
 			success() {
@@ -40,7 +48,16 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
-		console.log("App Show",(new Date).getMilliseconds())
+		let session_id = uni.getStorageSync('session_id')
+		if(session_id == null || session_id.length === 0){
+			getSessionID().then(res=>{
+				console.log(res)
+				if(res.Code == 200){
+					uni.setStorageSync('session_id',res.Data)
+				}
+			})
+		}
+		
 	},
 	onHide: function() {
 		console.log('App Hide');
@@ -60,12 +77,12 @@ export default {
 	
 	@font-face {
 		font-family: 'vant-icon';  /* project id 1363505 */
-		  src: url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.eot');
-		  src: url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.eot?#iefix') format('embedded-opentype'),
-		  url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.woff2') format('woff2'),
-		  url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.woff') format('woff'),
-		  url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.ttf') format('truetype'),
-		  url('//at.alicdn.com/t/font_1363505_bq6dbncynkv.svg#iconfont') format('svg');
+		src: url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.eot');
+		src: url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.eot?#iefix') format('embedded-opentype'),
+		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.woff2') format('woff2'),
+		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.woff') format('woff'),
+		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.ttf') format('truetype'),
+		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.svg#iconfont') format('svg');
 	}
 	.vant-icon {
 		font-family:'vant-icon' !important;

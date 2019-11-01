@@ -24,7 +24,7 @@
 			</view>
 			<view class="active-tip-three">
 				<view class="vant-icon">&#xe6b6;</view>
-				开奖时间：2019年10月7日 10:0
+				开奖时间：2019年10月7日 10:00
 			</view>
 		</view>
 		<view class="active-time">
@@ -79,7 +79,7 @@
 			<view class="active-rule-content">
 				<view>1.活动时间:2019年9月27日—2019年10月7日；</view>
 				<view>2.参与方式:点击「参与活动」授权手机号码，获取抽奖码；</view>
-				<view>3.活动规则：活动期间用户首次登录并授权手机号码后可获得1个抽奖码，同时用户将活动分享给好友且好友成功参与后可继续获得抽奖码，同时若好友通过分享购买会员，将会优惠25元同时用户获得25元现金红包；</view>
+				<view>3.活动规则：活动期间用户首次登录并授权手机号码后可获得1个抽奖码，同时用户将活动分享给好友且好友成功参与后可继续获得抽奖码，同时若好友通过分享购买会员，将会优惠50元同时用户获得50元现金红包；</view>
 				<view>4.开奖说明：平台将在抽奖时间（10月7日 10:00）从所有抽奖码中随机抽取70个抽奖码为中奖号码，并于该获得页面公示中奖信息，中奖用户可获得品象养车提供的全年无限制免费保养全合成机油版会员卡一张。</view>
 				<view>
 					注意事项：
@@ -228,9 +228,18 @@
 				phone:'',
 				codeList:[],
 				code:'',
-				winList:[]
+				winList:[],
+				SerialCode:'',
 	        }
 	    },
+		onShareAppMessage(res) {
+		    
+			return {
+			  title: '我正在参加【国庆赠卡活动】，能不能全年免费保养，就靠你了！',
+			  imageUrl:'https://cdn.doudouxiongglobal.com/store/active/banner2.png',
+			  path: '/pages/active/active?code='+this.SerialCode
+			}
+		},
 	    methods: {
 			goList(){
 				uni.navigateTo({
@@ -508,6 +517,7 @@
 			userData = JSON.parse(userData)
 			this.vip = userData.Vip
 			this.phone = userData.Phone
+			this.SerialCode = userData.SerialCode
 			if(userData['Phone'] !== ''){
 				this.avatar = userData['Avatar']
 			}
@@ -547,6 +557,7 @@
 							}
 						})
 					}
+					that.SerialCode = that.activeList.Code
 					that.codeList = that.activeList.CodeList
 					if(that.codeList.length ===0){
 						that.moreShow = false
@@ -609,6 +620,7 @@
 							}
 						})
 					}
+					that.SerialCode = that.activeList.Code
 					that.codeList = that.activeList.CodeList
 					if(that.codeList.length ===0){
 						that.moreShow = false

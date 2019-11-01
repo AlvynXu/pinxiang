@@ -1,6 +1,10 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path":"pages/index/indexV2",
+			"style": {}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "品象养车",
@@ -15,24 +19,6 @@
 					"navigationStyle":"default"
 			}
         },{
-            "path" : "pages/user/car",
-            "style" : {
-					"navigationBarTitleText": "我的"
-					}
-        },{
-            "path" : "pages/user/credit",
-            "style" : {
-					"navigationBarTitleText": "品象信用"
-					}
-        },{
-            "path" : "pages/user/active",
-            "style" : {
-					"navigationBarTitleText": "加入会员"
-					}
-        },{
-            "path" : "pages/store/store",
-			"style": {}
-        },{
             "path" : "pages/order/order",
             "style" : {}
         },{
@@ -40,42 +26,7 @@
             "style" : {
 					"navigationBarTitleText": "写评论"
 					}
-        }
-        ,{
-            "path" : "pages/store/appointment/appointment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/store/coupon/coupon",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/user/vip/vip",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/user/giftCard/giftCard",
-            "style" : {}
-        }
-		,{
-		    "path" : "pages/user/giftCard/pay",
-		    "style" : {}
-		}
-        ,{
-            "path" : "pages/store/storeSearch/storeSearch",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/user/vipAgreement",
-            "style" : {}
-        },
-		{
-            "path" : "pages/user/vip/help",
-            "style" : {
-            		"navigationBarTitleText": "会员帮助"
-            		}
-        },
-		{
+        },{
             "path" : "pages/login/login",
             "style" : {
             		"navigationBarTitleText": "登录"
@@ -86,14 +37,7 @@
             "style" : {
             		"navigationBarTitleText": "分销"
             		}
-        },
-		{
-            "path" : "pages/user/share",
-            "style" : {
-            		"navigationBarTitleText": "品象养车"
-            		}
-        }
-        ,{
+        },{
             "path" : "pages/active/active",
             "style" : {}
         }
@@ -104,8 +48,70 @@
         ,{
             "path" : "pages/winList/exchange/exchange",
             "style" : {}
-        }
+        },
+		{
+		    "path" : "pages/user/active",
+		    "style" : {}
+		}
     ],
+	"subPackages":[
+		{
+			"root": "pages/userSub/",
+			"pages": [{
+				"path" : "car",
+				"style" : {
+					"navigationBarTitleText": "我的"
+				}
+			},{
+				"path" : "active",
+				"style" : {
+					"navigationBarTitleText": "加入会员"
+				}
+			},{
+				"path" : "credit",
+				"style" : {
+					"navigationBarTitleText": "品象信用"
+				}
+			},{
+				"path" : "vip/vip",
+				"style" : {}
+			},{
+				"path" : "giftCard/giftCard",
+				"style" : {}
+			},{
+				"path" : "giftCard/pay",
+				"style" : {}
+			},{
+				"path" : "vipAgreement",
+				"style" : {}
+			},{
+				"path" : "vip/help",
+				"style" : {
+					"navigationBarTitleText": "会员帮助"
+				}
+			},{
+				"path" : "share",
+				"style" : {
+					"navigationBarTitleText": "品象养车"
+				}
+			}]
+		},{
+			"root": "pages/store/",
+			"pages":[{
+				"path" : "store",
+				"style": {}
+			},{
+				"path" : "appointment/appointment",
+				"style" : {}
+			},{
+				"path" : "coupon/coupon",
+				"style" : {}
+			},{
+				"path" : "storeSearch/storeSearch",
+				"style" : {}
+			}]
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "品象养车",
@@ -120,16 +126,16 @@
 		"color": "#8F8F94",
 		"selectedColor": "#f33e54",
 		"list": [{
-				"pagePath": "pages/index/index",
+				"pagePath": "pages/index/indexV2",
 				"iconPath": "static/img/footerBar/blog.png",
 				"selectedIconPath": "static/img/footerBar/blogSelect.png",
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/order/order",
-				"iconPath": "static/img/footerBar/order.png",
-				"selectedIconPath": "static/img/footerBar/order-selected.png",
-				"text": "预约"
+				"pagePath": "pages/index/index",
+				"iconPath": "static/img/footerBar/store.png",
+				"selectedIconPath": "static/img/footerBar/store_active.png",
+				"text": "商铺"
 			},
 			{
 				"pagePath": "pages/user/user",

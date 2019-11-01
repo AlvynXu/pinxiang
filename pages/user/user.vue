@@ -150,7 +150,7 @@
 			return {
 			  title: '【25元红包】加入会员，全年不限次数免费保养',
 			  imageUrl:'https://cdn.doudouxiongglobal.com/pinxiang/image/share/lALPDgQ9rBP3f8PNAyDNA-g_1000_800.png_620x10000q90g.jpg',
-			  path: '/pages/user/share?code='+referrer
+			  path: '/pages/userSub/share?code='+referrer
 			}
 		},
 		methods: {
@@ -162,17 +162,17 @@
 				let userData = uni.getStorageSync('user_data')
 				
 				uni.navigateTo({
-				    url: 'active'
+				    url: '/pages/userSub/active'
 				});
 			},
 			goCar(){
 				uni.navigateTo({
-				    url: 'car'
+				    url: '/pages/userSub/car'
 				});
 			},
 			goCredit(){
 				uni.navigateTo({
-				    url: 'credit'
+				    url: '/pages/userSub/credit'
 				});
 			},
 			goVip(){
@@ -193,13 +193,13 @@
 					})
 				}else{
 					uni.navigateTo({
-					    url: 'vip/vip'
+					    url: '/pages/userSub/vip/vip'
 					});
 				}
 			},
 			goGiftCard(){
 				uni.navigateTo({
-				    url: 'giftCard/giftCard'
+				    url: '/pages/userSub/giftCard/giftCard'
 				});
 			},
 			goRetail(){

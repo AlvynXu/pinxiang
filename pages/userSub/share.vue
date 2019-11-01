@@ -7,7 +7,7 @@
 			<image class="user-avatar" :src="avatar"></image>
 			<view class="user-phone">您的好友{{phone}}送您一份</view>
 		</view>
-		<view class="share-hint">25元会员红包</view>
+		<view class="share-hint">50元会员红包</view>
 	</view>
 </template>
 
@@ -35,9 +35,9 @@
 			userData = JSON.parse(userData)
 			let referrer = userData['SerialCode']
 			return {
-			  title: '【25元红包】加入会员，全年不限次数免费保养',
+			  title: '【50元红包】加入会员，全年不限次数免费保养',
 			  imageUrl:'https://cdn.doudouxiongglobal.com/pinxiang/image/share/lALPDgQ9rBP3f8PNAyDNA-g_1000_800.png_620x10000q90g.jpg',
-			  path: '/pages/user/share?code='+referrer
+			  path: '/pages/userSub/share?code='+referrer
 			}
 		},
 		methods: {
@@ -45,12 +45,12 @@
 				let userData = uni.getStorageSync('user_data')
 				if(userData === null || userData.length === 0){
 					uni.navigateTo({
-						url:"/pages/login/login?redirect=/pages/user/active"
+						url:"/pages/login/login?redirect=/pages/userSub/active"
 					})
 					return false;
 				}
 				uni.navigateTo({
-					url:"/pages/user/active"
+					url:"/pages/userSub/active"
 				})
 			},
 			
@@ -58,7 +58,7 @@
 			// 跳转到会员协议
 			agreement(){
 				uni.navigateTo({
-					url:"/pages/user/vipAgreement"
+					url:"/pages/userSub/vipAgreement"
 				})
 			},
 			selectVipCard(type){

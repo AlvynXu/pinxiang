@@ -426,6 +426,13 @@ export function appointment(params={}) {
 		data: params
 	})
 }
+export function appointmentV2(params={}) {
+	return fetch({
+		url: `${api.store}/appointment/v2`,
+		method: 'post',
+		data: params
+	})
+}
 export function getVipCount(params={}) {
 	return fetch({
 		url: `${api.vip}/count`,
@@ -503,9 +510,25 @@ export function payDetail(params={}) {
 	})
 }
 
+export function payDetailOne(params={}) {
+	return fetch({
+		url: `${api.pay}/detail/one`,
+		method: 'post',
+		data: params
+	})
+}
+
 export function payVip(params={}) {
 	return fetch({
 		url: `${api.pay}/vip`,
+		method: 'post',
+		data: params
+	})
+}
+
+export function payOne(params={}) {
+	return fetch({
+		url: `${api.pay}/one`,
 		method: 'post',
 		data: params
 	})
@@ -562,5 +585,21 @@ export function getWinList(code,params={}) {
 		url: `${api.active}/result/20191001`,
 		method: 'get',
 		params: params
+	})
+}
+
+export function getSessionID(params={}) {
+	return fetch({
+		url: `${api.base}/getSessionID`,
+		method:'get',
+		params:params
+	})
+}
+
+export function storeSearchV2(params={}) {
+	return fetch({
+		url: `${api.store}/search/v2`,
+		method:'post',
+		data:params
 	})
 }

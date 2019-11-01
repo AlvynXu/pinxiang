@@ -1,5 +1,5 @@
 <template>
-	<view class="store-box">
+	<scroll-view :scroll-y="true" :enable-back-to-top="true" lower-threshold="100" @scrolltolower="loadMore" class="store-box">
 		<view class="store-search">
 			<view class="vant-icon">&#xe692;</view>
 			<input class="uni-input" confirm-type="search" :value="searchText" @input="search" placeholder="输入门店信息" placeholder-style="color:rgba(51,51,51,0.5)"/>
@@ -68,7 +68,7 @@
 				<view class="gray"></view>
 			</view>
 		</view>
-	</view>
+	</scroll-view>
 </template>
 
 <script>
@@ -82,7 +82,8 @@
 				searchText:"",
 				vip:1,
 				storeList:[],
-				
+				page:1,
+				end:false,
 				timeout: null,
 			}
 		},
@@ -91,12 +92,10 @@
 			uni.getStorage({
 				key:"geo",
 				success: (res) => {
-					console.log(res)
 					if(res.errMsg=='getStorage:ok'){
 						let geo = JSON.parse(res.data)
-						getStore({Lat:geo.lat,Lng:geo.lng,City:geo.city}).then(storeData =>{
+						getStore({Lat:geo.lat,Lng:geo.lng,City:geo.city,Page:that.page}).then(storeData =>{
 							if(storeData.Code === 200){
-
 								that.storeList = storeData.Data.StoreData
 								that.recommend = storeData.Data.RecommendData
 							}
@@ -132,7 +131,6 @@
 								let geo = JSON.parse(res.data)
 								getStore({Lat:geo.lat,Lng:geo.lng,City:geo.city}).then(storeData =>{
 									if(storeData.Code === 200){
-					
 										that.storeList = storeData.Data.StoreData
 										that.recommend = storeData.Data.RecommendData
 									}
@@ -146,7 +144,6 @@
 						let storeData = await storeSearch({Name:value})
 						if(storeData.Code === 200){
 							that.storeList = storeData.Data
-							console.log(that.storeList)
 							if(that.storeList.length===0){
 								this.serachNoneShow = true
 							}else{
@@ -171,6 +168,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-start;
+		height:100vh;
 		margin-bottom:10upx;
 		.store-search{
 			margin:40upx 40upx;

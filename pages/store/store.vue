@@ -42,11 +42,12 @@
 						<view class="servince-left-one">
 							<view class="servince-name">{{val.Name}}</view>
 							<view class="servince-price">
-								<view class="price-name">￥{{val.Price}}</view>
+								<view class="price-name"><text>门市价: </text> <text>{{val.Price}}</text></view>
 							</view>
 						</view>
 						<view class="servince-right">
-							<view class="price-order">立即预约</view>
+							<view class="price-order" v-if="vip">立即预约</view>
+							<view class="price-order" v-else>会员免费</view>
 						</view>
 					</view>
 				</view>
@@ -72,7 +73,8 @@
 						</view>
 					</view>
 				</view>
-				<view class="servince-list-button" @click="buyNow">立即预约</view>
+				<view class="servince-list-button" @click="buyNow" v-if="vip">立即预约</view>
+				<view class="servince-list-button" @click="goBuyVip" v-else>加入会员</view>
 			</view>
 			<view class="ddx-information-box" v-if="TabCur===1">
 			    <view class="ddx-information-comment">
@@ -126,13 +128,15 @@
 						{{introduction}}
 					</view>
 				</view>
-				<view class="servince-list-button" @click="buyNow1">立即预约</view>
+				<view class="servince-list-button" @click="buyNow1" v-if="vip">立即预约</view>
+				<view class="servince-list-button" @click="goBuyVip" v-else>加入会员</view>
 			</view>
 			<view class="servince-notice" v-if="TabCur===2">
 				<view class="cover">
 					<image :src="tabList[TabCur].image"></image>
 				</view>
-				<view class="servince-list-button" @click="buyNow2">立即预约</view>
+				<view class="servince-list-button" @click="buyNow2" v-if="vip">立即预约</view>
+				<view class="servince-list-button" @click="goBuyVip" v-else>加入会员</view>
 			</view>
 				    <!-- <view class="ddx-shop-more"  @click="showMore">
 				      <view>{{txt}}</view>
@@ -186,7 +190,8 @@
 					</view>
 				</view>
 			</view>
-			<view class="popup-button" @click="onShowDatePicker('datetime')">立即预约</view>
+			<view class="popup-button" @click="onShowDatePicker('datetime')" v-if="vip">立即预约</view>
+			<view class="popup-button" @click="goBuyVip" v-else>加入会员</view>
 		</uni-popup>
 	</view>
 </template>
@@ -246,21 +251,16 @@
 				],
 				storeItem:[],
 				itemDetail:[],
-				basicsList:[
-					
-				], 
-				detailsList:[
-					
-				],
-				replyList:[
-				  
-				],
+				basicsList:[], 
+				detailsList:[],
+				replyList:[],
 				more:'arrow',
 				isShow: true,
 				txt: '查看更多精彩评论',
 				num: 3,
 				itemType:0,
-				imgShow:true
+				imgShow:true,
+				vip:0
 			};
 		},
 		onShareAppMessage(res) {
@@ -387,6 +387,11 @@
 				this.showPicker = false;
 				this.$refs.popup.close();
 			},
+			goBuyVip(){
+				uni.navigateTo({
+					url:"/pages/userSub/active"
+				})
+			},
 			onSelected(e) {//选择
 				this.showPicker = false;
 				let that = this
@@ -447,7 +452,6 @@
 			let that = this
 			let replayData = await getStoreReply(that.id)
 			if(replayData.Code === 200){
-				console.log(replayData.Data)
 				if(JSON.stringify(replayData.Data)!=='[]'){
 					that.replyList = replayData.Data
 					that.replyRate = replayData.Data.Rate
@@ -472,6 +476,7 @@
 				
 			}else{
 				this.userData = JSON.parse(userData)
+				this.vip = this.userData.Vip
 			}
 			let geo = JSON.parse(uni.getStorageSync('geo'))
 			let storeData = await getStoreByID(id,{Lat:geo.lat,Lng:geo.lng})
@@ -680,8 +685,19 @@
 							display: flex;
 							justify-content:space-between;
 							.price-name{
-								color:#FE5101;
-								font-size:40upx;
+								text{
+									display:inline-block;
+									color:#333;
+									font-size:26upx;
+									line-height: 50upx;
+								}
+								text:last-of-type{
+									color:#FE5101;
+									display:inline-block;
+									font-size:26upx;
+									line-height: 50upx;
+									margin-left:10upx;
+								}
 							}
 						}
 					}
@@ -689,14 +705,14 @@
 				.servince-right{
 					margin-left: 20upx;
 					.price-order{
-						width:112upx;
-						height:36upx;
-						line-height:36upx;
+						width:120upx;
+						height:50upx;
+						line-height:50upx;
 						color:#fff;
 						font-size:22upx;
 						background: #FE5100;
 						text-align: center;
-						border-radius:4upx;
+						border-radius:6upx;
 						margin-top: 50upx;
 					}
 				}
