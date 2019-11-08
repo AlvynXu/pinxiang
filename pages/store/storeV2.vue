@@ -236,7 +236,7 @@
 							<text :class="{'label-choose':formData.type===value.type}">{{value.name}}</text>
 						</view>
 					</view>
-					<view class="next-step-hint">*机油超4L需自行与门店协商补差价</view>
+					<view class="next-step-hint">*保养服务以平台门店上架机油为准，价格仅包含4L机油</view>
 				</view>
 			</view>
 		</px-popdown>

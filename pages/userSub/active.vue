@@ -1,12 +1,12 @@
 <template>
 	<view class="active-box">
 		<view class="active-img-box">
-			<img class="active-img" style="height:2438.4057upx;" src="https://cdn.doudouxiongglobal.com/store/vip/about-vip.png"/>
+			<img class="active-img" style="height:2438.4057upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/VIP-head.png"/>
 			<view class="question-one-box">
 				<view class="question-one" @click="question1Func"><text>我们如何去控制品质？</text><text class="vant-icon">&#xe6b4;</text></view>
 				<view class="question-one-image-box" v-if="question1">
-					<img class="question-one-image" style="height:2162.1376upx" src="https://cdn.doudouxiongglobal.com/store/vip/about-us-1.png.png"/>
-					<img class="question-one-image" style="height:2483.6956upx;margin-top:-20upx;" src="https://cdn.doudouxiongglobal.com/store/vip/about-us-2.png"/>
+					<img class="question-one-image" style="height:1864.1304upx" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/VIP-bg01.png"/>
+					<img class="question-one-image" style="height:2522.6449upx;margin-top:-20upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/VIP-bg02.png"/>
 				</view>
 			</view>
 			<view class="question-two-box">
