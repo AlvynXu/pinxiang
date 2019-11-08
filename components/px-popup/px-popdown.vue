@@ -2,7 +2,7 @@
   <view class="px-popdown" v-if="showPopDown">
 	  <view class="px-popdown-content" :style="{'height':height}" 
 	  :class="{'px-popdown-open':pxPopDownStatus=='open', 'px-popdown-close':pxPopDownStatus=='close'}">
-		  <view class="px-popdown-content-title">请选择预约时间</view>
+		  <view class="px-popdown-content-title" v-if="title">{{title}}</view>
 		  <scroll-view class="px-popdown-content-slot" :scroll-y="true">
 			  <slot />
 		  </scroll-view>
@@ -19,6 +19,10 @@ export default {
 	height:{
 		type: String,
 		default:'50%'
+	},
+	title:{
+		type:String,
+		default:''
 	}
   },
   data () {

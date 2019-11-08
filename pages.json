@@ -1,18 +1,16 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path":"pages/index/indexV2",
+			"path":"pages/index/index",
 			"style": {}
-		},
-		{
-			"path": "pages/index/index",
+		},{
+			"path": "pages/index/storeIndex",
 			"style": {
 				"navigationBarTitleText": "品象养车",
 				"backgroundColor":"#f3f3f3",
 				"navigationStyle":"custom"
 			}
-		}
-        ,{
+		},{
             "path" : "pages/user/user",
             "style" : {
 					"navigationBarTitleText": "我的",
@@ -31,8 +29,7 @@
             "style" : {
             		"navigationBarTitleText": "登录"
             		}
-        },
-		{
+        },{
             "path" : "pages/retail/retail",
             "style" : {
             		"navigationBarTitleText": "分销"
@@ -40,23 +37,16 @@
         },{
             "path" : "pages/active/active",
             "style" : {}
-        }
-        ,{
+        },{
             "path" : "pages/winList/winList",
             "style" : {}
-        }
-        ,{
+        },{
             "path" : "pages/winList/exchange/exchange",
             "style" : {}
-        },
-		{
+        },{
 		    "path" : "pages/user/active",
 		    "style" : {}
         }
-		,{
-			"path" : "pages/user/wallet/wallet",
-			"style" : {}
-		}
     ],
 	"subPackages":[
 		{
@@ -113,6 +103,13 @@
 			},{
 				"path" : "storeSearch/storeSearch",
 				"style" : {}
+			},{
+				"path" : "storeV2",
+				"style": {
+					"navigationBarTitleText": "品象养车",
+					"navigationBarBackgroundColor":"#FFFFFF",
+					"backgroundColor":"#F3F3F3"
+				}
 			}]
 		}
 	],
@@ -130,18 +127,16 @@
 		"color": "#8F8F94",
 		"selectedColor": "#f33e54",
 		"list": [{
-				"pagePath": "pages/index/indexV2",
+				"pagePath": "pages/index/index",
 				"iconPath": "static/img/footerBar/blog.png",
 				"selectedIconPath": "static/img/footerBar/blogSelect.png",
 				"text": "首页"
-			},
-			{
-				"pagePath": "pages/index/index",
+			},{
+				"pagePath": "pages/index/storeIndex",
 				"iconPath": "static/img/footerBar/store.png",
 				"selectedIconPath": "static/img/footerBar/store_active.png",
 				"text": "商铺"
-			},
-			{
+			},{
 				"pagePath": "pages/user/user",
 				"iconPath": "static/img/footerBar/mine.png",
 				"selectedIconPath": "static/img/footerBar/mineSelect.png",

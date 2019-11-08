@@ -64,6 +64,7 @@ export default {
 	},
 	globalData:{
 		redirect:'',
+		formData:[]
 	}
 };
 </script>

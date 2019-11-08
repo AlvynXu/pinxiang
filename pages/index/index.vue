@@ -1,253 +1,229 @@
 <template>
-	<scroll-view :scroll-y="true" :enable-back-to-top="true" lower-threshold="100" @scrolltolower="loadMore" class="store-box">
-		<view class="header-box">
-			<view class="status_bar">
-				<!-- 这里是状态栏 -->
-			</view>
-			<view class="header-box-title" :style="{bottom:bottom}">品象养车</view>
-			<view class="header-address-box" @tap="chooseArea" :style="{bottom:areaBottom}">
-				<text class="vant-icon header-address-icon">&#xe68f;</text>
-				<text class="header-address-text">{{area}}</text>
+	<view class="index-box">
+		<px-message type="error"></px-message>
+		<view class="index-header"></view>
+		<view class="index-bg"></view>
+		<view class="index-active">
+			<view class="active">
+				<view class="active-icon"><text class="vant-icon">&#xe60d;</text></view>
+				<view class="active-span">会员年费最高799，全年免费保养</view>
+				<view class="active-button"><button size="mini" :plain="true" @click="goBuyVip">点击开卡</button></view>
 			</view>
 		</view>
-		<view style="height: 158upx;"></view>
-		<view class="store-swiper">
-			<swiper class="swiper" circular="true" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration" :circular="circular">
-				<swiper-item v-for="(val,key) in swiperList" :key="key">
-					<image class="swiper-img" :src="val.Image" mode="aspectFill" :lazy-load="true"></image>
-				</swiper-item>
-			</swiper>
-			<view class="store-search" @tap="goSearch">
-				<view class="store-search-input">
-					<view class="input">输入门店信息</view>
+		<view class="appointment-box" v-if="payType === 0">
+			<view class="appointment-header">
+				<view class="appointment-type-list" v-for="(value, key) in appointmentType" :key="key" @click="changeAppointmentType(value.id)">
+					<view class="appointment-type-list-span">{{value.name}}</view>
+					<view class="appointment-type-list-bg" v-if="value.active">{{value.name}}</view>
 				</view>
-				<view class="vant-icon">&#xe692;</view>
 			</view>
-		</view>
-		<view class="store-vip" @tap="goActive">
-			<view class="vip-top">
-				<view class="vip-name">立即开卡</view>
-				<view class="vant-icon">&#xe65c;</view>
-			</view>
-			<view class="vip-bottom">
-				<view class="vip-name">全年免费保养，另送12次洗车服务</view>
-				<view class="vant-icon">&#xe69e;</view>
-			</view>
-		</view>
-		<view class="gray"></view>
-		<view class="store-nearby">
-			<view class="nearby-top" v-if="storeList.length!==0">
-				附近商户
-			</view>
-			<view class="nearby-top" v-if="storeList.length===0">
-				逛一逛
-			</view>
-			<view class="nearby-bot">
-				品象养车，会员畅养
-			</view>
-		</view>
-		<view class="gray"></view>
-
-		<view v-for="(val,key) in storeList" :key="key">
-			
-			<view class="store-list" @tap="goStore(val.ID)">
-				<image class="cover" :src="val.Image[0]" mode="aspectFill" :lazy-load="true"></image>
-				<view class="store-area">
-					<view class="vant-icon">&#xe68f;</view>
-					<view class="area-name">{{val.Area}} <text v-if="val.TradingArea"> · {{val.TradingArea}}</text></view>
-				</view>
-				<view class="store-name">{{val.Name}}</view>
-				<view class="store-distance">{{val.Distance}}</view>
-				<view class="store-address">{{val.Address}}
-					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
-				</view>
-				<view class="store-tips">
-					<view class="store-tip-list">
-						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
-							<view class="tip">{{v}}</view>
+			<view class="appointment-content">
+				<view class="appointment-input-box">
+					<view class="appointment-input">
+						<view class="appointment-input-icon vant-icon input-address">&#xe6be;</view>
+						<view class="appointment-input-cpn" @click="inputNumber">
+							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
+							<text v-else>{{formData.car}}</text>
 						</view>
 					</view>
-					<view class="store-buy" v-if="vip===0">会员免费</view>
-					<view class="store-buy" v-if="vip===1">立即预约</view>
-				</view>
-				<view class="gray"></view>
-			</view>
-		</view>
-		
-		<view v-for="(val,key) in recommend" :key="key">
-			<view class="store-list" @click="goStore(val.ID)">
-				<image class="cover" :src="val.Image[0]" mode="aspectFill" :lazy-load="true"></image>
-				<view class="store-area">
-					<view class="vant-icon">&#xe68f;</view>
-					<view class="area-name">{{val.City}} · {{val.Area}}</text></view>
-				</view>
-				<view class="store-name">{{val.Name}}</view>
-				<view class="store-distance">{{val.Distance}}</view>
-				<view class="store-address">{{val.Address}}
-					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
-				</view>
-				<view class="store-tips">
-					<view class="store-tip-list">
-						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
-							<view class="tip">{{v}}</view>
+					<view class="appointment-input">
+						<view class="appointment-input-icon vant-icon">&#xe6c3;</view>
+						<view class="appointment-input-cpn" @click="selectAppointmentDate">
+							<text style="color:#A4A4A4" v-if="formData.time==''">预约到店时间</text>
+							<text v-else>{{formData.time}}</text>
 						</view>
 					</view>
-					<view class="store-buy" v-if="vip===0">会员免费</view>
-					<view class="store-buy" v-if="vip===1">立即预约</view>
+					<view class="appointment-input">
+						<view class="appointment-input-icon vant-icon">&#xe6bf;</view>
+						<view class="appointment-input-cpn" @click="selectAppointmentStore">
+							<text style="color:#A4A4A4" v-if="formData.storeID==0">选择服务门店</text>
+							<text v-else>{{formData.storeName}}</text>
+						</view>
+					</view>
+					<view class="appointment-input" v-if="formData.price!==''">
+						<view class="appointment-input-icon vant-icon">&#xe6c1;</view>
+						<view class="appointment-input-cpn">
+							<text v-if="!userData.Vip">订单金额 <text style="color:#FE5100">　￥{{formData.price}}</text></text>
+							<text v-if="userData.Vip">订单金额 <text style="color:#FE5100">　会员免费</text></text>
+						</view>
+					</view>
+					<view class="appointment-input" v-if="formData.price!=='' && !userData.Vip">
+						<view class="appointment-input-icon vant-icon" style="color:#6DD400">&#xe6c0;</view>
+						<view class="appointment-input-cpn">
+							<text>单次体验会员</text>
+						</view>
+					</view>
 				</view>
-				<view class="gray"></view>
+				<view class="appointment-hint" v-if="active && !userData.Vip">
+					非会员用户首次预约，半价洗车
+				</view>
+				<view class="appointment-button">
+					<button :plain="true" @click="goAppointment" v-if="userData.Phone">立即预约</button>
+					<button :plain="true" v-if="userData.Phone ===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">立即预约</button>
+				</view>
 			</view>
 		</view>
-		<view style="text-align: center;width: 100%;font-size: 28upx;line-height: 60upx;color:#FE5100;" v-if="storeList.length!==0">门店持续更新中</view>
-	</scroll-view>
+		<view class="appointment-box" v-if="payType !== 0">
+			<view class="appointment-service-title">等待服务</view>
+			<view class="appointment-service-content">
+				<view class="appointment-service-content-pay" v-if="step===1">
+					<view class="appointment-service-content-pay-icon"><image src="https://cdn.doudouxiongglobal.com/pinxiang/attention.png"></image></view>
+					<view class="appointment-service-content-pay-text">预约成功，支付遇到了小问题，请在30分钟内完成付款，否则预约失效。是否继续？</view>
+					<view class="appointment-service-content-pay-button"><button class="confirm-button" @click="payAppointment">重新付款</button></view>
+				</view>
+				<view class="appointment-service-content-order-code" v-if="step!==1">
+					<view class="appoint-service-content-order-avatar"><image mode="aspectFill" :src="avatar"></image></view>
+					<view class="appoint-service-content-order-offerNumber">{{waitData.number.Number}}</view>
+					<view class="appoint-service-content-order-wait" v-if="step===2">预计服务时间：{{waitData.waitTime}}</view>
+					<view class="appoint-service-content-order-wait" v-if="step===3">开始服务时间：{{waitData.waitTime}}</view>
+					<view class="appoint-service-content-order-count" v-if="step===2 && waitData.count===0">当前无需排队</view>
+					<view class="appoint-service-content-order-count-red" v-if="step===2 && waitData.count>0">排队{{waitData.count}}人，预估等待{{waitData.wait}}分钟</view>
+					<view class="appoint-service-content-order-count-red" v-if="step===3">已服务{{waitData.count}}分钟，预估还剩余{{waitData.wait}}分钟排队</view>
+					<view class="appoint-service-content-order-hint">请在服务时间之前到店，过号自动延后一位</view>
+				</view>
+			</view>
+			<view class="appointment-service-rate"><px-step :size="4" :step="step" :textArr="stepText"></px-step></view>
+		</view>
+		<view class="banner-box">
+			<!-- <view class="announcement">公告 | 已帮助<text>88888</text>车主节省了时间</view> -->
+			<view class="banner-swiper-box">
+				<swiper class="swiper" circular="true" 
+				:current="current" :autoplay="true" 
+				:indicator-dots="true" indicator-color="#FFFFFF" indicator-active-color="#FE5100" 
+				:interval="2000" :duration="500" :circular="true">
+					<swiper-item v-for="(val,key) in swiperList" :key="key">
+						<image class="swiper-img" :src="val.Image" mode="aspectFill" :lazy-load="true"></image>
+					</swiper-item>
+				</swiper>
+			</view>
+		</view>
+		<px-popdown :height="'527rpx'" ref="datapicker" title="请选择预约时间">
+			<px-datepicker @choose="chooseAppointmentDate" v-model="formData.time"></px-datepicker>
+		</px-popdown>
+		<px-popright ref="storepicker" :width="'100vw'">
+			<store-search :time="formData.time" :type="formData.type" @close="storeSearchClose" @choose="chooseStore" appointmentTime="formData.time"></store-search>
+		</px-popright>
+		<plate-number ref="plate" v-model="formData.car" @showOrHide="showOrHide"></plate-number>
+	</view>
 </template>
 
 <script>
-	import uniRate from "@/components/uni-rate/uni-rate.vue"
-	import {getStore,getToken,getBanner} from "@/api/index.js"
-	export default {
-		components: {uniRate},
+	import {
+		getStore,
+		getToken,
+		getBanner,
+		changePhone,
+		decryptPhone,
+		appointmentV2,
+		payDetailOne,
+		payOne,
+		getAppointmentV2,
+		getAppointmentDetail,
+		cancleOrder,
+		offerNumber
+	} from "@/api/index.js"
+	
+	import plateNumber from '@/components/plate-number/plateNumber.vue';
+	import pxPopdown from '@/components/px-popup/px-popdown.vue';
+	import pxPopright from '@/components/px-popup/px-popright.vue';
+	import pxDatepicker from '@/components/px-datepicker/px-datepicker.vue';
+	import storeSearch from '@/components/store-search/storeSearchV2.vue';
+	import pxStep from '@/components/px-step/px-step.vue'
+	import pxMessage from '@/components/px-message/px-message.vue'
+	
+	export default{
+		components: {plateNumber,pxPopdown,pxPopright,pxDatepicker,storeSearch,pxStep,pxMessage},
 		data() {
 			return {
+				step:1,
+				avatar:'',
+				stepText:['预约成功','等待服务','开始服务','结束服务'],
 				current:0,
 				swiperList:[],
-				autoplay: true,
-				interval: 2000,
-				circular:true,
-				duration: 500,
-				area:'',
-				city:'',
-				address:'',
-				lat:"",
-				lng:'',
-				vip:0,
-				storeList:[],
-				recommend:[],
-				platform: '',
-				bottom: '8rpx',
-				areaBottom: '10rpx',
-				page:1,
-				end:false
+				appointmentType:[
+					{id:0, name:"洗车服务",active:1},
+					{id:1, name:"半合成保养",active:0},
+					{id:2, name:"全合成保养",active:0},
+				],
+				storeItems:[],
+				priceArr:[],
+				userData:[],
+				appointmentData:[],
+				active:0,
+				payType:0,
+				qrCode:'',
+				waitData:{number:0,count:0,wait:0,waitTime:''},
+				formData:{
+					type:0,
+					car:'',
+					time:'',
+					storeID:0,
+					storeName:'',
+					price:''
+				}
 			}
 		},
-		onShareAppMessage(res) {
-			let userData = uni.getStorageSync('user_data')
-			userData = JSON.parse(userData)
-			let referrer = userData['SerialCode']
-		    return {
-		      title: '品象养车',
-		      path: '/pages/index/index'
-		    }
-		},
-		onShow() {
-			let that = this
-			getBanner({}).then(bannerData=>{
-				if(bannerData.Code === 200){
-					that.swiperList = bannerData.Data
+		methods:{
+			changeAppointmentType(id){
+				let that = this
+				this.formData.type = id
+				for (let i=0; i<that.appointmentType.length;i++){
+					that.appointmentType[i].active = 0;
+					if (that.appointmentType[i].id === id) that.appointmentType[i].active = 1;
 				}
-			})
-			
-			wx.getSystemInfo({
-				success:function(res){
-					if(res.platform == "devtools"){
-					}else if(res.platform == "ios"){
-						that.bottom = '8rpx'
-						that.areaBottom = '15rpx'
-					}else if(res.platform == "android"){
-						that.bottom = '12rpx'
-						that.areaBottom = '21rpx'
-					}
+				if(this.formData.price === '') return false;
+				this.formData.price = this.priceArr[id]
+				if(this.formData.type === 0 && this.active){
+					this.formData.price = parseInt(this.formData.price)/2
 				}
-			})
-			// let tokenData = await getToken()
-			let userData = uni.getStorageSync('user_data')
-			if(userData === null ||userData.length === 0){
-				
-			}else{
-				this.vip = JSON.parse(userData).Vip
-			}
-			
-		},
-		async onLoad() {
-			let that = this
-			uni.getStorage({
-				key:"geo",
-				success(res) {
-					console.log(res.data)
-					if(res.data!=undefined){
-						res = JSON.parse(res.data)
-						getStore({'Lat':res.lat,'Lng':res.lng,'City':res.city,'Page':that.page}).then(storeData => {
-							if(storeData.Code === 200){
-								if(storeData.Data.StoreData.length === 0){
-									uni.showToast({
-										icon:"none",
-										title:"该地区门店正在更新中"
-									})
-								}
-								that.storeList = storeData.Data.StoreData
-								that.recommend = storeData.Data.RecommendData
-								if(storeData.Data.Count<5){
-									that.end = true
-								}
-							}
-						});
-					}
-					
-				}
-			})
-			wx.getLocation({
-			 type: 'gcj02',
-			 success (res) {
-				 console.log("定位",(new Date).getMilliseconds())
-				that.lat = res.latitude
-				that.lng = res.longitude				
-				
-				uni.request({
-					header:{
-						"Content-Type": "application/text"
-					},
-					url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
-					success(re) {
-						if(re.statusCode===200){
-							console.log("位置",(new Date).getMilliseconds())
-							that.area = re.data.result.address_component.street
-							that.city = re.data.result.address_component.city
-							uni.setStorageSync('geo',JSON.stringify({
-								'lat':res.latitude,
-								'lng':res.longitude,
-								'province':re.data.result.address_component.province,
-								'city':re.data.result.address_component.city,
-								'area':re.data.result.address_component.district,
-								'address':re.data.result.address
-							}))
-							getStore({'Lat':res.latitude,'Lng':res.longitude,'City':re.data.result.address_component.city,'Page':that.page}).then(storeData => {
-								if(storeData.Code === 200){
-									if(storeData.Data.StoreData.length === 0){
-										uni.showToast({
-											icon:"none",
-											title:"该地区门店正在更新中"
-										})
-									}
-									that.storeList = storeData.Data.StoreData
-									that.recommend = storeData.Data.RecommendData
-									if(storeData.Data.Count<5){
-										that.end = true
-									}
-								}
-							});
-						}
-					 }
-				});
-			 }
-			})
-		},
-		methods: {
-			goStore(id){
-				uni.navigateTo({
-				    url: `../store/store?id=${id}`
-				});
 			},
-			goActive(){
+			inputNumber(){
+				this.$refs.storepicker.close()
+				this.$refs.datapicker.close()
+				this.$refs.plate.show();
+			},
+			selectAppointmentDate(){
+				this.$refs.plate.close();
+				this.$refs.storepicker.close()
+				this.$refs.datapicker.open()
+			},
+			chooseAppointmentDate(value){
+				this.formData.time = value
+				this.$refs.datapicker.close()
+			},
+			selectAppointmentStore(){
+				this.$refs.plate.close();
+				this.$refs.datapicker.close()
+				this.$refs.storepicker.open()
+			},
+			storeSearchClose(){
+				this.$refs.storepicker.close()
+			},
+			goBuyVip(){
+				uni.navigateTo({
+					url:"/pages/userSub/active"
+				})
+			},
+			chooseStore(id,name,price,time,items,active){
+				this.active = active
+				this.priceArr = price
+				this.formData.time = time
+				this.formData.storeName = name
+				this.formData.storeID = id
+				this.formData.price = this.priceArr[this.formData.type]
+				this.storeItems = items
+				if(this.formData.type === 0 && active){
+					this.formData.price = parseInt(this.formData.price)/2
+				}
+				this.storeSearchClose()
+			},
+			goLogin(){
+				uni.navigateTo({
+					url:"/pages/login/login"
+				})
+			},
+			getPhoneNumber(e){
+				let that = this
 				let userData = uni.getStorageSync('user_data')
 				if(userData === null || userData.length === 0){
 					wx.showModal({
@@ -265,341 +241,561 @@
 					})
 					return false;
 				}
-				uni.navigateTo({
-					url: '../userSub/active'
-				});
-			},
-			goSearch(){
-				uni.navigateTo({
-				    url: '../store/storeSearch/storeSearch'
-				});
-			},
-			loadMore(){
-				let that = this
-				if(!this.end){
-					that.page += 1
-					getStore({'Lat':that.lat,'Lng':that.lng,'City':that.city,'Page':that.page}).then(storeData => {
-						if(storeData.Code === 200){
-							if(storeData.Data.Count>0){
-								storeData.Data.StoreData.forEach((value,key)=>{
-									that.storeList.push(value)
-								})
-							}
-							if(storeData.Data.Count<5){
-								that.end = true
-							}
+				if(e.detail.errMsg === 'getPhoneNumber:ok'){
+					let wxOpenID = uni.getStorageSync('wxOpenID')
+					decryptPhone({'OpenID':wxOpenID,'Encrypt':e.detail.encryptedData,'IV':e.detail.iv}).then(res => {
+						if(res.Code === 200){
+							that.userData.phone = res.Data.Phone
+							changePhone({Phone:res.Data.Phone}).then(response =>{
+								if(response.Code === 200){
+									let userData = uni.getStorageSync('user_data')
+									userData = JSON.parse(userData)
+									userData['Phone'] = res.Data.Phone
+									that.userData.Phone = res.Data.Phone
+									uni.setStorageSync('user_data',JSON.stringify(userData))
+									that.goAppointment()
+								}
+							})
 						}
-					});
+					})
 				}
 			},
-			chooseArea(){
+			payAppointment(){ // 未付款重复支付
 				let that = this
-				wx.chooseLocation({
-					success(res) {
-						console.log(res)
-						that.page = 1
-						that.area = res.name
-						that.lat = res.latitude
-						that.lng = res.longitude
-						uni.request({
-							header:{
-								"Content-Type": "application/text"
-							},
-							url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
-							success(re) {
-								if(re.statusCode===200){
-									console.log(re)
-									that.city = re.data.result.address_component.city
-									uni.setStorageSync('geo',JSON.stringify({
-										'lat':res.latitude,
-										'lng':res.longitude,
-										'province':re.data.result.address_component.province,
-										'city':re.data.result.address_component.city,
-										'area':re.data.result.address_component.district,
-										'address':re.data.result.address
-									}))
-									getStore({'Lat':res.latitude,'Lng':res.longitude,'City':re.data.result.address_component.city,'Page':that.page}).then(storeData => {
-										if(storeData.Code === 200){
-											if(storeData.Data.StoreData.length === 0){
-												uni.showToast({
-													icon:"none",
-													title:"该地区门店正在更新中"
-												})
-											}
-											that.storeList = storeData.Data.StoreData
-											that.recommend = storeData.Data.RecommendData
-											if(storeData.Data.Count<5){
-												that.end = true
-											}
+				this.goBuy({
+					OpenID: uni.getStorageSync('wxOpenID'),
+					Type:that.appointmentData.Type,
+					StoreID:that.appointmentData.StoreID,
+					Extra:that.appointmentData.ID
+				})
+			},
+			cancelAppointment(){
+				
+			},
+			goBuy(params){
+				let that = this
+				payDetailOne(params).then(detail=>{
+					if(detail.Code === 200){
+						uni.requestPayment({
+							provider: 'wxpay',
+							timeStamp: detail.Data.timestamp.toString(),
+							nonceStr: detail.Data.nonce_str,
+							package: `prepay_id=${detail.Data.prepay_id}`,
+							signType: 'MD5',
+							paySign: detail.Data.sign,
+							success: function (res) {
+								console.log('success:' + JSON.stringify(res));
+								if(res.errMsg=='requestPayment:ok'){
+									payOne({OrderNo:detail.Data.order_number}).then(r=>{
+										if(r.Code === 200){
+											uni.shwoToast({
+												title:"支付成功"
+											})
 										}
-									});
+										that.resetData()
+									})
+								}else{
+									wx.showToast({
+										title:"支付失败",
+										icon:"none"
+									})
+									that.resetData()
 								}
-							 }
+								that.resetData()
+							},
+							fail: function (err) {
+								console.log('fail:' + JSON.stringify(err));
+								that.resetData()
+							}
 						});
+					}
+				})
+			},
+			goAppointment(){
+				let that = this
+				if(this.userData.length === 0){
+					return this.goLogin()
+				}
+				if(this.formData.car === '') return uni.showToast({
+					icon:"none",
+					title:"请输入车牌号"
+				})
+				if(this.formData.time === '') return uni.showToast({
+					icon:'none',
+					title:"请选择预约时间"
+				})
+				if(this.formData.storeID === 0) return uni.showToast({
+					icon:'none',
+					title:"请选择门店"
+				})
+				let storeItemID = this.storeItems[this.formData.type]
+				uni.setStorageSync('carNumber',this.formData.car)
+				offerNumber({
+					'AppointmentTime':this.formData.time,
+					'StoreID':this.formData.storeID,
+					'Type':1,
+					'ServiceType':this.formData.type,
+					'StoreItemID':storeItemID,
+					'Phone':this.userData.Phone,
+					'CarNumber': this.formData.car
+				}).then(response =>{
+					if(response.Code === 200){
+						if(that.userData.Vip){
+							return uni.showToast({
+								title:"预约成功"
+							})
+						}
+						let orderID = response.Data.ID
+						that.goBuy({
+							OpenID: uni.getStorageSync('wxOpenID'),
+							Type:that.formData.type,
+							StoreID:that.formData.storeID,
+							Extra:orderID
+						})
+					}
+				})
+			},
+			resetData(){
+				let that = this
+				that.formData = {
+					type:0,
+					car:'',
+					time:'',
+					storeID:0,
+					storeName:'',
+					price:''
+				}
+				let userData = uni.getStorageSync('user_data')
+				if(userData === null || userData === undefined || userData === '') return false
+				this.userData = JSON.parse(userData)
+				getAppointmentV2({}).then(res=>{
+					if(res.Code === 200){
+						if(res.Data.Type === 0) that.step = that.payType = 0
+						if(res.Data.Type === 1) that.step = 1
+						if(res.Data.Type === 2) that.step = 2
+						if(res.Data.Type === 4) that.step = 3
+						if(res.Data.Type!==0){
+							that.payType = 1
+							that.appointmentData = res.Data.Appointment
+							getAppointmentDetail(res.Data.Appointment.ID,{}).then(res=>{
+								if(res.Code === 200) {
+									that.qrCode = res.Data.QrCode
+								}
+							})
+							that.waitData.number = res.Data.Number,
+							that.waitData.count = res.Data.Count,
+							that.waitData.wait = res.Data.Wait
+							that.waitData.waitTime = res.Data.WaitTime
+						}
 						
 					}
 				})
 			}
-		}
+		},
+		onShow() {
+			let that = this
+			this.resetData()
+			let formData = getApp().globalData.formData
+			console.log(formData)
+			if(formData != undefined && formData != []){
+				console.log(formData)
+				this.formData.type = formData.type
+				this.formData.storeID = formData.storeID,
+				this.formData.storeName = formData.storeName,
+				this.formData.price = formData.price
+				getApp().globalData.formData = []
+			}
+		},
+		onLoad(option) {
+			console.log(getApp().globalData.formData)
+			let that = this
+			getBanner({Type:1}).then(bannerData=>{
+				if(bannerData.Code === 200){
+					that.swiperList = bannerData.Data
+				}
+			})
+			let car = uni.getStorageSync('carNumber')
+			if(car === null || car === undefined || car === ''){
+				
+			}else{
+				this.formData.car = car
+			}
+			wx.getLocation({
+				type: 'gcj02',
+				success (res) {
+					uni.request({
+						header:{
+							"Content-Type": "application/text"
+						},
+						url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
+						success(re) {
+							if(re.statusCode===200){
+								uni.setStorageSync('geo',JSON.stringify({
+									'lat':res.latitude,
+									'lng':res.longitude,
+									'province':re.data.result.address_component.province,
+									'city':re.data.result.address_component.city,
+									'area':re.data.result.address_component.district,
+									'address':re.data.result.address
+								}))
+							}
+						}
+					});
+				}
+			})
+			let token = uni.getStorageSync('api_token')
+			if(token === null || token === undefined || token === '') return this.goLogin()
+			let userData = uni.getStorageSync('user_data')
+			if(userData === null || userData === undefined || userData === '') return this.goLogin()
+			this.userData = JSON.parse(userData)
+			this.avatar = this.userData.Avatar
+		}	
 	}
 </script>
 
-<style lang="scss" scoped>
-	.status_bar {
-		height: var(--status-bar-height);
-		width: 100%;
-	}
-	.gray{
-		width:750upx;
-		height:10upx;
-		background: #F3F3F3;
-	}
-	.header-box{
-		position:fixed;
-		top:0;
-		left:0;
+<style scoped lang="scss">
+	.index-box{
 		width: 750upx;
-		height: 154upx;
-		background: #FCFCFC;
-		overflow: hidden;
-		z-index:100;
-	}
-	.header-box-title{
-		position: absolute;
-		width: 100%;
-		line-height: 58upx;
-		font-size:33upx;
-		font-family:PingFangSC;
-		font-weight:400;
-		color:rgba(51,51,51,1);
-		text-align: center;
-		left:0;
-		z-index:101;
-	}
-	.header-address-box{
-		position: absolute;
-		left:20upx;
-		z-index: 102;
-		.header-address-icon{
-			font-size:33upx;
-			color:#A4A4A4;
-			vertical-align: middle;
+		position: relative;
+		.index-header{
+			width: 100%;
+			height:1upx;
 		}
-		.header-address-text{
-			display:inline-block;
-			margin-left:-10upx;
-			font-size:30upx;
-			line-height: 30upx;
-			width: 150upx;
-			overflow: hidden;/*超出部分隐藏*/
-			text-overflow:ellipsis;/* 超出部分显示省略号 */
-			white-space: nowrap;/*规定段落中的文本不进行换行 */
-			color:#A4A4A4;
-			vertical-align: middle;
+		.index-bg{
+			position: absolute;
+			top:0;
+			left:0;
+			z-index:-1;
+			width: 750upx;
+			height: 100vh;
+			background:linear-gradient(180deg,rgba(254,81,0,0.35) 0%,rgba(254,140,0,0.3) 54%,rgba(255,255,255,0.31) 91%,rgba(255,255,255,1) 100%,rgba(255,255,255,1) 100%);
 		}
-	}
-	.store-box {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: flex-start;
-		height: 100vh;
-		margin-bottom:10upx;
-		.store-swiper{
-			width:750upx;
-			height:413upx;
-			position: relative;
-			.swiper{
-				width:750upx;
-				height:413upx;
-				.swiper-img{
-					width:750upx;
-					height:413upx;
-				}
-			}
-			.store-search{
-				width:667upx;
-				height:121upx;
-				background: #fff;
-				position: absolute;
-				top:353upx;
-				left:42upx;
-				border-radius:11upx;
-				box-shadow: 0px 0px 3px 3px rgba(164,164,164,0.1);
-				display: flex;
+		.index-active{
+			width: 674upx;
+			height: 54upx;
+			padding: 18upx 20upx;
+			margin:0 auto;
+			margin-top:15upx;
+			background-color:white;
+			box-shadow:0upx 0upx 2upx 0upx rgba(0,0,0,0.5);
+			border-radius:4upx;
+			.active{
+				width: 100%;
+				height: 100%;
+				display:inline-flex;
 				justify-content: space-between;
-				.store-search-input{
-					margin-top: 45upx;
-					width:450upx;
-					margin-left:33upx;
-					.input{
-						font-size:25upx;
+				&-icon{
+					width: 54upx;
+					height: 54upx;
+					border-radius: 54upx;
+					background-color: #F7F7F7;
+					flex-shrink: 0;
+					text-align: center;
+					.vant-icon{
+						line-height: 54upx;
 						color:#A4A4A4;
+						margin:0 auto;
 					}
 				}
-				.vant-icon{
-					margin-top: 45upx;
-					font-size:30upx;
-					margin-right: 60upx;
-					color:#FE5100;
+				&-span{
+					width: 100%;
+					height: 54upx;
+					flex-shrink: 1;
+					font-size:25upx;
+					font-weight:400;
+					color:rgba(164,164,164,1);
+					line-height: 54upx;
+					margin-left:20upx;
 				}
-			}
-		}
-		.store-vip{
-			width:667upx;
-			height:134upx;
-			box-shadow: 0px 0px 3px 3px rgba(164,164,164,0.1);
-			margin: 0 auto;
-			margin-top: 100upx;
-			margin-bottom: 15upx;
-			border-radius:11upx;
-			.vip-top{
-				width:580upx;
-				font-size:29upx;
-				color:#FE5100;
-				display: flex;
-				height:65upx;
-				line-height:65upx;
-				margin-left:33upx;
-				justify-content: space-between;
-				border-bottom:1upx solid rgba(254,81,0,0.1);
-				.vant-icon{
-					font-size:40upx;
-					margin-right: 0;
-				}
-			}
-			.vip-bottom{
-				width:580upx;
-				font-size:22upx;
-				display: flex;
-				height:65upx;
-				line-height:65upx;
-				margin-left:33upx;
-				justify-content: space-between;
-				.vip-name{
-					color:#A4A4A4;
-				}
-				.vant-icon{
-					font-size:40upx;
-					margin-right: 0;
-					margin-top:2upx;
-					color:rgba(254,81,0,0.5)
-				}
-			}
-		}
-		.store-nearby{
-			width:667upx;
-			height:107upx;
-			margin: 0 auto;
-			.nearby-top{
-				font-size:29upx;
-				margin-top: 22upx;
-			}
-			.nearby-bot{
-				font-size:21upx;
-				color:#A4A4A4;
-			}
-		}
-		.store-list{
-			position: relative;
-			.cover {
-				width: 667upx;
-				height: 457upx;
-				display:block;
-				margin: 0 auto;
-				margin-top: 20upx;
-				// margin-left: 41.5upx;
-				// margin-right: auto;
-			}
-			
-			.store-area{
-				width: 667upx;
-				position: absolute;
-				display: flex;
-				justify-content: flex-start;
-				font-size:25upx;
-				margin-left: 41.5upx;
-				top:410upx;
-				left:20upx;
-				.vant-icon{
-					color:#FE5100;
-					font-size:30upx;
-				}
-				.area-name{
-					color:#fff;
+				&-button{
+					width:129upx;
+					height:47upx;
+					margin-top:4.5upx;
+					flex-shrink: 0;
+					background:rgba(255,255,255,1);
+					button{
+						width: 125upx;
+						height:43upx;
+						line-height: 43upx;
+						font-size:27upx;
+						font-weight:400;
+						color:rgba(254,81,0,1);
+						border:2upx solid rgba(254,81,0,1);
+						padding:0;
+						border-radius: 0;
+					}
+					
 				}
 			}
 			
-			.store-name{
-				width: 667upx;
-				font-size:36upx;
-				margin : 0 auto;
-				margin-top: 24upx;
-			}
-			.store-address{
-				width: 667upx;
-				margin: 0 auto;
+		}
+		
+		.appointment-box{
+			width: 674upx;
+			padding: 27upx 20upx;
+			margin:0 auto;
+			margin-top:20upx;
+			background-color:white;
+			box-shadow:0upx 0upx 2upx 0upx rgba(0,0,0,0.5);
+			border-radius:6upx;
+			.appointment-service-title{
+				height:40upx;
 				font-size:29upx;
-				color:#A4A4A4;
-				margin-top:18upx;
-				display: flex;
-				justify-content: space-between;
-				.uni-rate{
-					margin-top:10upx;
-				}
+				font-weight:500;
+				color:rgba(95,95,95,1);
+				line-height:40upx;
+				text-align: center;
 			}
-			.store-tips{
-				width: 667upx;
-				margin: 0 auto;
-				margin-top: 17upx;
-				display: flex;
-				justify-content:flex-start;
-				padding-bottom:20upx;
-				.store-tip-list{
-					width:470upx;
-					display: flex;
-					justify-content:flex-start;
-					margin-top:10upx;
-					.tips{
-						// margin-top: 10upx;	
-						// display: flex;
-						// justify-content:flex-start;
-						.tip{
-							width:141upx;
-							height:40upx;
-							margin-right: 5upx;
-							line-height: 40upx;
-							text-align: center;
-							color:#FE8C00;
-							font-size: 25upx;
-							border-radius:18px;
-							border:2upx solid rgba(254,140,0,1);
+			.appointment-service-content{
+				width: 100%;
+				margin:0 auto;
+				&-pay{
+					margin:0 auto;
+					width: 100%;
+					margin-top:67upx;
+					&-icon{
+						width: 71upx;
+						height: 71upx;
+						margin:0 auto;
+						image{
+							width: 100%;
+							height: 100%;
+						}
+					}
+					&-text{
+						width: 80%;
+						margin:0 auto;
+						margin-top:45upx;
+						font-size:33upx;
+						font-weight:400;
+						color:rgba(51,51,51,1);
+						line-height:45upx;
+					}
+					&-button{
+						width: 80%;
+						display:inline-flex;
+						justify-content: space-between;
+						margin:0 10%;
+						margin-top:67upx;
+						margin-bottom:67upx;
+						button{
+							width:40%;
+							height:72upx;
+							line-height: 72upx;
+							background:white;
+							font-size:29upx;
+							font-weight:400;
+						}
+						.confirm-button{
+							background:#FE5100;
+							border:none;
+							color:white;
 						}
 					}
 				}
-				.store-buy{
-					width:163upx;
-					height:67upx;
-					line-height: 67upx;
-					background:rgba(254,81,0,1);
-					border-radius:11upx;
-					font-size:29upx;
-					font-weight:500;
-					color:#fff;
-					text-align: center;
-					margin-left:43upx;
+				&-order-code{
+					width: 100%;
+					margin: 0 auto;
+					.coupon-ewm-image{
+						width: 100%;
+					}
+					.appoint-service-content-order-avatar{
+						width:174upx;
+						height:174upx;
+						margin:0 auto;
+						margin-top:45upx;
+						overflow: hidden;
+						border-radius: 174upx;
+						image{
+							width: 100%;
+							height: 100%;
+						}
+					}
+					.appoint-service-content-order-offerNumber{
+						width: 100%;
+						text-align: center;
+						font-size:65upx;
+						font-weight:600;
+						color:rgba(95,95,95,1);
+						line-height:91upx;
+						margin-top:25upx;
+					}
+					.appoint-service-content-order-wait{
+						width: 100%;
+						text-align: center;
+						margin-top:5upx;
+						font-size:24upx;
+						font-weight:400;
+						color:rgba(95,95,95,1);
+						line-height:33upx;
+					}
+					.appoint-service-content-order-count{
+						width: 100%;
+						text-align: center;
+						font-size:33upx;
+						font-weight:500;
+						color:rgba(68,181,73,1);
+						line-height:45upx;
+						margin-top:36upx
+					}
+					.appoint-service-content-order-count-red{
+						width: 100%;
+						text-align: center;
+						font-size:33upx;
+						font-weight:500;
+						color:#FE5100;
+						line-height:45upx;
+						margin-top:36upx
+					}
+					.appoint-service-content-order-hint{
+						font-size:24upx;
+						font-weight:400;
+						color:rgba(216,216,216,1);
+						line-height:33upx;
+						width: 100%;
+						text-align: center;
+						margin-top:38upx;
+					}
+				}
+			}
+			
+			.appointment-service-rate{
+				width: 100%;
+			}
+			.appointment-header{
+				width: 584upx;
+				height:54upx;
+				display:inline-flex;
+				margin:0 45upx;
+				justify-content: space-between;
+				.appointment-type-list{
+					height:54upx;
+					padding:0upx 14upx;
+					position: relative;
+					&-span{
+						font-size:29upx;
+						font-weight:400;
+						color:rgba(51,51,51,1);
+						line-height:54upx;
+					}
+					&-bg{
+						position: absolute;
+						top:0;left:0;
+						width: 100%;
+						height:100%;
+						background:rgba(254,81,0,1);
+						border-radius:27upx;
+						z-index:1;
+						font-size:29upx;
+						font-weight:400;
+						color:#FFFFFF;
+						line-height:54upx;
+						text-align: center;
+					}
+				}
+			}
+			.appointment-content{
+				width: 100%;
+				margin-top: 89upx;
+				.appointment-input-box{
+					width: 100%;
+					.appointment-input{
+						width: 100%;
+						display:inline-flex;
+						justify-content: space-between;
+						margin-bottom:56upx;
+						&-icon{
+							flex-shrink: 0;
+							font-size:36upx;
+							font-weight:400;
+							color:#FE8C00;
+							vertical-align: middle;
+							padding:0;
+							margin:0;
+							padding-top:10upx;
+							margin-left: 10upx;
+						}
+						&-cpn{
+							width: 100%;
+							min-height: 56upx;
+							font-size:25upx;
+							font-weight:400;
+							color:#333333;
+							line-height:56upx;
+							vertical-align: middle;
+							margin-left:14upx;
+							border-bottom: 1px solid rgba(0,0,0,0.1);
+							position: relative;
+							
+						}
+						.input-address{
+							color:#000A82;
+							font-size: 27upx;
+							padding-top:16upx;
+						}
+					}
+				}
+				.appointment-button{
+					width: 100%;
+					button{
+						width:402upx;
+						height:72upx;
+						background:rgba(254,81,0,1);
+						border-radius:27upx;
+						border:none;
+						font-size:33upx;
+						font-family:PingFangSC-Medium,PingFang SC;
+						color:rgba(255,255,255,1);
+						line-height:72upx;
+						letter-spacing:18upx;
+						margin-bottom:27upx;
+					}
+				}
+			}
+		}
+		.banner-box{
+			width: 100%;
+			background-color:white;
+			padding: 16upx 0;
+			margin-top:27upx;
+			box-shadow:0upx 0upx 2upx 0upx rgba(0,0,0,0.5);
+			border-radius:4upx;
+			.announcement{
+				width: 100%;
+				text-align: center;
+				font-size:25upx;
+				font-weight:400;
+				color:rgba(95,95,95,1);
+				line-height:36upx;
+				text{
+					color:#FE8C00;
+					margin:0 6upx;
+				}
+			}
+			.banner-swiper-box{
+				width: 714upx;
+				height: 236upx;
+				margin:0 auto;
+				margin-top:18upx;
+				margin-bottom:4upx;
+				.swiper{
+					width:714upx;
+					height:236upx;
+					.swiper-img{
+						width:714upx;
+						height:236upx;
+					}
 				}
 			}
 		}
 	}
-	.store-distance{
-		position: absolute;
-		right:60upx;
-		bottom: 170upx;
-		font-size:29upx;
-		font-family:PingFangSC;
+	.appointment-hint{
+		width: 100%;
+		text-align: center;
+		font-size:27upx;
 		font-weight:400;
-		color:rgba(164,164,164,1);
-		line-height:40upx;
+		color:rgba(254,81,0,1);
+		line-height:38upx;
+		margin-bottom:4upx;
 	}
 </style>

@@ -90,11 +90,16 @@
 				<view class="vant-word">品象信用</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
-			<view class="prove-credit list" @click="goRetail">
+			<view class="prove-credit list" @click="goOrder">
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/icon/book.png" mode="aspectFit"></image>
+				<view class="vant-word">我的订单</view>
+				<view class="vant-icon">&#xe609;</view>
+			</view>
+			<!-- <view class="prove-credit list" @click="goRetail">
 				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/image/column/retail.png" mode="aspectFit"></image>
 				<view class="vant-word">分销中心</view>
 				<view class="vant-icon">&#xe609;</view>
-			</view>
+			</view> -->
 			
 			<!-- <view class="prove-center list" @click="goGiftCard">
 				<view class="vant-icon">&#xe6a4;</view>
@@ -174,6 +179,11 @@
 				uni.navigateTo({
 				    url: '/pages/userSub/credit'
 				});
+			},
+			goOrder(){
+				uni.navigateTo({
+					url:"/pages/order/order"
+				})
 			},
 			goVip(){
 				if(this.vip === 0){

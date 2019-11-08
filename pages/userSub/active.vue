@@ -38,10 +38,10 @@
 				</view>
 			</view>
 			<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
-				立即开通，每年至少节省1000元
+				立即开通，每年至少节省2000元
 			</button>
 			<button v-if="phone!=''" class="active-join-button" @click="buyVIP">
-				立即开通，每年至少节省1000元
+				立即开通，每年至少节省2000元
 			</button>
 		</view>
 	</view>
@@ -60,7 +60,8 @@
 				vip:0,
 				question1:false,
 				question2:false,
-				type:''
+				type:'',
+				to:''
 			}
 		},
 		methods: {
@@ -141,9 +142,15 @@
 										wx.showToast({
 											title:"购买成功",
 											success() {
-												wx.switchTab({
-													url:'/pages/user/user?status=buied'
-												})
+												if(that.to === 'index'){
+													wx.switchTab({
+														url:'/pages/index/index'
+													})
+												}else{
+													wx.switchTab({
+														url:'/pages/user/user?status=buied'
+													})
+												}
 											}
 										})
 	
@@ -236,7 +243,9 @@
 			}
 		},
 		onLoad(options) {
-			console.log(options.code)
+			if(options.to!=undefined && options.to!=null){
+				this.to = options.to
+			}
 			if(options.code!=undefined){
 				uni.setStorageSync('ReferrerCode',options.code)
 			}else{
@@ -260,7 +269,6 @@
 					city:userData.City
 				}})
 			}
-			// this.redirect = options.redirect
 		}
 	}
 </script>

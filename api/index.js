@@ -447,6 +447,13 @@ export function getAppointmentDetail(id,params={}) {
 		params: params
 	})
 }
+export function getAppointmentV2(id,params={}) {
+	return fetch({
+		url: `${api.store}/appointmentV2`,
+		method: 'get',
+		params: params
+	})
+}
 
 export function getVip(params={}) {
 	return fetch({
@@ -599,6 +606,22 @@ export function getSessionID(params={}) {
 export function storeSearchV2(params={}) {
 	return fetch({
 		url: `${api.store}/search/v2`,
+		method:'post',
+		data:params
+	})
+}
+
+export function getMessage(params={}){
+	return fetch({
+		url: `${api.base}/message`,
+		method:'get',
+		params:params
+	})
+}
+
+export function offerNumber(params={}) {
+	return fetch({
+		url: `${api.base}/offerNumber`,
 		method:'post',
 		data:params
 	})

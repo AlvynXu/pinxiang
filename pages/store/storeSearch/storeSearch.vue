@@ -109,7 +109,7 @@
 		methods: {
 			goStore(id){
 				uni.navigateTo({
-				    url: `/pages/store/store?id=${id}`
+				    url: `/pages/store/storeV2?id=${id}`
 				});
 			},
 			goActive(){

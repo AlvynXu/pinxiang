@@ -10,7 +10,7 @@
 				<view class="store-list-icon" :class="{'red':val.Active}"></view>
 				<view class="store-list-content" @click="val.Open ? chooseStore(val.ID,val.Name,[val.MarketWash,val.MarketSemiSynthetic,val.MarketTotalSynthetic],[val.WashItem,val.CareItem,val.CareItem],val.Active) : ()=>{return false}">
 					<view class="store-list-content-top">
-						<view class="store-list-content-top-title">{{val.TradingArea}}·{{val.Name}}<label v-if="val.Active">首次洗车半价</label></view>
+						<view class="store-list-content-top-title">{{val.Name}}<label v-if="val.Active">首次洗车半价</label></view>
 						<view class="store-list-content-top-km">{{val.Distance}}</view>
 					</view>
 					<view class="store-list-content-middle">
@@ -19,9 +19,9 @@
 					</view>
 					<view class="store-list-content-bottom">
 						<view class="store-list-content-bottom-label">
-							<label v-if="type===0">单次洗车￥{{val.WashPrice}}</label>
-							<label v-if="type===1">半合成保养￥{{val.CarePrice}}</label>
-							<label v-if="type===2">全合成保养￥{{val.CarePrice}}</label>
+							<label v-if="type===0">单次洗车￥{{val.MarketWash}}</label>
+							<label v-if="type===1">半合成保养￥{{val.MarketSemiSynthetic}}</label>
+							<label v-if="type===2">全合成保养￥{{val.MarketTotalSynthetic}}</label>
 						</view>
 						<view v-if="val.Open===1" class="store-list-content-bottom-rate"><uni-rate :value="val.Rate" size="15" :disabled="true"></uni-rate></view>
 						<view v-if="val.Open===0" class="store-list-content-bottom-hint red">当前时间，门店暂未营业</view>
@@ -75,6 +75,7 @@
 				+ ':' + (date.getMinutes()<30 ? `30` : '00')
 			}
 			
+			
 			uni.getStorage({
 				key:"geo",
 				success: (res) => {
@@ -86,7 +87,72 @@
 								that.recommend = storeData.Data.RecommendData
 							}
 						})
+					}else{
+						wx.getLocation({
+							type: 'gcj02',
+							success (res) {
+								uni.request({
+									header:{
+										"Content-Type": "application/text"
+									},
+									url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
+									success(re) {
+										if(re.statusCode===200){
+											uni.setStorageSync('geo',JSON.stringify({
+												'lat':res.latitude,
+												'lng':res.longitude,
+												'province':re.data.result.address_component.province,
+												'city':re.data.result.address_component.city,
+												'area':re.data.result.address_component.district,
+												'address':re.data.result.address
+											}))
+											storeSearchV2({
+												Lat:res.latitude,Lng:res.longitude,
+												City:re.data.result.address_component.city,Page:that.page,AppointmentTime: that.appointment}).then(storeData =>{
+												if(storeData.Code === 200){
+													that.storeList = storeData.Data.StoreData
+													that.recommend = storeData.Data.RecommendData
+												}
+											})
+										}
+									}
+								});
+							}
+						})
 					}
+				},
+				fail() {
+					wx.getLocation({
+						type: 'gcj02',
+						success (res) {
+							uni.request({
+								header:{
+									"Content-Type": "application/text"
+								},
+								url:'https://apis.map.qq.com/ws/geocoder/v1/?location='+res.latitude+','+res.longitude+'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
+								success(re) {
+									if(re.statusCode===200){
+										uni.setStorageSync('geo',JSON.stringify({
+											'lat':res.latitude,
+											'lng':res.longitude,
+											'province':re.data.result.address_component.province,
+											'city':re.data.result.address_component.city,
+											'area':re.data.result.address_component.district,
+											'address':re.data.result.address
+										}))
+										storeSearchV2({
+											Lat:res.latitude,Lng:res.longitude,
+											City:re.data.result.address_component.city,Page:that.page,AppointmentTime: that.appointment}).then(storeData =>{
+											if(storeData.Code === 200){
+												that.storeList = storeData.Data.StoreData
+												that.recommend = storeData.Data.RecommendData
+											}
+										})
+									}
+								}
+							});
+						}
+					})
 				}
 			})
 		},

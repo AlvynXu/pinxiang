@@ -478,6 +478,7 @@
 				this.userData = JSON.parse(userData)
 				this.vip = this.userData.Vip
 			}
+			
 			let geo = JSON.parse(uni.getStorageSync('geo'))
 			let storeData = await getStoreByID(id,{Lat:geo.lat,Lng:geo.lng})
 			if(storeData.Code === 200){
