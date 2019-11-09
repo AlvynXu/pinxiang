@@ -28,14 +28,21 @@
 				</view>
 				<view class="store-name">{{val.Name}}</view>
 				<view class="store-distance">{{val.Distance}}</view>
-				<view class="store-address">{{val.Address}}
-					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
+				<view class="store-address">
+					<view>{{val.Address}}</view>
+					<view class="appointment-number">已预约:{{val.AppointCount}}</view>
+				    <!-- {{val.Address}}
+					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate> -->
 				</view>
-				<view class="store-tips">
-					<view class="store-tip-list">
+				<view class="store-tip">
+					<!-- <view class="store-tip-list">
 						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
 							<view class="tip">{{v}}</view>
 						</view>
+					</view> -->
+					<view class="rate">
+						<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
+						<view class="per-capita-price">¥ 430/人</view>
 					</view>
 					<view class="store-buy" v-if="vip===0">会员免费</view>
 					<view class="store-buy" v-if="vip===1">立即预约</view>
@@ -53,14 +60,21 @@
 				</view>
 				<view class="store-name">{{val.Name}}</view>
 				<view class="store-distance">{{val.Distance}}</view>
-				<view class="store-address">{{val.Address}}
-					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
+				<view class="store-address">
+					<view>{{val.Address}}</view>
+					<view class="appointment-number">已预约:{{val.AppointCount}}</view>
+				    <!-- {{val.Address}}
+					<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate> -->
 				</view>
-				<view class="store-tips">
-					<view class="store-tip-list">
+				<view class="store-tip">
+					<!-- <view class="store-tip-list">
 						<view class="tips" v-for="(v,k) in val.TagsZH" :key="k">
 							<view class="tip">{{v}}</view>
 						</view>
+					</view> -->
+					<view class="rate">
+						<uni-rate :value="val.Rate" size="13" :disabled="true"></uni-rate>
+						<view class="per-capita-price">¥ 430/人</view>
 					</view>
 					<view class="store-buy" v-if="vip===0">会员免费</view>
 					<view class="store-buy" v-if="vip===1">立即预约</view>
@@ -246,33 +260,52 @@
 				margin-top:18upx;
 				display: flex;
 				justify-content: space-between;
-				.uni-rate{
-					margin-top:10upx;
+				.appointment-number{
+					font-size: 25upx;
+					font-weight:400;
+					color: #FE8C00;
 				}
 			}
-			.store-tips{
+			.store-tip{
 				width: 667upx;
 				margin-left: 33upx;
 				margin-top: 17upx;
 				display: flex;
-				justify-content:space-between;
-				padding-bottom:20upx;
-				.tips{
-					margin-top: 10upx;	
-					display: flex;
-					justify-content:flex-start;
-					.tip{
-						width:141upx;
-						height:40upx;
-						margin-right: 5upx;
-						line-height: 40upx;
-						text-align: center;
-						color:#FE8C00;
-						font-size: 25upx;
-						border-radius:18px;
-						border:2upx solid rgba(254,140,0,1);
+				justify-content: space-between;
+				align-items: center;
+				padding-bottom: 20upx;
+				.rate{
+					position: relative;
+					width: 266upx;
+					.per-capita-price{
+						position: absolute;
+						right: 0;
+						top:50%;
+						transform: translateY(-50%);
+						font-size:22upx;
+						font-weight:400;
+						color:rgba(164,164,164,1);
 					}
 				}
+				.uni-rate{
+					margin-top:10upx;
+				}
+				// .tips{
+				// 	margin-top: 10upx;	
+				// 	display: flex;
+				// 	justify-content:flex-start;
+				// 	.tip{
+				// 		width:141upx;
+				// 		height:40upx;
+				// 		margin-right: 5upx;
+				// 		line-height: 40upx;
+				// 		text-align: center;
+				// 		color:#FE8C00;
+				// 		font-size: 25upx;
+				// 		border-radius:18px;
+				// 		border:2upx solid rgba(254,140,0,1);
+				// 	}
+				// }
 				.store-buy{
 					width:163upx;
 					height:67upx;
