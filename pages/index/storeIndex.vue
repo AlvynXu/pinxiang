@@ -1,17 +1,18 @@
 <template>
 	<scroll-view :scroll-y="true" :enable-back-to-top="true" lower-threshold="100" @scrolltolower="loadMore" class="store-box">
-		<view class="header-box">
+		
+		<!-- <view class="header-box">
 			<view class="status_bar">
-				<!-- 这里是状态栏 -->
+				这里是状态栏
 			</view>
 			<view class="header-box-title">品象养车</view>
-			<!-- <view class="header-box-title" :style="{bottom:bottom}">品象养车</view>
+			<view class="header-box-title" :style="{bottom:bottom}">品象养车</view>
 			<view class="header-address-box" @tap="chooseArea" :style="{bottom:areaBottom}">
 				<text class="vant-icon header-address-icon">&#xe68f;</text>
 				<text class="header-address-text">{{area}}</text>
-			</view> -->
+			</view>
 		</view>
-		<view style="height: 158upx;"></view>
+		<view style="height: 158upx;"></view> -->
 		<view class="address-search">
 			<view class="address-box" @tap="chooseArea" :style="{bottom:areaBottom}">
 				<text class="vant-icon address-icon">&#xe68f;</text>
@@ -429,7 +430,7 @@
 	
 	.address-search{
 		position: fixed;
-		top: 158upx;
+		top: 0;
 		left: 0;
 		z-index: 109;
 		background-color: #FFFFFF;

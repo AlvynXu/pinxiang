@@ -7,8 +7,7 @@
 			"path": "pages/index/storeIndex",
 			"style": {
 				"navigationBarTitleText": "品象养车",
-				"backgroundColor":"#f3f3f3",
-				"navigationStyle":"custom"
+				"backgroundColor":"#FCFCFC"
 			}
 		},{
             "path" : "pages/user/user",
