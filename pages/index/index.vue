@@ -344,6 +344,7 @@
 							return uni.showToast({
 								title:"预约成功"
 							})
+							that.resetData()
 						}
 						let orderID = response.Data.ID
 						that.goBuy({

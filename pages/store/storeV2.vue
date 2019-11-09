@@ -67,8 +67,8 @@
 									<view class="store-detail-content-service-list-info-top-appointment">已预约 20</view>
 								</view>
 								<view class="store-detail-content-service-list-info-bottom">
-									<label @click="openWashPopDown(value.ID)">单词体验价 ￥{{store.MarketWash}}</label>
-									<view>12次免费洗车</view>
+									<label @click="openWashPopDown(value.ID)">单次体验价 ￥{{store.MarketWash}}</label>
+									<view>会员免费预约</view>
 								</view>
 							</view>
 						</view>
@@ -80,7 +80,7 @@
 									<view class="store-detail-content-service-list-info-top-appointment">已预约 20</view>
 								</view>
 								<view class="store-detail-content-service-list-info-bottom">
-									<label @click="openCarePopDown(1,value.ID)">单词体验价 ￥{{store.MarketSemiSynthetic}}</label>
+									<label @click="openCarePopDown(1,value.ID)">单次体验价 ￥{{store.MarketSemiSynthetic}}</label>
 									<view>会员免费预约</view>
 								</view>
 							</view>
@@ -93,7 +93,7 @@
 									<view class="store-detail-content-service-list-info-top-appointment">已预约 20</view>
 								</view>
 								<view class="store-detail-content-service-list-info-bottom">
-									<label @click="openCarePopDown(2,value.ID)">单词体验价 ￥{{store.MarketTotalSynthetic}}</label>
+									<label @click="openCarePopDown(2,value.ID)">单次体验价 ￥{{store.MarketTotalSynthetic}}</label>
 									<view>会员免费预约</view>
 								</view>
 							</view>
@@ -223,7 +223,8 @@
 					<view class="next-step-top-image"><image mode="aspectFill" :src="nextData.image"></image></view>
 					<view class="next-step-top-info">
 						<text>{{nextData.name}}</text>
-						<label v-if="formData.vip || vip">会员全年免费</label>
+						<label v-if="(formData.vip || vip) && formData.type===0">12次免费洗车</label>
+						<label v-if="(formData.vip || vip) && formData.type!==0">会员全年免费</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && vip===0">单次体验价￥{{nextData.price}}</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text> ￥{{nextData.activePrice}}</label>
 						<label v-if="formData.vip===0 && (formData.type===1 || formData.type===2) && vip===0">单次体验价￥{{nextData.price}}</label>
