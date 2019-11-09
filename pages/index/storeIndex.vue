@@ -10,20 +10,21 @@
 				<text class="vant-icon header-address-icon">&#xe68f;</text>
 				<text class="header-address-text">{{area}}</text>
 			</view> -->
-			<view class="address-search">
-				<view class="address-box" @tap="chooseArea" :style="{bottom:areaBottom}">
-					<text class="vant-icon address-icon">&#xe68f;</text>
-					<text class="address-text">{{area}}</text>
+		</view>
+		<view style="height: 158upx;"></view>
+		<view class="address-search">
+			<view class="address-box" @tap="chooseArea" :style="{bottom:areaBottom}">
+				<text class="vant-icon address-icon">&#xe68f;</text>
+				<text class="address-text">{{area}}</text>
+			</view>
+			<view class="store-search" @tap="goSearch">
+				<view class="store-search-input">
+					<view class="input">输入门店信息</view>
 				</view>
-				<view class="store-search" @tap="goSearch">
-					<view class="store-search-input">
-						<view class="input">输入门店信息</view>
-					</view>
-					<view class="vant-icon">&#xe692;</view>
-				</view>
+				<view class="vant-icon">&#xe692;</view>
 			</view>
 		</view>
-		<view style="height: 220upx;"></view>
+		<view style="height: 96upx;"></view>
 		<view class="store-swiper">
 			<swiper class="swiper" circular="true" :indicator-dots="true" indicator-color="#FFFFFF" indicator-active-color="#FE5100" :current="current" :autoplay="autoplay" :interval="interval" :duration="duration">
 				<swiper-item v-for="(val,key) in swiperList" :key="key">
@@ -70,7 +71,7 @@
 					<text>洗车免费</text>
 				</view>
 				<view>
-					<view class="vant-icon circular">&#xe6bf;</view>
+					<view class="vant-icon circular">&#xe6af;</view>
 					<text>品质保证</text>
 				</view>
 			</view>
@@ -411,58 +412,67 @@
 		top:0;
 		left:0;
 		width: 750upx;
+		height: 158upx;
 		background: #FCFCFC;
 		overflow: hidden;
 		z-index:100;
 		.header-box-title{
 			width: 100%;
-			line-height: 78upx;
+			line-height: 98upx;
 			font-size:33upx;
 			font-family:PingFangSC;
 			font-weight:400;
 			color:rgba(51,51,51,1);
 			text-align: center;
 		}
-		.address-search{
-			height: 80upx;
-			padding: 0 40upx;
+	}
+	
+	.address-search{
+		position: fixed;
+		top: 158upx;
+		left: 0;
+		z-index: 109;
+		background-color: #FFFFFF;
+		height: 96upx;
+		box-sizing: border-box;
+		width: 750upx;
+		padding: 0 40upx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.address-box{
+			.address-icon{
+				font-size:33upx;
+				color:#A4A4A4;
+				vertical-align: middle;
+			}
+			.address-text{
+				display:inline-block;
+				margin-left:-10upx;
+				font-size:30upx;
+				line-height: 30upx;
+				width: 150upx;
+				overflow: hidden;/*超出部分隐藏*/
+				text-overflow:ellipsis;/* 超出部分显示省略号 */
+				white-space: nowrap;/*规定段落中的文本不进行换行 */
+				color:#A4A4A4;
+				vertical-align: middle;
+			}
+		}
+		.store-search{
+			width:494upx;
+			height:54upx;
+			border-radius:11upx;
+			background:rgba(164,164,164,0.2);
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.address-box{
-				.address-icon{
-					font-size:33upx;
-					color:#A4A4A4;
-					vertical-align: middle;
-				}
-				.address-text{
-					display:inline-block;
-					margin-left:-10upx;
-					font-size:30upx;
-					line-height: 30upx;
-					width: 150upx;
-					overflow: hidden;/*超出部分隐藏*/
-					text-overflow:ellipsis;/* 超出部分显示省略号 */
-					white-space: nowrap;/*规定段落中的文本不进行换行 */
-					color:#A4A4A4;
-					vertical-align: middle;
-				}
-			}
-			.store-search{
-				width:494upx;
-				height:54upx;
-				border-radius:11upx;
-				background:rgba(164,164,164,0.2);
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 0 12upx 0 22upx;
-				color:#A4A4A4;
-				font-size: 25upx;
-			}
+			padding: 0 12upx 0 22upx;
+			color:#A4A4A4;
+			font-size: 25upx;
 		}
 	}
-
+	
 	.store-box {
 		display: flex;
 		flex-direction: column;
