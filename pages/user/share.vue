@@ -1,5 +1,5 @@
 <template>
-	<view class="store-search">
+	<view>
 		
 	</view>
 </template>
@@ -11,17 +11,17 @@
 				
 			}
 		},
-		onLoad() {
-			uni.switchTab({
-				url:"/pages/index/index"
-			})
-		},
-		
 		methods: {
+			
+		},
+		onLoad() {
+			uni.redirectTo({
+				url:'/pages/userSub/share'
+			})
 		}
 	}
 </script>
 
-<style lang="scss" scoped>
-	
+<style>
+
 </style>
