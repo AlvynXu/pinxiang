@@ -626,3 +626,11 @@ export function offerNumber(params={}) {
 		data:params
 	})
 }
+
+export function usedCount(params = {}) {
+	return fetch({
+		url: `${api.base}/usedCount`,
+		method: 'get',
+		params:params
+	})
+}

@@ -69,7 +69,7 @@
 				<view class="appointment-service-content-pay" v-if="step===1">
 					<view class="appointment-service-content-pay-icon"><image src="https://cdn.doudouxiongglobal.com/pinxiang/attention.png"></image></view>
 					<view class="appointment-service-content-pay-text">预约成功，支付遇到了小问题，请在30分钟内完成付款，否则预约失效。是否继续？</view>
-					<view class="appointment-service-content-pay-button"><button class="confirm-button" @click="payAppointment">重新付款</button></view>
+					<view class="appointment-service-content-pay-button"><button @click="cancelAppointment">取消</button><button class="confirm-button" @click="payAppointment">重新付款</button></view>
 				</view>
 				<view class="appointment-service-content-order-code" v-if="step!==1">
 					<view class="appoint-service-content-order-avatar"><image mode="aspectFill" :src="avatar"></image></view>
@@ -84,8 +84,8 @@
 			</view>
 			<view class="appointment-service-rate"><px-step :size="4" :step="step" :textArr="stepText"></px-step></view>
 		</view>
-		<view class="banner-box">
-			<!-- <view class="announcement">公告 | 已帮助<text>88888</text>车主节省了时间</view> -->
+		<view class="banner-box" v-if="step === 0 || step === 1">
+			<view class="announcement">公告 | 已帮助<text>{{useCount}}</text>车主节省了时间</view>
 			<view class="banner-swiper-box">
 				<swiper class="swiper" circular="true" 
 				:current="current" :autoplay="true" 
@@ -96,6 +96,9 @@
 					</swiper-item>
 				</swiper>
 			</view>
+		</view>
+		<view v-if="step !== 0 && step !== 1">
+			
 		</view>
 		<px-popdown :height="'527rpx'" ref="datapicker" title="请选择预约时间">
 			<px-datepicker @choose="chooseAppointmentDate" v-model="formData.time"></px-datepicker>
@@ -120,7 +123,8 @@
 		getAppointmentV2,
 		getAppointmentDetail,
 		cancleOrder,
-		offerNumber
+		offerNumber,
+		usedCount
 	} from "@/api/index.js"
 	
 	import plateNumber from '@/components/plate-number/plateNumber.vue';
@@ -136,6 +140,7 @@
 		data() {
 			return {
 				step:1,
+				useCount:0,
 				avatar:'',
 				stepText:['预约成功','等待服务','开始服务','结束服务'],
 				current:0,
@@ -270,7 +275,24 @@
 				})
 			},
 			cancelAppointment(){
-				
+				let that = this
+				wx.showModal({
+					title:'提醒',
+					content:"确认取消吗？您的预约信息将会失效哦",
+					confirmText:'确认',
+					success (res) {
+					    if (res.confirm) {
+							cancleOrder(that.appointmentData.ID,{CancelReason:'取消支付'}).then(res =>{
+								if(res.Code === 200){
+									that.resetData()
+								}
+							})
+					      // window.location.href = '/login'
+					    } else if (res.cancel) {
+					      console.log('用户点击取消')
+					    }
+					}
+				})
 			},
 			goBuy(params){
 				let that = this
@@ -397,9 +419,7 @@
 			let that = this
 			this.resetData()
 			let formData = getApp().globalData.formData
-			console.log(formData)
 			if(formData != undefined && formData != []){
-				console.log(formData)
 				this.formData.type = formData.type
 				this.formData.storeID = formData.storeID,
 				this.formData.storeName = formData.storeName,
@@ -408,11 +428,15 @@
 			}
 		},
 		onLoad(option) {
-			console.log(getApp().globalData.formData)
 			let that = this
 			getBanner({Type:1}).then(bannerData=>{
 				if(bannerData.Code === 200){
 					that.swiperList = bannerData.Data
+				}
+			})
+			usedCount({}).then(res => {
+				if(res.Code === 200){
+					that.useCount = res.Data
 				}
 			})
 			let car = uni.getStorageSync('carNumber')

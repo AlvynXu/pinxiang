@@ -11,6 +11,7 @@ uniRequest.interceptors.response.use(
 	response => {
 		if (parseInt(response.status) === 200) {
 			const code = response.data.Code;
+			const msg = response.data.Msg;
 			if(parseInt(code)===80003){
 				uni.removeStorageSync('user_data')
 				uni.removeStorageSync('api_token')
@@ -27,6 +28,24 @@ uniRequest.interceptors.response.use(
 					    if (res.confirm) {
 							uni.navigateTo({
 								url:"/pages/login/login"
+							})
+					      // window.location.href = '/login'
+					    } else if (res.cancel) {
+					      console.log('用户点击取消')
+					    }
+					}
+				})
+				return Promise.resolve(response.data);
+			}
+			if (parseInt(code) === 50016) {
+				wx.showModal({
+					title:'提醒',
+					content:msg,
+					confirmText:'认证',
+					success (res) {
+					    if (res.confirm) {
+							uni.navigateTo({
+								url:"/pages/userSub/car"
 							})
 					      // window.location.href = '/login'
 					    } else if (res.cancel) {

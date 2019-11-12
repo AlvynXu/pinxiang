@@ -1,5 +1,5 @@
 <template>
-	<view class="store-search">
+	<view>
 		
 	</view>
 </template>
@@ -11,17 +11,17 @@
 				
 			}
 		},
+		methods: {
+			
+		},
 		onLoad() {
 			uni.switchTab({
-				url:"/pages/index/index"
+				url:'/pages/index/index'
 			})
-		},
-		
-		methods: {
 		}
 	}
 </script>
 
-<style lang="scss" scoped>
-	
+<style>
+
 </style>

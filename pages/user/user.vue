@@ -91,7 +91,7 @@
 				<view class="vant-icon">&#xe609;</view>
 			</view>
 			<view class="prove-credit list" @click="goOrder">
-				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/icon/book.png" mode="aspectFit"></image>
+				<image class="img" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/book-01.png" mode="aspectFit"></image>
 				<view class="vant-word">我的订单</view>
 				<view class="vant-icon">&#xe609;</view>
 			</view>
