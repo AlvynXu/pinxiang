@@ -10,6 +10,13 @@
 				"backgroundColor":"#FCFCFC"
 			}
 		},{
+			"path": "pages/takeTheNumber/takeTheNumber",
+			"style": {
+				"navigationBarTitleText": "品象养车",
+				"backgroundColor":"#FCFCFC",
+				"navigationStyle":"custom"
+			}
+		},{
             "path" : "pages/user/user",
             "style" : {
 					"navigationBarTitleText": "我的",

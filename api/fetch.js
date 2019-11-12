@@ -55,7 +55,7 @@ uniRequest.interceptors.response.use(
 
 export function fetch(options) {
 	return new Promise((resolve, reject) => {
-		uniRequest.defaults.headers.common['Authorization'] = 'bearer '+uni.getStorageSync('api_token');
+		uniRequest.defaults.headers.common['Authorization'] = 'bearer '+ uni.getStorageSync('api_token');
 		uniRequest.defaults.headers.common['SessionID'] = uni.getStorageSync('session_id');
 		if (options.method == 'get') {
 			uniRequest.get(options.url, {data:options.params}).then(function(response) {
