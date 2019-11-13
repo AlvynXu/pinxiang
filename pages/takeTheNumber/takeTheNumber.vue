@@ -127,94 +127,20 @@
 			}
 		},
 		//页面加载获取定位
-		async onLoad() {
+		async onLoad(options) {
 			let that = this
-			uni.getStorage({
-				key: "geo",
-				success(res) {
-					console.log(res.data)
-					if (res.data != undefined) {
-						res = JSON.parse(res.data)
-						getStore({
-							'Lat': res.lat,
-							'Lng': res.lng,
-							'City': res.city,
-							'Page': that.page
-						}).then(storeData => {
-							if (storeData.Code === 200) {
-								if (storeData.Data.StoreData.length === 0) {
-									uni.showToast({
-										icon: "none",
-										title: "该地区门店正在更新中"
-									})
-								}
-								that.storeList = storeData.Data.StoreData
-								that.recommend = storeData.Data.RecommendData
-								if (storeData.Data.Count < 5) {
-									that.end = true
-								}
-							}
-						});
-					}
-
-				}
-			})
-			wx.getLocation({
-				type: 'gcj02',
-				success(res) {
-					console.log("定位", (new Date).getMilliseconds())
-					that.lat = res.latitude
-					that.lng = res.longitude
-
-					uni.request({
-						header: {
-							"Content-Type": "application/text"
-						},
-						url: 'https://apis.map.qq.com/ws/geocoder/v1/?location=' + res.latitude + ',' + res.longitude +
-							'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
-						success(re) {
-							if (re.statusCode === 200) {
-								console.log("位置", (new Date).getMilliseconds())
-								that.area = re.data.result.address_component.street
-								that.city = re.data.result.address_component.city
-								uni.setStorageSync('geo', JSON.stringify({
-									'lat': res.latitude,
-									'lng': res.longitude,
-									'province': re.data.result.address_component.province,
-									'city': re.data.result.address_component.city,
-									'area': re.data.result.address_component.district,
-									'address': re.data.result.address
-								}))
-								getStore({
-									'Lat': res.latitude,
-									'Lng': res.longitude,
-									'City': re.data.result.address_component.city,
-									'Page': that.page
-								}).then(storeData => {
-									if (storeData.Code === 200) {
-										if (storeData.Data.StoreData.length === 0) {
-											uni.showToast({
-												icon: "none",
-												title: "该地区门店正在更新中"
-											})
-										}
-										that.storeList = storeData.Data.StoreData
-										that.recommend = storeData.Data.RecommendData
-										if (storeData.Data.Count < 5) {
-											that.end = true
-										}
-									}
-								});
-							}
-						}
-					});
-				}
-			})
+			
+			
 		},
 		methods: {
 			//排队取号
 			takeNumber(){
 				console.log(this.formData,'排队预约信息')
+			},
+			goBuyVip(){
+				uni.navigateTo({
+					url:'/pages/userSub/active'
+				})
 			},
 			//填写车牌号
 			inputNumber() {
@@ -250,61 +176,6 @@
 					that.appointmentType[i].active = 0;
 					if (that.appointmentType[i].id === id) that.appointmentType[i].active = 1;
 				}
-			},
-			//更改位置信息
-			chooseArea() {
-				let that = this
-				wx.chooseLocation({
-					success(res) {
-						console.log(res)
-						that.page = 1
-						that.area = res.name
-						that.lat = res.latitude
-						that.lng = res.longitude
-						uni.request({
-							header: {
-								"Content-Type": "application/text"
-							},
-							url: 'https://apis.map.qq.com/ws/geocoder/v1/?location=' + res.latitude + ',' + res.longitude +
-								'&key=QKLBZ-JNMC4-W2EUA-XOZ7H-DOVF2-D5FTJ',
-							success(re) {
-								if (re.statusCode === 200) {
-									console.log(re)
-									that.city = re.data.result.address_component.city
-									uni.setStorageSync('geo', JSON.stringify({
-										'lat': res.latitude,
-										'lng': res.longitude,
-										'province': re.data.result.address_component.province,
-										'city': re.data.result.address_component.city,
-										'area': re.data.result.address_component.district,
-										'address': re.data.result.address
-									}))
-									getStore({
-										'Lat': res.latitude,
-										'Lng': res.longitude,
-										'City': re.data.result.address_component.city,
-										'Page': that.page
-									}).then(storeData => {
-										if (storeData.Code === 200) {
-											if (storeData.Data.StoreData.length === 0) {
-												uni.showToast({
-													icon: "none",
-													title: "该地区门店正在更新中"
-												})
-											}
-											that.storeList = storeData.Data.StoreData
-											that.recommend = storeData.Data.RecommendData
-											if (storeData.Data.Count < 5) {
-												that.end = true
-											}
-										}
-									});
-								}
-							}
-						});
-
-					}
-				})
 			}
 		}
 	}
