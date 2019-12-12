@@ -106,7 +106,7 @@
 		<px-popright ref="storepicker" :width="'100vw'">
 			<store-search :time="formData.time" :type="formData.type" @close="storeSearchClose" @choose="chooseStore" appointmentTime="formData.time"></store-search>
 		</px-popright>
-		<plate-number ref="plate" v-model="formData.car" @showOrHide="showOrHide"></plate-number>
+		<plate-number ref="plate" v-model="formData.car"></plate-number>
 	</view>
 </template>
 
@@ -124,7 +124,8 @@
 		getAppointmentDetail,
 		cancleOrder,
 		offerNumber,
-		usedCount
+		usedCount,
+		useCarNumber
 	} from "@/api/index.js"
 	
 	import plateNumber from '@/components/plate-number/plateNumber.vue';
@@ -419,13 +420,20 @@
 			let that = this
 			this.resetData()
 			let formData = getApp().globalData.formData
-			if(formData != undefined && formData != []){
+			if(formData != undefined && formData != [] && formData.length>0){
 				this.formData.type = formData.type
 				this.formData.storeID = formData.storeID,
 				this.formData.storeName = formData.storeName,
 				this.formData.price = formData.price
 				getApp().globalData.formData = []
 			}
+			useCarNumber({}).then(res=>{
+				if(res.Code === 200){
+					if(res.Data !== ''){
+						that.formData.car = res.Data
+					}
+				}
+			})
 		},
 		onLoad(option) {
 			let that = this
@@ -439,12 +447,7 @@
 					that.useCount = res.Data
 				}
 			})
-			let car = uni.getStorageSync('carNumber')
-			if(car === null || car === undefined || car === ''){
-				
-			}else{
-				this.formData.car = car
-			}
+			
 			wx.getLocation({
 				type: 'gcj02',
 				success (res) {

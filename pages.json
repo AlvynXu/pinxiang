@@ -148,7 +148,7 @@
 				"pagePath": "pages/index/storeIndex",
 				"iconPath": "static/img/footerBar/store.png",
 				"selectedIconPath": "static/img/footerBar/store_active.png",
-				"text": "商铺"
+				"text": "门店"
 			},{
 				"pagePath": "pages/user/user",
 				"iconPath": "static/img/footerBar/mine.png",

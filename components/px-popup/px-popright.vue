@@ -1,17 +1,18 @@
 <template>
   <view class="px-popright" v-if="showpopright">
-	  <view class="px-popright-content" :style="{'width':width}" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend"
+	  <view class="px-popright-content" :style="[{'width':width,'right':marginLeft+'vw'}]" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend"
 	  :class="{'px-popright-open':pxPopRightStatus=='open', 'px-popright-close':pxPopRightStatus=='close'}">
 		  <slot />
 	  </view>
 	  <view class="px-popright-mask" @click="close()"></view>
-	<!-- <slot /> -->
   </view>
 </template>
 
 <script>
-const startPageX=0;
-const endPageX=0;
+var startPageX = 0;
+var startPageY = 0;
+var endPageY = 0;
+var endPageX = 0;
 
 export default {
   name: 'PxPopright',
@@ -24,7 +25,10 @@ export default {
   data () {
     return {
 		showpopright:false,
-		pxPopRightStatus:'close'
+		pxPopRightStatus:'close',
+		windowWidth:0,
+		marginLeft:-100,
+		interval:null
     }
   },
   watch: {
@@ -37,6 +41,14 @@ export default {
 	}
   },
   created () {
+	  let that = this
+	  uni.getSystemInfo({
+	  	success(res) {
+			if(res.errMsg == 'getSystemInfo:ok'){
+				that.windowWidth = res.safeArea.width
+			}
+	  	}
+	  })
   },
   methods: {
 	open(){
@@ -53,16 +65,13 @@ export default {
 		this.$emit('close', 1)
 	},
 	touchstart(e){
-		console.log(1)
-		console.log(e)
+		
 	},
 	touchmove(e){
-		// console.log(2)
-		// console.log(e)
+		
 	},
 	touchend(e){
-		// console.log(3)
-		// console.log(e)
+		
 	}
   }
 }
@@ -96,7 +105,6 @@ export default {
 			height: 100%;
 			background-color:white;
 			bottom:top;
-			right:-100vw;
 			z-index:1000;
 			&-title{
 				width:100%;

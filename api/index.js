@@ -634,3 +634,11 @@ export function usedCount(params = {}) {
 		params:params
 	})
 }
+
+export function useCarNumber(params={}) {
+	return fetch({
+		url: `${api.user}/lastCarNumber`,
+		method: 'get',
+		params:params
+	})
+}

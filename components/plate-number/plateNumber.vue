@@ -1,11 +1,11 @@
 <template>
     <!-- 车牌组件 -->
     <view class="plate-content">
-        <view class="plate-popup" v-show="plateShow">
+        <view class="plate-popup" v-if="plateShow">
             <!-- 关闭 -->
             <!-- <view class="plate-close" v-show="plateNumber.length===8 || plateNumber.length===7" @click="close">关闭</view> -->
             <view class="plate-close" @click="close">关闭</view>
-            <view v-show="!plateNumber">
+            <view v-if="!plateNumber">
                 <view class="plate-popup-item">
                     <view class="plate-popup-item-list" v-for="(item,itemIndex) in keyVehicle1" :key="itemIndex" @click="plateHead(item)">{{item}}</view>
                 </view>
@@ -24,7 +24,7 @@
                 </view>
             </view>
 
-            <view v-show="plateNumber">
+            <view v-if="plateNumber">
                 <view class="plate-popup-item">
                     <!-- 数字选择 -->
                     <view class="plate-popup-item-list" :class="(plateNumber.length<2 || isInputZh)?'':''" v-for="(item,itemIndex) in keyNumber" :key="itemIndex" @click="plateNum(item)">{{item}}</view>
@@ -56,9 +56,15 @@
 <script>
 	import plateDel from './plate-del.png'
     export default {
+		props: {
+			value:{
+				type:String,
+				default:''
+			}
+		},
         data() {
             return {
-				plateNumber:'',//输入的车牌
+				plateNumber:this.value,//输入的车牌
                 plateShow: false, //车牌选择是否打开
                 keyVehicle1: ['京', '沪', '粤', '津', '冀', '豫', '云', '辽', '黑', '湘'],
                 keyVehicle2: ['皖', '鲁', '新', '苏', '浙', '赣', '鄂', '桂', '甘'],
@@ -72,10 +78,14 @@
                 src: ''
             };
         },
+		watch:{
+			value(newValue){
+				this.plateNumber = newValue
+			}
+		},
         mounted() {
             this.src = plateDel;
         },
-        onShow() {},
         methods: {
             /**
              * @desc 初始化

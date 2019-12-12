@@ -35,9 +35,8 @@
 					</view>
 					<view class="appointment-input">
 						<view class="appointment-input-icon vant-icon">&#xe6bf;</view>
-						<view class="appointment-input-cpn" @click="selectAppointmentStore">
-							<text style="color:#A4A4A4" v-if="formData.storeID==0">选择服务门店</text>
-							<text v-else>{{formData.storeName}}</text>
+						<view class="appointment-input-cpn">
+							<text>{{formData.storeName}}</text>
 						</view>
 					</view>
 				</view>
@@ -74,7 +73,8 @@
 
 <script>
 	import {
-		getStore
+		getStore,
+		getStoreByID
 	} from "@/api/index.js"
 	import pxPopright from '@/components/px-popup/px-popright.vue';
 	import storeSearch from '@/components/store-search/storeSearchV2.vue';
@@ -112,25 +112,40 @@
 					time: '',
 					price: ''
 				},
-				storeItems: [],
-				priceArr: [],
-				area: '',
-				city: '',
-				address: '',
-				lat: "",
-				lng: '',
-				storeList: [], //店铺列表
-				recommend: [],
-				platform: '',
-				page: 1,
-				end: false
+				
+				id:0
 			}
 		},
-		//页面加载获取定位
-		async onLoad(options) {
+		onShow() {
 			let that = this
-			
-			
+			getStoreByID(this.id).then(res=>{
+				console.log(res)
+				if(res.Code===200){
+					console.log(res.Data[0].Name)
+					that.formData.storeName = res.Data[0].Name
+				}
+			})
+		},
+		//页面加载获取定位
+		onLoad(options) {
+			let that = this
+			let id = options.id
+			this.id = id
+			let userData = uni.getStorageSync('UserData')
+			// if(userData.length === 0){
+			// 	uni.navigateTo({
+			// 		url:"/pages/login/login"
+			// 	})
+			// 	return false
+			// }
+			// userData = JSON.parse(userData)
+			getStoreByID(id).then(res=>{
+				console.log(res)
+				if(res.Code===200){
+					console.log(res.Data[0].Name)
+					that.formData.storeName = res.Data[0].Name
+				}
+			})
 		},
 		methods: {
 			//排队取号

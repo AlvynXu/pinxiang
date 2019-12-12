@@ -8,7 +8,7 @@
 		<scroll-view class="store-list-box" :scroll-y="true" :show-scrollbar="false" @scrolltolower="nextPage">
 			<view class="store-list" v-for="(val,key) in storeList" :key="key" :class="{'disabled':val.Open===0}">
 				<view class="store-list-icon" :class="{'red':val.Active}"></view>
-				<view class="store-list-content" @click="val.Open ? chooseStore(val.ID,val.Name,[val.MarketWash,val.MarketSemiSynthetic,val.MarketTotalSynthetic],[val.WashItem,val.CareItem,val.CareItem],val.Active) : ()=>{return false}">
+				<view class="store-list-content" @click="chooseStore(val.ID,val.Name,[val.MarketWash,val.MarketSemiSynthetic,val.MarketTotalSynthetic],[val.WashItem,val.CareItem,val.CareItem],val.Active,val.Open)">
 					<view class="store-list-content-top">
 						<view class="store-list-content-top-title">{{val.Name}}<label v-if="val.Active">首次洗车半价</label></view>
 						<view class="store-list-content-top-km">{{val.Distance}}</view>
@@ -62,9 +62,10 @@
 				timeout: null,
 				appointment : this.time,
 				keyword : ''
+
 			}
 		},
-		onLoad() {
+		mounted() {
 			let that = this
 			let date = new Date()
 			let tmpHoure = date.getMinutes()<30 ? date.getHours() : date.getHours()+1
@@ -75,10 +76,10 @@
 				+ ':' + (date.getMinutes()<30 ? `30` : '00')
 			}
 			
-			
 			uni.getStorage({
 				key:"geo",
 				success: (res) => {
+					console.log(res)
 					if(res.errMsg=='getStorage:ok'){
 						let geo = JSON.parse(res.data)
 						storeSearchV2({Lat:geo.lat,Lng:geo.lng,City:geo.city,Page:that.page,AppointmentTime: that.appointment}).then(storeData =>{
@@ -111,6 +112,7 @@
 												City:re.data.result.address_component.city,Page:that.page,AppointmentTime: that.appointment}).then(storeData =>{
 												if(storeData.Code === 200){
 													that.storeList = storeData.Data.StoreData
+													
 													that.recommend = storeData.Data.RecommendData
 												}
 											})
@@ -192,7 +194,9 @@
 			openDatePicker(){
 				this.$refs.datapicker.open()
 			},
-			chooseStore(id,name,priceArr,itemArr,active){
+			chooseStore(id,name,priceArr,itemArr,active,open){
+				console.log(open)
+				if(!open) return false
 				this.$emit("choose",id,name,priceArr,this.appointment,itemArr,active)
 			},
 			chooseAppointmentDate(value){

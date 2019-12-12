@@ -1,15 +1,21 @@
+let base = 'https://api.quchebang.cn'
+switch (__wxConfig.envVersion){
+	case "develop": base = 'https://test.api.pxglobal.cn';break; //本地开发
+	case "trial": base = 'https://test.api.pxglobal.cn';break; // 体验版
+	default: break;
+}
 export default {
-  base: 'https://api.quchebang.cn',
-  upload: 'https://api.quchebang.cn/upload',
-  sms: 'https://api.quchebang.cn/sms',
-  blog: 'https://api.quchebang.cn/blog',
-  user: 'https://api.quchebang.cn/user',
-  mina: 'https://api.quchebang.cn/mina',
-  store: 'https://api.quchebang.cn/store',
-  order: 'https://api.quchebang.cn/order',
-  pay: 'https://api.quchebang.cn/pay',
-  vip: 'https://api.quchebang.cn/vip',
-  active: 'https://api.quchebang.cn/active'
+  base: base,
+  upload: `${base}/upload`,
+  sms: `${base}/sms`,
+  blog: `${base}/blog`,
+  user: `${base}/user`,
+  mina: `${base}/mina`,
+  store: `${base}/store`,
+  order: `${base}/order`,
+  pay: `${base}/pay`,
+  vip: `${base}/vip`,
+  active: `${base}/active`
   
   // base: 'http://api.dev.doudouxiongglobal.com',
   // upload: 'http://api.dev.doudouxiongglobal.com/upload',

@@ -2,6 +2,7 @@
 import { getOpenID, login, getSessionID } from '@/api/index.js';
 export default {
 	onLaunch: function(options) {
+		
 		console.log("App OnLaunch",(new Date).getMilliseconds())
 		if(options.query.code!==undefined){
 			uni.setStorageSync('ReferrerCode',options.query.code)
@@ -64,7 +65,14 @@ export default {
 	},
 	globalData:{
 		redirect:'',
-		formData:[]
+		formData:{
+			type:0,
+			car:'',
+			time:'',
+			storeID:0,
+			storeName:'',
+			price:''
+		}
 	}
 };
 </script>
