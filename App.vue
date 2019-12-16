@@ -2,8 +2,6 @@
 import { getOpenID, login, getSessionID } from '@/api/index.js';
 export default {
 	onLaunch: function(options) {
-		
-		console.log("App OnLaunch",(new Date).getMilliseconds())
 		if(options.query.code!==undefined){
 			uni.setStorageSync('ReferrerCode',options.query.code)
 		}else{
@@ -48,7 +46,6 @@ export default {
 		});
 	},
 	onShow: function() {
-		console.log('App Show');
 		let session_id = uni.getStorageSync('session_id')
 		if(session_id == null || session_id.length === 0){
 			getSessionID().then(res=>{
@@ -61,7 +58,6 @@ export default {
 		
 	},
 	onHide: function() {
-		console.log('App Hide');
 	},
 	globalData:{
 		redirect:'',

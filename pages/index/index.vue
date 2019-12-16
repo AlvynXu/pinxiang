@@ -21,7 +21,11 @@
 				<view class="appointment-input-box">
 					<view class="appointment-input">
 						<view class="appointment-input-icon vant-icon input-address">&#xe6be;</view>
-						<view class="appointment-input-cpn" @click="inputNumber">
+						<view class="appointment-input-cpn" @click="inputNumber" v-if="vip===0">
+							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
+							<text v-else>{{formData.car}}</text>
+						</view>
+						<view class="appointment-input-cpn" @click="bindNumber" v-if="vip===1">
 							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
 							<text v-else>{{formData.car}}</text>
 						</view>
@@ -168,6 +172,7 @@
 				active:0,
 				payType:0,
 				qrCode:'',
+				vip:0,
 				waitData:{number:0,count:0,wait:0,waitTime:''},
 				formData:{
 					type:0,
@@ -197,6 +202,13 @@
 				this.$refs.storepicker.close()
 				this.$refs.datapicker.close()
 				this.$refs.plate.show();
+			},
+			bindNumber(){
+				if(this.formData.car === ''){
+					wx.navigateTo({
+						url:"/pages/userSub/car"
+					})
+				}
 			},
 			selectAppointmentDate(){
 				this.$refs.plate.close();
@@ -439,6 +451,10 @@
 			}
 			useCarNumber({}).then(res=>{
 				if(res.Code === 200){
+					if(res.Data == 'needBind'){
+						console.log("需要绑定")
+						return false;
+					}
 					if(res.Data !== ''){
 						that.formData.car = res.Data
 					}
@@ -487,6 +503,8 @@
 			if(userData === null || userData === undefined || userData === '') return this.goLogin()
 			this.userData = JSON.parse(userData)
 			this.avatar = this.userData.Avatar
+			this.vip = this.userData.Vip
+			console.log(this.vip)
 		}	
 	}
 </script>

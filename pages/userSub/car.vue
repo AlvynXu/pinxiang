@@ -4,8 +4,8 @@
 		<view class="car-num">
 			<view class="car-num-left">车牌号：</view>
 			<view class="car-num-right">
-				<input class="uni-input" v-if="type==3 || type==2" :value="carNumber" @input="carNumInput" placeholder="浙A123456" placeholder-style="color:#f3f3f3;" />
-				<input class="uni-input" v-if="type==1 || type==0" :value="carNumber" :disabled="true" />
+				<input class="uni-input" v-if="type == 3 || type == 2" :value="carNumber" @input="carNumInput" placeholder="浙A123456" placeholder-style="color:#f3f3f3;" />
+				<input class="uni-input" v-if="type == 1 || type == 0" :value="carNumber" :disabled="true" />
 			</view>
 		</view>
 		<view class="car-img">
@@ -30,38 +30,35 @@
 			<view class="show-img" v-show="showImg3" @click="chooseImage3"><image mode="aspectFill" :src="carImg"></image></view>
 		</view>
 		<view style="position: relative;">
-			<view class="car-discern" v-if="type!=3">
+			<view class="car-discern" v-if="type != 3">
 				<view class="car-discern-left">车辆识别代码号(VIN码)：</view>
 				<view class="car-discern-right"><input :value="vin" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-if="type!=3">
+			<view class="car-enginen" v-if="type != 3">
 				<view class="car-enginen-left">发动机号码：</view>
 				<view class="car-enginen-right"><input :value="engineNumber" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-if="type!=3">
+			<view class="car-enginen" v-if="type != 3">
 				<view class="car-enginen-left">车辆类型：</view>
 				<view class="car-enginen-right"><input :value="carType" :disabled="true" class="uni-input" /></view>
 			</view>
-			<view class="car-enginen" v-if="type!=3">
+			<view class="car-enginen" v-if="type != 3">
 				<view class="car-enginen-left">核定载人数：</view>
 				<view class="car-enginen-right"><input :value="persons" :disabled="true" class="uni-input" /></view>
 			</view>
 			<view class="mask" v-show="type == 0">行驶证认证通过后自动完善</view>
 		</view>
-		
-		<view class="car-button" v-show="type===3"><button @click="addDriverFunc">提交</button></view>
+
+		<view class="car-button" v-show="type === 3"><button @click="addDriverFunc">提交</button></view>
 		<view class="shenhe-mask" v-show="type == 0">材料审核…</view>
 		<view class="shenhe-word" v-show="type == 0">行驶证信息正在人工审核中，请耐心等待</view>
 	</view>
 </template>
 
 <script>
-import { uploadCarImg, h5UploadKey,getDriver,addDriver } from '@/api/index';
+import { uploadCarImg, h5UploadKey, getDriver, addDriver } from '@/api/index';
 import qiniuUploader from '@/utils/qiniuUploader.js';
-
-function initQiniu() {
-	
-}
+function initQiniu() {}
 export default {
 	data() {
 		return {
@@ -75,104 +72,101 @@ export default {
 			showImg2: false,
 			chooseImg3: true,
 			showImg3: false,
-			uptoken:'',
-			imageObject:[],
+			uptoken: '',
+			imageObject: [],
 			domain: 'https://cdn.doudouxiongglobal.com',
-			carNumber:'',
-			vin:'',
-			engineNumber:'',
-			carType:'',
-			persons:''
+			carNumber: '',
+			vin: '',
+			engineNumber: '',
+			carType: '',
+			persons: ''
 		};
 	},
 	async onLoad() {
-		let key="g3Y7NQmKSFb6Oyu91yOERMpLYcw9goCeteodilEQ"
-		let uptoken = await h5UploadKey({key:key,bucket:'doudouxiong'})
+		let key = 'g3Y7NQmKSFb6Oyu91yOERMpLYcw9goCeteodilEQ';
+		let uptoken = await h5UploadKey({ key: key, bucket: 'doudouxiong' });
 		let driverData = await getDriver({});
-		if(driverData.Code === 200){
-			if(JSON.stringify(driverData.Data) !== '[]'){
-				console.log(1)
-				let data = driverData.Data
-				this.type = data.Status
-				this.driverLicense = data.DriverLicense
-				this.dLSubPage = data.DLSubPage
-				this.carImg = data.CarImage
-				this.chooseImg = false
-				this.showImg = true
-				this.chooseImg2 = false
-				this.showImg2 = true
-				this.chooseImg3 = false
-				this.showImg3 = true
-				this.carNumber = data.CarNumber
-				this.vin = data.VIN
-				this.engineNumber = data.EngineNumber
-				this.carType = (data.CarType) ? '营运' : '非营运'
-				this.persons = data.Persons
+		if (driverData.Code === 200) {
+			if (JSON.stringify(driverData.Data) !== '[]') {
+				let data = driverData.Data;
+				this.type = data.Status;
+				this.driverLicense = data.DriverLicense;
+				this.dLSubPage = data.DLSubPage;
+				this.carImg = data.CarImage;
+				this.chooseImg = false;
+				this.showImg = true;
+				this.chooseImg2 = false;
+				this.showImg2 = true;
+				this.chooseImg3 = false;
+				this.showImg3 = true;
+				this.carNumber = data.CarNumber;
+				this.vin = data.VIN;
+				this.engineNumber = data.EngineNumber;
+				this.carType = data.CarType ? '营运' : '非营运';
+				this.persons = data.Persons;
 			}
 		}
 		qiniuUploader.init({
-			region: 'SCN', 
+			region: 'SCN',
 			// uptokenURL: 'https://[yourserver.com]/api/uptoken', //请求后端uptoken的url地址
-			uptoken: uptoken,  //你请求后端的uptoken,和上面一样的，uptokenURL不填就找uptoken,填一个就可以了（这里是字符串数据不是url了）
+			uptoken: uptoken, //你请求后端的uptoken,和上面一样的，uptokenURL不填就找uptoken,填一个就可以了（这里是字符串数据不是url了）
 			domain: 'https://cdn.doudouxiongglobal.com/', //yourBucketId:这个去你域名配置那里要
 			shouldUseQiniuFileName: true,
 			key: 'driver/'
 		});
 	},
 	methods: {
-		carNumInput(e){
-			this.carNumber = e.detail.value
+		carNumInput(e) {
+			this.carNumber = e.detail.value;
 		},
-		async addDriverFunc(){
+		async addDriverFunc() {
 			let carNumber = this.carNumber,
-			driverLicense = this.driverLicense,
-			dLSubPage = this.dLSubPage,
-			carImg = this.carImg
-			if (carNumber == ''){
+				driverLicense = this.driverLicense,
+				dLSubPage = this.dLSubPage,
+				carImg = this.carImg;
+			if (carNumber == '') {
 				wx.showToast({
-					title:"请输入车牌号"
-				})
-				return false
+					title: '请输入车牌号'
+				});
+				return false;
 			}
-			if (driverLicense == ''){
+			if (driverLicense == '') {
 				wx.showToast({
-					title:"请上传驾驶证"
-				})
-				return false
+					title: '请上传驾驶证'
+				});
+				return false;
 			}
-			if (dLSubPage == ''){
+			if (dLSubPage == '') {
 				wx.showToast({
-					title:"请上传驾驶证副页"
-				})
-				return false
+					title: '请上传驾驶证副页'
+				});
+				return false;
 			}
-			if (carImg == ''){
+			if (carImg == '') {
 				wx.showToast({
-					title:"请上传后车身45度照片"
-				})
-				return false
+					title: '请上传后车身45度照片'
+				});
+				return false;
 			}
 			let data = {
-				CarNumber : carNumber,
-				DriverLicense : driverLicense,
-				DLSubPage : dLSubPage,
-				CarImage : carImg
-			}
-			let result = await addDriver(data)
-			if(result.Code === 200){
+				CarNumber: carNumber,
+				DriverLicense: driverLicense,
+				DLSubPage: dLSubPage,
+				CarImage: carImg
+			};
+			let result = await addDriver(data);
+			if (result.Code === 200) {
 				wx.showToast({
-					title:"上传成功，请等待审核结果",
+					title: '上传成功，请等待审核结果',
 					success() {
-						wx.navigateBack({
-							
-						})
+						wx.navigateBack({});
 					}
-				})
+				});
 			}
-			console.log(result)
+			console.log(result);
 		},
 		async chooseImage(file) {
-			if(this.type == 0 || this.type == 1) return false
+			if (this.type == 0 || this.type == 1) return false;
 			let that = this;
 			uni.chooseImage({
 				count: 1, //默认9
@@ -180,30 +174,38 @@ export default {
 				sourceType: ['album'], //从相册选择
 				success: function(res) {
 					wx.showLoading({
-						title:"正在上传"
-					})
+						title: '正在上传'
+					});
 					qiniuUploader.upload(
-						res.tempFilePaths[0], 
-						(res) => {that.imageObject=res}, 
-						(error) => {console.log(error);wx.showToast({title:'上传失败'})},null,
-						(progress) => {
-							console.log('上传进度', progress.progress)
-							console.log('已经上传的数据长度', progress.totalBytesSent)
-							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend)
-						}, null,null,
-						(compolete) => {
-							wx.hideLoading()
-							if(compolete.statusCode === 200){
-								let data = JSON.parse(compolete.data)
-								let driverLicense = that.domain+'/'+data.key;
+						res.tempFilePaths[0],
+						res => {
+							that.imageObject = res;
+						},
+						error => {
+							console.log(error);
+							wx.showToast({ title: '上传失败' });
+						},
+						null,
+						progress => {
+							console.log('上传进度', progress.progress);
+							console.log('已经上传的数据长度', progress.totalBytesSent);
+							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend);
+						},
+						null,
+						null,
+						compolete => {
+							wx.hideLoading();
+							if (compolete.statusCode === 200) {
+								let data = JSON.parse(compolete.data);
+								let driverLicense = that.domain + '/' + data.key;
 								that.driverLicense = driverLicense;
 								that.chooseImg = false;
 								that.showImg = true;
-							}else{
-								wx.hideLoading()
+							} else {
+								wx.hideLoading();
 								wx.showToast({
-									title:'上传失败'
-								})
+									title: '上传失败'
+								});
 							}
 						}
 					);
@@ -211,7 +213,7 @@ export default {
 			});
 		},
 		async chooseImage2(file) {
-			if(this.type == 0 || this.type == 1) return false
+			if (this.type == 0 || this.type == 1) return false;
 			let that = this;
 			uni.chooseImage({
 				count: 1, //默认9
@@ -219,30 +221,38 @@ export default {
 				sourceType: ['album'], //从相册选择
 				success: function(res) {
 					wx.showLoading({
-						title:"正在上传"
-					})
+						title: '正在上传'
+					});
 					qiniuUploader.upload(
 						res.tempFilePaths[0],
-						(res) => {that.imageObject=res}, 
-						(error) => {console.log(error);wx.showToast({title:'上传失败'})},null,
-						(progress) => {
-							console.log('上传进度', progress.progress)
-							console.log('已经上传的数据长度', progress.totalBytesSent)
-							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend)
-						}, null,null,
-						(compolete) => {
-							wx.hideLoading()
-							if(compolete.statusCode === 200){
-								let data = JSON.parse(compolete.data)
-								let dLSubPage = that.domain+'/'+data.key;
+						res => {
+							that.imageObject = res;
+						},
+						error => {
+							console.log(error);
+							wx.showToast({ title: '上传失败' });
+						},
+						null,
+						progress => {
+							console.log('上传进度', progress.progress);
+							console.log('已经上传的数据长度', progress.totalBytesSent);
+							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend);
+						},
+						null,
+						null,
+						compolete => {
+							wx.hideLoading();
+							if (compolete.statusCode === 200) {
+								let data = JSON.parse(compolete.data);
+								let dLSubPage = that.domain + '/' + data.key;
 								that.dLSubPage = dLSubPage;
 								that.chooseImg2 = false;
 								that.showImg2 = true;
-							}else{
-								wx.hideLoading()
+							} else {
+								wx.hideLoading();
 								wx.showToast({
-									title:'上传失败'
-								})
+									title: '上传失败'
+								});
 							}
 						}
 					);
@@ -250,7 +260,7 @@ export default {
 			});
 		},
 		async chooseImage3(file) {
-			if(this.type == 0 || this.type == 1) return false
+			if (this.type == 0 || this.type == 1) return false;
 			let that = this;
 			uni.chooseImage({
 				count: 1, //默认9
@@ -258,30 +268,38 @@ export default {
 				sourceType: ['album'], //从相册选择
 				success: function(res) {
 					wx.showLoading({
-						title:"正在上传"
-					})
+						title: '正在上传'
+					});
 					qiniuUploader.upload(
 						res.tempFilePaths[0],
-						(res) => {that.imageObject=res}, 
-						(error) => {console.log(error);wx.showToast({title:'上传失败'})},null,
-						(progress) => {
-							console.log('上传进度', progress.progress)
-							console.log('已经上传的数据长度', progress.totalBytesSent)
-							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend)
-						}, null,null,
-						(compolete) => {
-							wx.hideLoading()
-							if(compolete.statusCode === 200){
-								let data = JSON.parse(compolete.data)
-								let carImg = that.domain+'/'+data.key;
+						res => {
+							that.imageObject = res;
+						},
+						error => {
+							console.log(error);
+							wx.showToast({ title: '上传失败' });
+						},
+						null,
+						progress => {
+							console.log('上传进度', progress.progress);
+							console.log('已经上传的数据长度', progress.totalBytesSent);
+							console.log('预期需要上传的数据总长度', progress.totalBytesExpectedToSend);
+						},
+						null,
+						null,
+						compolete => {
+							wx.hideLoading();
+							if (compolete.statusCode === 200) {
+								let data = JSON.parse(compolete.data);
+								let carImg = that.domain + '/' + data.key;
 								that.carImg = carImg;
 								that.chooseImg3 = false;
 								that.showImg3 = true;
-							}else{
-								wx.hideLoading()
+							} else {
+								wx.hideLoading();
 								wx.showToast({
-									title:'上传失败'
-								})
+									title: '上传失败'
+								});
 							}
 						}
 					);
@@ -342,19 +360,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
-			position:relative;
+			position: relative;
 			.vant-icon {
 				text-align: center;
 				font-size: 140upx;
 				color: #fff;
-				margin-top:-30upx;
+				margin-top: -30upx;
 			}
-			.car-img-word{
-				position:absolute;
-				top:80upx;
-				left:250upx;
-				font-size:36upx;
-				color:#fff;
+			.car-img-word {
+				position: absolute;
+				top: 80upx;
+				left: 250upx;
+				font-size: 36upx;
+				color: #fff;
 			}
 		}
 		.car-img-bot2 {
@@ -365,19 +383,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
-			position:relative;
+			position: relative;
 			.vant-icon {
 				text-align: center;
 				font-size: 140upx;
 				color: #fff;
-				margin-top:-30upx;
+				margin-top: -30upx;
 			}
-			.car-img-word{
-				position:absolute;
-				top:80upx;
-				left:250upx;
-				font-size:36upx;
-				color:#fff;
+			.car-img-word {
+				position: absolute;
+				top: 80upx;
+				left: 250upx;
+				font-size: 36upx;
+				color: #fff;
 			}
 		}
 		.car-img-bot3 {
@@ -388,19 +406,19 @@ export default {
 			background-size: 100% 100%;
 			margin: 0 auto 25upx auto;
 			border: 2upx dashed #a4a4a4;
-			position:relative;
+			position: relative;
 			.vant-icon {
 				text-align: center;
 				font-size: 140upx;
 				color: #fff;
-				margin-top:-30upx;
+				margin-top: -30upx;
 			}
-			.car-img-word{
-				position:absolute;
-				top:80upx;
-				left:250upx;
-				font-size:36upx;
-				color:#fff;
+			.car-img-word {
+				position: absolute;
+				top: 80upx;
+				left: 250upx;
+				font-size: 36upx;
+				color: #fff;
 			}
 		}
 		.show-img {
@@ -466,7 +484,7 @@ export default {
 		text-align: center;
 		font-size: 29upx;
 		color: #fff;
-		z-index:10;
+		z-index: 10;
 	}
 	.shenhe-mask {
 		width: 504upx;
@@ -485,18 +503,17 @@ export default {
 		text-align: center;
 		padding-bottom: 150upx;
 	}
-	.car-button{
+	.car-button {
 		width: 504upx;
-		margin:0 auto;
-		padding-bottom:40upx;
-		button{
-			background-color:#FE5100;
-			color:white;
+		margin: 0 auto;
+		padding-bottom: 40upx;
+		button {
+			background-color: #fe5100;
+			color: white;
 		}
-		
 	}
 	input {
-		font-size:29upx;
+		font-size: 29upx;
 	}
 }
 </style>

@@ -1,12 +1,6 @@
 // import axios from 'axios';
 import uniRequest from 'uni-request';
-// import { Toast,Notify,Dialog  } from 'vant';
-// import UserAgent from '@/libs/user-agent'
-
-// uniRequest.defaults.baseURL = 'https://yourapi.domain.com';
-
 uniRequest.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
 uniRequest.interceptors.response.use(
 	response => {
 		if (parseInt(response.status) === 200) {
@@ -29,7 +23,6 @@ uniRequest.interceptors.response.use(
 							uni.navigateTo({
 								url:"/pages/login/login"
 							})
-					      // window.location.href = '/login'
 					    } else if (res.cancel) {
 					      console.log('用户点击取消')
 					    }
@@ -47,7 +40,6 @@ uniRequest.interceptors.response.use(
 							uni.navigateTo({
 								url:"/pages/userSub/car"
 							})
-					      // window.location.href = '/login'
 					    } else if (res.cancel) {
 					      console.log('用户点击取消')
 					    }
@@ -63,6 +55,7 @@ uniRequest.interceptors.response.use(
 				})
 				return Promise.resolve(response.data);
 			}
+			console.log(response.data)
 			return Promise.resolve(response.data);
 		}
 	},
@@ -78,7 +71,6 @@ export function fetch(options) {
 		uniRequest.defaults.headers.common['SessionID'] = uni.getStorageSync('session_id');
 		if (options.method == 'get') {
 			uniRequest.get(options.url, {data:options.params}).then(function(response) {
-				console.log(response)
 				resolve(response);
 			}).catch(function(error) {
 				console.log(error);
