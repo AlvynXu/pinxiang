@@ -57,6 +57,15 @@
 				<view class="appointment-hint" v-if="active && !userData.Vip">
 					非会员用户首次预约，半价洗车
 				</view>
+				
+				<view class="active-vip" v-if="joinVip">
+					hhhhhhhhhhhh
+				</view>
+				<view class="joinVip">
+					<view class="joinVip-radio"><view v-if="joinVip" class="vant-icon">&#xe6bd;</view></view>
+					<view>加入会员，全年免费预约</view>
+				</view>
+				
 				<view class="appointment-button">
 					<button :plain="true" @click="goAppointment" v-if="userData.Phone">立即预约</button>
 					<button :plain="true" v-if="userData.Phone ===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">立即预约</button>
@@ -140,6 +149,7 @@
 		components: {plateNumber,pxPopdown,pxPopright,pxDatepicker,storeSearch,pxStep,pxMessage},
 		data() {
 			return {
+				joinVip:false,
 				step:1,
 				useCount:0,
 				avatar:'',

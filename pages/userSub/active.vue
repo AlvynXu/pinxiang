@@ -1,5 +1,9 @@
 <template>
 	<view class="active-box">
+		<view class="tabTop">
+			<view class="tabTop-item"><view :class="tabTop==0?'tabTop-item1':'tabTop-item2'" @click="chooseTab(0)">保养会员</view></view>
+			<view class="tabTop-item"><view :class="tabTop==1?'tabTop-item1':'tabTop-item2'" @click="chooseTab(1)">洗车会员</view></view>
+		</view>
 		<view class="active-img-box">
 			<img class="active-img" style="height:2438.4057upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/VIP-head.png"/>
 			<view class="question-one-box">
@@ -18,7 +22,7 @@
 			</view>
 			<img style="height:625upx;width: 100%;margin-top:11upx;" src="https://cdn.doudouxiongglobal.com/store/vip/tip.png"/>
 		</view>
-		<view class="active-join">
+		<view class="active-join" v-if="tabTop==0">
 			<view class="active-join-top">
 				<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
 					全合成机油 <text class="active-amount">799</text>元/年
@@ -44,6 +48,26 @@
 				立即开通，每年至少节省2000元
 			</button>
 		</view>
+		<view class="active-join" v-if="tabTop==1">
+			<view class="active-join-top">
+				<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
+					中频洗车专享 <text class="active-amount">99/5</text>次
+					<view v-if="vipSelected==0" class="selected-icon vant-icon">&#xe6b2;</view>
+				</view>
+				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
+					高频洗车尊享 <text class="active-amount">299/20</text>次
+					<view v-if="vipSelected==1" class="selected-icon vant-icon">&#xe6b2;</view>
+				</view>
+			</view>
+			<view class="active-button">
+				<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
+					立即开通，洗车低至15元/次
+				</button>
+				<button v-if="phone!=''" class="active-join-button" @click="buyVIP">
+					立即开通，洗车低至15元/次
+				</button>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -56,15 +80,22 @@
 				phone : '',
 				redirect:'',
 				vipSelected:0,
+				tabTop:0,
 				agreementChecked:true,
 				vip:0,
 				question1:false,
 				question2:false,
 				type:'',
-				to:''
+				to:'',
+				VipType:0
 			}
 		},
 		methods: {
+			//切换tab按钮，选择购买保养卡还是洗车卡
+			chooseTab(i){
+				this.tabTop = i;
+				this.vipSelected = 0
+			},
 			question1Func(){
 				this.question1 = this.question1 ? false : true
 			},
@@ -109,17 +140,29 @@
 				}
 			},
 			async buyVIP(){
-				let that = this
+				let that = this;
 				if(this.agreementChecked==false){
 					wx.showToast({
 						title:"请先阅读会员协议"
 					})
 					return false
 				}
-				
+				if(this.tabTop==0){
+					if(this.vipSelected==0){
+						this.VipType = 2;
+					}else{
+						this.VipType = 3
+					}
+				}else if(this.tabTop==1){
+					if(this.vipSelected==0){
+						this.VipType = 4;
+					}else{
+						this.VipType = 5
+					}
+				}
 				let detail =  await payDetail({
 					OpenID: uni.getStorageSync('wxOpenID'),
-					VipType : this.vipSelected,
+					VipType : this.VipType,
 					Type : this.type
 				})
 				if(detail.Code === 200){
@@ -133,7 +176,7 @@
 					    success: function (res) {
 					        console.log('success:' + JSON.stringify(res));
 							if(res.errMsg=='requestPayment:ok'){
-								payVip({OrderNo:detail.Data.order_number,VipType:that.vipSelected,o2w:uni.getStorageSync('ReferrerCode')}).then(response=>{
+								payVip({OrderNo:detail.Data.order_number,VipType:this.VipType,o2w:uni.getStorageSync('ReferrerCode')}).then(response=>{
 									if(response.Code === 200){
 										let userData = uni.getStorageSync('user_data')
 										userData = JSON.parse(userData)
@@ -276,10 +319,58 @@
 <style lang="scss" scoped>
 .active-box{
 	width:750upx;
+	.tabTop{
+		width:750upx;
+		height:126upx;
+		background:rgba(250,103,73,1);
+		position: fixed;
+		top: 0;
+		left: 0;
+		font-size:29upx;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		.tabTop-item{
+			position: relative;
+			width:319upx;
+			height:83upx;
+			background:rgba(209,36,36,1);
+			border-radius:43upx;
+			.tabTop-item1{
+				position: absolute;
+				top:-8upx;
+				left: 5upx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width:310upx;
+				height:87upx;
+				color: #FA6400;
+				background:linear-gradient(180deg,rgba(255,192,0,1) 0%,rgba(254,140,0,1) 100%);
+				border-radius:43upx;
+			}
+			.tabTop-item2{
+				position: absolute;
+				top:-8upx;
+				left: 5upx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width:310upx;
+				height:87upx;
+				color: #FFFFFF;
+				background:linear-gradient(180deg,rgba(239,115,112,1) 0%,rgba(219,63,61,1) 100%);
+				border-radius:43upx;
+			}
+		}
+	}
+	.active-button{
+		padding-top: 18upx;
+	}
 	.active-img-box{
 		width:750upx;
 		background:#F3F3F3;
-		padding-bottom:270upx;
+		padding:126upx 0 270upx 0;
 		.question-one-box{
 			margin:0;
 			margin-top:11upx;
