@@ -57,10 +57,13 @@
 						</view>
 						<view class="join-date">{{vipData.EndDate}}到期</view>
 					</view>
-					<view class="join-nomber">3728 6172 3123 1246 1723</view>
+					<view class="join-nomber">{{vipData.VipNo}}</view>
 					<view class="join-buy2">
-						<view>保养卡·全合成机油版</view>
-						<view>去续费 ></view>
+						<view>{{vipData.VipName}}</view>
+						<view class="join-buy-icon">
+							<view>去续费</view>
+							<view class="vant-icon">&#xe609;</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -476,10 +479,9 @@
 				.join-buy-icon{
 					display: flex;
 					justify-content: flex-start;
-					.van-icon{
-					  font-size:30upx;
-					  margin-left:0;
-					  margin-right:10upx;
+					align-items: center;
+					.vant-icon{
+						font-size: 24upx;
 					}
 				}
 			}

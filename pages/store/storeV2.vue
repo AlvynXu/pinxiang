@@ -223,7 +223,7 @@
 					<view class="next-step-top-image"><image mode="aspectFill" :src="nextData.image"></image></view>
 					<view class="next-step-top-info">
 						<text>{{nextData.name}}</text>
-						<label v-if="(formData.vip || vip) && formData.type===0">12次免费洗车</label>
+						<label v-if="(formData.vip || vip) && formData.type===0">会员洗车单次低至19元</label>
 						<label v-if="(formData.vip || vip) && formData.type!==0">会员全年免费</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && vip===0">单次体验价￥{{nextData.price}}</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text> ￥{{nextData.activePrice}}</label>

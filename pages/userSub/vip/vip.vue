@@ -20,31 +20,24 @@
 		</view>
 		<view class="vip-card">
 			<swiper class="swiper" previous-margin='60rpx' next-margin='60rpx' :circular="true" @change='changSwiper'>
-				<swiper-item class="swiper-card">
+				<swiper-item class="swiper-card" v-for="(val,key) in VipData" :key="key">
 					<view class="swiper-card-item">
 						<view class="swiper-card-item-top">
 							<view class="swiper-card-item-top-left"><text class="vant-icon">&#xe6b1;</text>品象会员</view>
-							<view class="swiper-card-item-top-right">2019.12.31到期</view>
+							<view class="swiper-card-item-top-right" v-if="val.IsBuy!=0">{{val.EndDate}}到期</view>
 						</view>
-						<view class="swiper-card-item-numb">3728 6172 3123 1246 1723</view>
-						<view class="swiper-card-item-bot">保养卡·全合成机油版</view>
-					</view>
-				</swiper-item>
-				<swiper-item class="swiper-card">
-					<view class="swiper-card-item">
-						<view class="swiper-card-item-top">
-							<view class="swiper-card-item-top-left"><text class="vant-icon">&#xe6b1;</text>品象会员</view>
-							<view class="swiper-card-item-top-right">2019.12.31到期</view>
-						</view>
-						<view class="swiper-card-item-numb">3728 6172 3123 1246 1723</view>
-						<view class="swiper-card-item-bot">保养卡·全合成机油版</view>
+						<view class="swiper-card-item-numb">{{val.VipNo}}</view>
+						<view class="swiper-card-item-bot">{{val.VipName}}</view>
 					</view>
 				</swiper-item>
 			</swiper>
 		</view>
 		<view class="vip-lists">
 			<view class="vip-tips" @click="goActive">
-				{{endDate}}到期 品质养车，就在品象会员养车 VIP续费>
+				{{VipData[current].EndDate}}到期 品质养车，就在品象会员养车 VIP<text>续费</text><text>升级</text>>
+			</view>
+			<view class="vip-tips" @click="goActive">
+				品质养车，就在品象会员养车 VIP续费>
 			</view>
 			<view class="vip-list" v-for="(val,key) in vipList" :key="key">
 				<view class="vip-icon">
@@ -104,10 +97,10 @@
 				avatar: "https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname: '优象会员',
 				phone: '',
-				vipList: [
-
-				],
-				endDate: ''
+				vipList: [],
+				VipData:{},
+				endDate: '',
+				current:0 //swiper开始显示第几张
 			};
 		},
 		async onLoad(options) {
@@ -122,7 +115,6 @@
 				this.isLogin = 1
 				if (userData.Vip === 1) this.vip = 1
 				getVip({}).then((res) => {
-					console.log(res)
 					if (res.Code === 200) {
 						let lastDate = res.Data.EndDate
 						that.endDate = lastDate.substring(0, 4) + '-' + lastDate.substring(5, 7) + '-' + lastDate.substring(8, 10)
@@ -132,23 +124,24 @@
 			this.redirect = getApp().globalData.redirect
 			let benefits = await vipBenefits({})
 			if (benefits.Code == 200) {
+				this.VipData = benefits.Data.VipData;
+				console.log(this.VipData)
 				this.vipList = [{
 						name: "保养",
-						time: benefits.Data.care.date == '' ? '-' : benefits.Data.care.date,
-						distance: benefits.Data.care.km
+						time: benefits.Data.Detail.Care.LastDate == '' ? '-' : benefits.Data.Detail.Care.LastDate,
+						distance: benefits.Data.Detail.Care.Km
 					},
 					{
 						name: "洗车",
-						time: benefits.Data.wash.date == '' ? '-' : benefits.Data.wash.date,
-						total: benefits.Data.wash.times
+						time: benefits.Data.Detail.Wash.LastDatess == '' ? '-' : benefits.Data.Detail.Wash.LastDate,
+						total: benefits.Data.Detail.Wash.times
 					},
 				]
 			}
 		},
 		methods: {
-			changSwiper(e) {
-				let current = e.detail.current
-				console.log(e.detail.current)
+			changSwiper(e){
+				console.log(e)
 			},
 			goActive() {
 				let userData = uni.getStorageSync('user_data')
@@ -228,16 +221,17 @@
 			padding-top: 30upx;
 
 			.swiper {
-				height: 284upx;
+				height: 366upx;
 
 				.swiper-card {
 					width: 606upx;
-					height: 284upx;
+					height: 366upx;
 					padding-right: 30upx;
 
 					.swiper-card-item {
+						position: relative;
 						width: 100%;
-						height: 100%;
+						height: 284upx;
 						background: url("https://cdn.doudouxiongglobal.com/pinxiang/image/bg.png");
 						background-size: 100% 100%;
 						border-radius: 11upx;
