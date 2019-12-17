@@ -14,7 +14,7 @@
 					<view>加入会员</view>
 				</view>
 				<view class="join-word">会员养车·全年免费</view>
-				<view class="join-words">开卡赠送12次洗车服务</view>
+				<view class="join-words">品象会员单次洗车低至19元</view>
 				<view class="join-buy">
 					<view style="margin-left: 10upx;">已有{{count}}人购买</view>
 					<view class="join-buy-icon">立即开通
@@ -40,7 +40,7 @@
 						<view>加入会员</view>
 					</view>
 					<view class="join-word">会员养车·全年免费</view>
-					<view class="join-words">开卡赠送12次洗车服务</view>
+					<view class="join-words">品象会员单次洗车低至19元</view>
 					<view class="join-buy">
 						<view style="margin-left: 10upx;">已有{{count}}人购买</view>
 						<view class="join-buy-icon">立即开通
@@ -48,16 +48,19 @@
 						</view>
 					</view>
 				</view>
-				<view v-show="vip===1">
+				<view v-show="vip!=0">
 					<view class="join-name">
-						<view class="vant-icon">&#xe6b1;</view>
-						<!-- <i class="van-icon van-icon-pinzhi"></i> -->
-						<view>品象会员</view>
+						<view class="join-name-icon">
+							<view class="vant-icon">&#xe6b1;</view>
+							<!-- <i class="van-icon van-icon-pinzhi"></i> -->
+							<view>品象会员</view>
+						</view>
 						<view class="join-date">{{vipData.EndDate}}到期</view>
 					</view>
-					<view class="join-word">会员养车·全年免费</view>
+					<view class="join-nomber">3728 6172 3123 1246 1723</view>
 					<view class="join-buy2">
-						<view>{{vipData.VipNo}}</view>
+						<view>保养卡·全合成机油版</view>
+						<view>去续费 ></view>
 					</view>
 				</view>
 			</view>
@@ -391,26 +394,32 @@
 			left:0;
 			.join-name{
 				font-size:29upx;
-				margin-left:20upx;
-				margin-top:25upx;
+				margin: 25upx 20upx;
 				color:#fff;
 		        display: flex;
-		        justify-content: start;
-		        .van-icon{
-					font-size:40upx;
-					margin-left:20upx;
-					margin-right:0;
-					color:#fff;
-				}
-				view{
-				  height:40upx;
-				  line-height:40upx;
-				  margin-left:10upx;
+		        justify-content: space-between;
+				align-items: center;
+				.join-name-icon{
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					.van-icon{
+						font-size:40upx;
+						margin-left:20upx;
+						margin-right:0;
+						color:#fff;
+					}
 				}
 				.join-date{
-					margin-left: 70px;
 					font-size:22upx;
 				}
+			}
+			.join-nomber{
+				font-size:43upx;
+				font-weight: 500;
+				color:#FCF5D4;
+				margin-top:62upx;
+				text-align: center;
 			}
 			.join-word{
 				font-size:51upx;
@@ -451,7 +460,7 @@
 				}
 			}
 			.join-buy2{
-				width:553upx;
+				width:613upx;
 				height:47upx;
 				line-height:47upx;
 				border-radius:5upx;
@@ -459,7 +468,7 @@
 				margin-left:30upx;
 				font-size:22upx;
 				color:#4B2A00;
-				margin-top:85upx;
+				margin-top:65upx;
 				display: flex;
 				justify-content: space-between;
 				text-align: center;

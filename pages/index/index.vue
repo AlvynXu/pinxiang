@@ -13,8 +13,8 @@
 		<view class="appointment-box" v-if="payType === 0">
 			<view class="appointment-header">
 				<view class="appointment-type-list" v-for="(value, key) in appointmentType" :key="key" @click="changeAppointmentType(value.id)">
-					<view class="appointment-type-list-span">{{value.name}}</view>
-					<view class="appointment-type-list-bg" v-if="value.active">{{value.name}}</view>
+					<view :class="formData.type==value.id?'appointment-type-list-bg':'appointment-type-list-span'">{{value.name}}</view>
+					<!-- <view class="appointment-type-list-bg" v-if="value.active">{{value.name}}</view> -->
 				</view>
 			</view>
 			<view class="appointment-content">
@@ -75,7 +75,7 @@
 						<view class="appointment-text-last" v-if="formData.type==2">品象全合成会员，全年不限次保养，平台门店通用</view>
 					</view>
 				</view>
-				<view class="appointment-hint" v-if="formData.price=='' && !userData.Vip">
+				<view class="appointment-hint" v-if="formData.price=='' && !userData.Vip&&formData.type==0">
 					非会员用户首次预约，半价洗车
 				</view>
 
@@ -499,8 +499,8 @@
 								}
 							})
 							that.waitData.number = res.Data.Number,
-								that.waitData.count = res.Data.Count,
-								that.waitData.wait = res.Data.Wait
+							that.waitData.count = res.Data.Count,
+							that.waitData.wait = res.Data.Wait
 							that.waitData.waitTime = res.Data.WaitTime
 						}
 
@@ -511,14 +511,14 @@
 		onShow() {
 			let that = this
 			this.resetData()
-			let formData = getApp().globalData.formData
-			if (formData != undefined && formData != [] && formData.length > 0) {
+			let formData = getApp().globalData.formData;
+			if(formData.length!=0){
 				this.formData.type = formData.type
-				this.formData.storeID = formData.storeID,
-					this.formData.storeName = formData.storeName,
-					this.formData.price = formData.price
-				getApp().globalData.formData = []
+				this.formData.storeID = formData.storeID
+				this.formData.storeName = formData.storeName
+				this.formData.price = formData.price
 			}
+			getApp().globalData.formData = []
 			useCarNumber({}).then(res => {
 				if (res.Code === 200) {
 					if (res.Data == 'needBind') {
@@ -577,7 +577,6 @@
 			this.userData = JSON.parse(userData)
 			this.avatar = this.userData.Avatar
 			this.vip = this.userData.Vip
-			console.log(this.vip)
 		}
 	}
 </script>
@@ -839,19 +838,13 @@
 					}
 
 					&-bg {
-						position: absolute;
-						top: 0;
-						left: 0;
-						width: 100%;
-						height: 100%;
+						padding: 0 14upx;
 						background: rgba(254, 81, 0, 1);
 						border-radius: 27upx;
-						z-index: 1;
 						font-size: 29upx;
 						font-weight: 400;
 						color: #FFFFFF;
 						line-height: 54upx;
-						text-align: center;
 					}
 				}
 			}
