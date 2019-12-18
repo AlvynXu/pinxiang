@@ -169,7 +169,7 @@
 		<view class="store-button-box">
 			<button class="one-time" v-if="step===0" @click="oneTime">单次体验</button>
 			<button class="buy-vip" v-if="step===0" @click="buyVip">会员免费预约</button>
-			<button class="next-step" v-if="step===1" @click="goChooseTime">下一步，预约服务时间</button>
+			<button class="next-step" v-if="step===1||formData.vip === 0 && step===2" @click="goChooseTime">下一步，预约服务时间</button>
 			<button class="next-step" v-if="formData.vip === 1 && step===2" @click="goChooseTime">加入会员</button>
 		</view>
 
@@ -235,8 +235,8 @@
 					</view>
 					<view class="next-step-top-info">
 						<text>{{nextData.name}}</text>
-						<label v-if="(formData.vip || vip) && formData.type===0">会员洗车单次低至19元</label>
-						<label v-if="(formData.vip || vip) && formData.type!==0">会员全年免费</label>
+						<label v-if="(formData.vip || vip || step==2) && formData.type===0">会员洗车单次低至19元</label>
+						<label v-if="(formData.vip || vip || step==2) && formData.type!==0">会员全年免费</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && vip===0">单次体验价￥{{nextData.price}}</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text>
 							￥{{nextData.activePrice}}</label>
@@ -313,7 +313,6 @@
 				this.openChooseStoreItem()
 			},
 			buyVip() {
-				this.formData.vip = 0
 				this.step = 2
 				this.openChooseStoreItem()
 				if(this.serviceLabels[0].type==0){
@@ -340,6 +339,7 @@
 				if (this.formData.type === 2) price = this.store.MarketTotalSynthetic
 				this.formData.price = price
 				getApp().globalData.formData = this.formData
+				console.log(this.formData,'formData')
 				if (this.formData.vip&&this.step==2) {
 					uni.navigateTo({
 						url: '/pages/userSub/active?to=index'+'&tabTop='+this.tabTop
@@ -412,20 +412,28 @@
 				this.formData.itemID = this.serviceLabels[key].itemID
 				this.nextData = this.serviceLabels[key]
 				this.formData.vip = 0
+				this.vip = 0
 				if(this.formData.type==0){
 					if(this.VipData['4'].IsBuy==0){
 						this.formData.vip=1
 						this.tabTop = 1
+					}else{
+						this.vip = 1
 					}
 				}else if(this.formData.type==1){
-					if(this.VipData['3'].IsBuy==0){
-						this.formData.vip=1
-					}
-				}else{
 					if(this.VipData['2'].IsBuy==0){
 						this.formData.vip=1
+					}else{
+						this.vip = 1
+					}
+				}else{
+					if(this.VipData['3'].IsBuy==0){
+						this.formData.vip=1
+					}else{
+						this.vip = 1
 					}
 				}
+				console.log(this.formData.vip,this.vip,this.step)
 			},
 			closeChooseStoreItem() {
 				this.step = 0
