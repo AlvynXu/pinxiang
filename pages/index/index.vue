@@ -21,12 +21,13 @@
 				<view class="appointment-input-box">
 					<view class="appointment-input">
 						<view class="appointment-input-icon vant-icon input-address">&#xe6be;</view>
-						<view class="appointment-input-cpn" @click="inputNumber" v-if="vip===0">
+						<view class="appointment-input-cpn" @click="inputNumber" v-if="attestation===0">
 							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
 							<text v-else>{{formData.car}}</text>
 						</view>
-						<view class="appointment-input-cpn" v-if="vip===1">
-							<text>{{formData.car}}</text>
+						<view class="appointment-input-cpn" v-if="attestation===1">
+							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
+							<text v-else>{{formData.car}}</text>
 						</view>
 					</view>
 					<view class="appointment-input">
@@ -82,8 +83,8 @@
 					<view class="joinVip-radio" @click="joinV">
 						<view v-if="joinVip" class="vant-icon">&#xe6bd;</view>
 					</view>
-					<view class="joinVip-text" v-if="formData.type==0">加入会员，价格低至19/次</view>
-					<view class="joinVip-text" v-if="formData.type==0">加入会员，价格低至34/次</view>
+					<view class="joinVip-text" v-if="formData.type==0&&formData.storeID!==73">加入会员，价格低至19/次</view>
+					<view class="joinVip-text" v-if="formData.type==0&&formData.storeID===73">加入会员，价格低至34/次</view>
 					<view class="joinVip-text" v-if="formData.type!=0">加入会员，全年免费预约</view>
 				</view>
 
@@ -164,7 +165,8 @@
 		useCarNumber,
 		payDetail,
 		payVip,
-		vipByType
+		vipByType,
+		getVip
 	} from "@/api/index.js"
 
 	import plateNumber from '@/components/plate-number/plateNumber.vue';
@@ -219,6 +221,8 @@
 				payType: 0,
 				qrCode: '',
 				vip: 0,
+				new:0,
+				attestation:0,
 				waitData: {
 					number: 0,
 					count: 0,
@@ -243,7 +247,6 @@
 			//非会员勾选加入会员
 			joinV() {
 				this.joinVip = !this.joinVip;
-				console.log(this.formData.storeID,this.formData.type,'门店id')
 			},
 			//洗车，保养 ，服务类型切换
 			changeAppointmentType(id) {
@@ -263,11 +266,32 @@
 				}
 				if (this.formData.price === '') return false;
 				this.formData.price = this.priceArr[id]
-				if (this.formData.type === 0 && this.active) {
+				if (this.formData.type === 0 && this.active && this.new) {
 					this.formData.price = parseInt(this.formData.price) / 2
 				}
 			},
-			inputNumber() {
+			async inputNumber() {
+				let that = this
+				let res = await getVip({});
+				if(res.Code === 200){
+					if(res.Data!==0 && that.attestation === 0){
+						uni.showModal({
+							title:'提醒',
+							content:'请前往认证车辆信息',
+							confirmText:'前往',
+							success (res) {
+							    if (res.confirm) {
+									uni.navigateTo({
+										url:"/pages/userSub/car"
+									})
+							    } else if (res.cancel) {
+							      console.log('用户点击取消')
+							    }
+							}
+						})
+						return false
+					}
+				}
 				this.$refs.storepicker.close()
 				this.$refs.datapicker.close()
 				this.$refs.plate.show();
@@ -315,7 +339,7 @@
 				this.formData.storeID = id
 				this.formData.price = this.priceArr[this.formData.type]
 				this.storeItems = items
-				if (this.formData.type === 0 && active) {
+				if (this.formData.type === 0 && active && this.new) {
 					this.formData.price = parseInt(this.formData.price) / 2
 				}
 				this.storeSearchClose()
@@ -451,7 +475,8 @@
 					icon: "none",
 					title: "请输入车牌号"
 				})
-				if (carNumb.test(this.formData.car)) return uni.showToast({
+				
+				if (!carNumb.test(this.formData.car)) return uni.showToast({
 					icon: "none",
 					title: "请输入正确车牌号"
 				})
@@ -585,6 +610,17 @@
 
 					}
 				})
+				useCarNumber({}).then(res => {
+					if (res.Code === 200) {
+						if(res.Data === ''){
+							that.new = 1;
+							return false;
+						}
+						that.new = 0;
+						that.formData.car = res.Data.CarNumber,
+						this.attestation = res.Data.Attestation
+					}
+				})
 			}
 		},
 		onShow() {
@@ -598,17 +634,7 @@
 				this.formData.price = formData.price
 			}
 			getApp().globalData.formData = []
-			useCarNumber({}).then(res => {
-				if (res.Code === 200) {
-					if (res.Data == 'needBind') {
-						console.log("需要绑定")
-						return false;
-					}
-					if (res.Data !== '') {
-						that.formData.car = res.Data
-					}
-				}
-			})
+			
 		},
 		onLoad(option) {
 			let that = this
