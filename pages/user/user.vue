@@ -9,9 +9,11 @@
 			</view>
 			<view class="user-join" @click="goActive">
 				<view class="join-name">
-					<view class="vant-icon">&#xe6b1;</view>
-					<!-- <i class="van-icon van-icon-pinzhi"></i> -->
-					<view>加入会员</view>
+					<view  class="join-name-icon">
+						<view class="vant-icon">&#xe6b1;</view>
+						<!-- <i class="van-icon van-icon-pinzhi"></i> -->
+						<view>加入会员</view>
+					</view>
 				</view>
 				<view class="join-word">会员养车·全年免费</view>
 				<view class="join-words">品象会员单次洗车低至19元</view>
@@ -35,9 +37,10 @@
 			<view class="user-join" @click="goActive">
 				<view v-show="vip===0">
 					<view class="join-name">
-						<view class="vant-icon">&#xe6b1;</view>
-						<!-- <i class="van-icon van-icon-pinzhi"></i> -->
-						<view>加入会员</view>
+						<view class="join-name-icon">
+							<view class="vant-icon">&#xe6b1;</view>
+							<view>加入会员</view>
+						</view>
 					</view>
 					<view class="join-word">会员养车·全年免费</view>
 					<view class="join-words">品象会员单次洗车低至19元</view>
