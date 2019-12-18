@@ -55,7 +55,7 @@
 				<image src="https://cdn.doudouxiongglobal.com/pinxiang/V1.2/vipbg-13.png"></image>
 				<view class="position">
 					<view class="position-text">会员养车·全年免费</view>
-					<view class="position-text-white">立即开卡，赠送12次洗车服务</view>
+					<view class="position-text-white">会员洗车低至6.6折优惠</view>
 				</view>
 			</view>
 			<view class="vip-card-service">
@@ -68,8 +68,8 @@
 					<text>会员畅养</text>
 				</view>
 				<view>
-					<view class="vant-icon circular">&#xe6ae;</view>
-					<text>洗车免费</text>
+					<view class="vant-icon circular">&#xe6cd;</view>
+					<text>线上预约</text>
 				</view>
 				<view>
 					<view class="vant-icon circular">&#xe6af;</view>

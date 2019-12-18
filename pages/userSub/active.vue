@@ -27,7 +27,7 @@
 			<img style="height:625upx;width: 100%;margin-top:11upx;" src="https://cdn.doudouxiongglobal.com/store/vip/tip.png" />
 		</view>
 		<view class="active-img-box" v-if='tabTop==1'>
-			<img class="active-img" style="height:2438upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/v1.21/vip-bg2.png" />
+			<img class="active-img" style="height:1438upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/v1.21/vip-bg2.png" />
 		</view>
 		<view class="active-join" v-if="tabTop==0">
 			<view class="active-join-top">

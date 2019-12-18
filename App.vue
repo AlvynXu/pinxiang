@@ -79,15 +79,14 @@ export default {
 		margin:0;
 		padding:0;
 	}
-	
 	@font-face {
-		font-family: 'vant-icon';  /* project id 1363505 */
-		src: url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.eot');
-		src: url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.eot?#iefix') format('embedded-opentype'),
-		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.woff') format('woff'),
-		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_1363505_f7rhmkt1u9.svg#iconfont') format('svg');
+	  font-family: 'vant-icon';  /* project id 1363505 */
+	  src: url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.eot');
+	  src: url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.eot?#iefix') format('embedded-opentype'),
+	  url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.woff2') format('woff2'),
+	  url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.woff') format('woff'),
+	  url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.ttf') format('truetype'),
+	  url('//at.alicdn.com/t/font_1363505_erpgrtl2psf.svg#iconfont') format('svg');
 	}
 	.vant-icon {
 		font-family:'vant-icon' !important;

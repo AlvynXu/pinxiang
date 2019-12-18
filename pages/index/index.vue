@@ -25,9 +25,8 @@
 							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
 							<text v-else>{{formData.car}}</text>
 						</view>
-						<view class="appointment-input-cpn" @click="bindNumber" v-if="vip===1">
-							<text style="color:#A4A4A4" v-if="formData.car==''">请输入车牌,如:浙A12345</text>
-							<text v-else>{{formData.car}}</text>
+						<view class="appointment-input-cpn" v-if="vip===1">
+							<text>{{formData.car}}</text>
 						</view>
 					</view>
 					<view class="appointment-input">
@@ -89,8 +88,8 @@
 				</view>
 
 				<view class="appointment-button">
-					<button :plain="true" @click="goAppointment" v-if="userData.Phone">立即预约</button>
-					<button :plain="true" v-if="userData.Phone ===''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">立即预约</button>
+					<button :plain="true" @click="goAppointment" v-if="userData.Phone&&formData.price!==''">立即预约</button>
+					<button :plain="true" v-if="userData.Phone ===''&&formData.price!==''" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">立即预约</button>
 				</view>
 			</view>
 		</view>
@@ -444,12 +443,17 @@
 			},
 			goAppointment() {
 				let that = this
+				let carNumb = /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/
 				if (this.userData.length === 0) {
 					return this.goLogin()
 				}
 				if (this.formData.car === '') return uni.showToast({
 					icon: "none",
 					title: "请输入车牌号"
+				})
+				if (carNumb.test(this.formData.car)) return uni.showToast({
+					icon: "none",
+					title: "请输入正确车牌号"
 				})
 				if (this.formData.time === '') return uni.showToast({
 					icon: 'none',
@@ -944,8 +948,8 @@
 
 						.vant-icon {
 							position: absolute;
-							top: -2upx;
-							left: -1upx;
+							top: -6upx;
+							left: -2upx;
 							z-index: 2;
 							font-size: 32upx;
 							color: #FE5100;

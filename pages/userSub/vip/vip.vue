@@ -194,13 +194,14 @@
 		.vip-user {
 			width: 750upx;
 			height: 187upx;
-
+			background: #fff;
+			
 			.login-white {
 				padding-top: 33upx;
 				width: 750upx;
+				box-sizing: border-box;
 				padding-left: 42upx;
 				height: 154upx;
-				background: #fff;
 				display: flex;
 				justify-content: start;
 
