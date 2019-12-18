@@ -143,7 +143,7 @@
 				avatar:"https://cdn.doudouxiongglobal.com/Default_image/%20default_head_01.png",
 				nickname:'优象会员',
 				phone:'',
-				vip : 1,
+				vip : 0,
 				redirect:'',
 				vipData:[],
 				count:0,
@@ -244,19 +244,14 @@
 						that.avatar = res.Data.user.Avatar,
 						that.nickname = res.Data.user.Nickname,
 						that.phone = res.Data.user.Phone
-						that.isLogin = 1
-						// console.log(that.vip)
-						// let userData = uni.getStorageSync('user_data')
-						// console.log(userData)
-						if(res.Data.user.Vip === 1) {
-							that.vip = 1
-							getVip({}).then((res)=>{
-								console.log(res)
-								if(res.Code === 200){
+						getVip({}).then((res)=>{
+							if(res.Code === 200){
+								if(res.Data!==0){
+									that.vip = 1;
 									that.vipData = res.Data
 								}
-							})
-						}
+							}
+						})
 						if(that.redirect!=''){
 							console.log(that.redirect)
 							getApp().globalData.redirect=''
@@ -292,31 +287,26 @@
 			let that = this
 			if(userData.length > 0){
 				userData = JSON.parse(userData)
-				console.log(userData)
 				this.avatar = userData.Avatar,
 				this.nickname = userData.Nickname,
 				this.phone = userData.Phone
 				this.isLogin = 1
-				that.vip = userData.Vip
-						// console.log(that.vip)
-				if(that.vip === 1) {
-					this.vip = 1
-					getVip({}).then((res)=>{
-						console.log(res)
-						if(res.Code === 200){
+				getVip({}).then((res)=>{
+					console.log(res.Data.length)
+					if(res.Code === 200){
+						if(res.Data!==0){
+							that.vip = 1;
 							that.vipData = res.Data
 						}
-					})
-				}
+					}
+				})
 			}
 		},
 		async onLoad(options) {
-			console.log(options)
 			let countData = await getVipCount()
 			if(countData.Code === 200){
 				this.count = countData.Data
 			}
-			console.log(this.count)
 			if(options.status=='buied'){
 				this.buiedVip = true;
 			}
@@ -330,7 +320,6 @@
 					city:userData.City
 				}})
 			}
-			// this.redirect = getApp().globalData.redirect
 		}
 	}
 </script>

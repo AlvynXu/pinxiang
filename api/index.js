@@ -642,3 +642,11 @@ export function useCarNumber(params={}) {
 		params:params
 	})
 }
+
+export function vipByType(type,params={}) {
+	return fetch({
+		url: `${api.user}/vip/type/${type}`,
+		method: 'get',
+		params:params
+	})
+}

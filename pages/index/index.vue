@@ -47,39 +47,39 @@
 					<view class="appointment-input" v-if="formData.price!==''">
 						<view class="appointment-input-icon vant-icon">&#xe6c1;</view>
 						<view class="appointment-input-cpn">
-							<text v-if="!userData.Vip&&!joinVip">订单金额 <text style="color:#FE5100">　￥{{formData.price}}</text></text>
-							<text v-if="userData.Vip||joinVip">订单金额 <text style="color:#FE5100;padding-left: 10upx;">会员免费</text></text>
+							<text v-if="!vip&&!joinVip">订单金额 <text style="color:#FE5100">　￥{{formData.price}}</text></text>
+							<text v-if="vip||joinVip">订单金额 <text style="color:#FE5100;padding-left: 10upx;">会员免费</text></text>
 						</view>
 					</view>
-					<view class="appointment-input" v-if="formData.price!=='' && !userData.Vip">
+					<view class="appointment-input" v-if="formData.price!=='' && !vip">
 						<view class="appointment-input-icon vant-icon" style="color:#6DD400">&#xe6c0;</view>
 						<view class="appointment-input-cpn">
 							<text v-if="!joinVip">单次体验会员</text>
-							<text v-if="joinVip&&formData.type==0">高频洗车会员</text>
-							<text v-if="joinVip&&formData.type==0">中频洗车会员</text>
+							<text v-if="joinVip&&formData.type==0&&formData.storeID===73">高频洗车会员</text>
+							<text v-if="joinVip&&formData.type==0&&formData.storeID!==73">中频洗车会员</text>
 							<text v-if="joinVip&&formData.type==1">半合成版会员</text>
 							<text v-if="joinVip&&formData.type==2">全合成版会员</text>
 						</view>
 					</view>
-					<view v-if='!userData.Vip&&joinVip'>
+					<view v-if='!vip&&joinVip'>
 						<view class="appointment-input-last">
 							<view class="appointment-input-last-icon vant-icon" style="color:#FFC600">&#xe6c2;</view>
-							<view class="appointment-input-last-cpn" v-if="formData.type==0">加入会员：¥680</view>
-							<view class="appointment-input-last-cpn" v-if="formData.type==0">加入会员：¥99</view>
+							<view class="appointment-input-last-cpn" v-if="formData.type==0&&formData.storeID===73">加入会员：¥299</view>
+							<view class="appointment-input-last-cpn" v-if="formData.type==0&&formData.storeID!==73">加入会员：¥99</view>
 							<view class="appointment-input-last-cpn" v-if="formData.type==1">加入会员：¥599</view>
 							<view class="appointment-input-last-cpn" v-if="formData.type==2">加入会员：¥799</view>
 						</view>
-						<view class="appointment-text-last" v-if="formData.type==0">688/20次，品象洗车会员，单次低至34元<text class="text-grey">(仅限富阳地区可用)</text></view>
-						<view class="appointment-text-last" v-if="formData.type==0">99元/5次，品象洗车会员，单次低至19元<text class="text-grey">(富阳地区除外)</text></view>
+						<view class="appointment-text-last" v-if="formData.type==0&&formData.storeID===73">288/20次，品象洗车会员，单次低至34元<text class="text-grey">(仅限富阳地区可用)</text></view>
+						<view class="appointment-text-last" v-if="formData.type==0&&formData.storeID!==73">99元/5次，品象洗车会员，单次低至19元<text class="text-grey">(富阳地区除外)</text></view>
 						<view class="appointment-text-last" v-if="formData.type==1">品象半合成会员，全年不限次保养，平台门店通用</view>
 						<view class="appointment-text-last" v-if="formData.type==2">品象全合成会员，全年不限次保养，平台门店通用</view>
 					</view>
 				</view>
-				<view class="appointment-hint" v-if="formData.price=='' && !userData.Vip&&formData.type==0">
+				<view class="appointment-hint" v-if="formData.price=='' && !vip&&formData.type==0">
 					非会员用户首次预约，半价洗车
 				</view>
 
-				<view class="joinVip" v-if="formData.price!=='' && !userData.Vip">
+				<view class="joinVip" v-if="formData.price!=='' && !vip">
 					<view class="joinVip-radio" @click="joinV">
 						<view v-if="joinVip" class="vant-icon">&#xe6bd;</view>
 					</view>
@@ -162,7 +162,10 @@
 		cancleOrder,
 		offerNumber,
 		usedCount,
-		useCarNumber
+		useCarNumber,
+		payDetail,
+		payVip,
+		vipByType
 	} from "@/api/index.js"
 
 	import plateNumber from '@/components/plate-number/plateNumber.vue';
@@ -247,6 +250,13 @@
 			changeAppointmentType(id) {
 				let that = this
 				this.formData.type = id;
+				if(this.formData.storeID!==''){
+					vipByType(this.formData.type,{StoreID:this.formData.storeID}).then(res=>{
+						if(res.Code === 200){
+							that.vip = res.Data
+						}
+					})
+				}
 				this.joinVip = false;
 				for (let i = 0; i < that.appointmentType.length; i++) {
 					that.appointmentType[i].active = 0;
@@ -293,6 +303,12 @@
 				})
 			},
 			chooseStore(id, name, price, time, items, active) {
+				let that = this
+				vipByType(this.formData.type,{StoreID:id}).then(res=>{
+					if(res.Code === 200){
+						that.vip = res.Data
+					}
+				})
 				this.active = active
 				this.priceArr = price
 				this.formData.time = time
@@ -443,6 +459,65 @@
 					icon: 'none',
 					title: "请选择门店"
 				})
+				
+				if(this.joinVip){
+					let vipType = 2
+					if(this.formData.storeID==73&&this.formData.type===0){
+						vipType = 5
+					}
+					if(this.formData.storeID!=73&&this.formData.type===0){
+						vipType= 4
+					}
+					if(this.formData.type == 1){
+						vipType= 3
+					}
+					if(this.formData.type == 2){
+						vipType= 2
+					}
+					payDetail({
+						OpenID: uni.getStorageSync('wxOpenID'),
+						VipType: vipType
+					}).then(detail =>{
+						if (detail.Code === 200) {
+							uni.requestPayment({
+								provider: 'wxpay',
+								timeStamp: detail.Data.timestamp.toString(),
+								nonceStr: detail.Data.nonce_str,
+								package: `prepay_id=${detail.Data.prepay_id}`,
+								signType: 'MD5',
+								paySign: detail.Data.sign,
+								success: function(res) {
+									if (res.errMsg == 'requestPayment:ok') {
+										payVip({
+											OrderNo: detail.Data.order_number,
+											VipType: vipType,
+											o2w: uni.getStorageSync('ReferrerCode')
+										}).then(response => {
+											if (response.Code === 200) {
+												that.vip = 1
+												that.offerNumberFunc()
+											}
+										})
+									} else {
+										wx.showToast({
+											title: "支付失败",
+											icon: "none"
+										})
+									}
+								},
+								fail: function(err) {
+									console.log('fail:' + JSON.stringify(err));
+								}
+							});
+						}
+					})
+				}else{
+					that.offerNumberFunc()
+				}
+				
+			},
+			offerNumberFunc(){
+				let that = this
 				let storeItemID = this.storeItems[this.formData.type]
 				uni.setStorageSync('carNumber', this.formData.car)
 				offerNumber({
@@ -455,7 +530,7 @@
 					'CarNumber': this.formData.car
 				}).then(response => {
 					if (response.Code === 200) {
-						if (that.userData.Vip) {
+						if (that.vip) {
 							return uni.showToast({
 								title: "预约成功"
 							})
@@ -576,7 +651,7 @@
 			if (userData === null || userData === undefined || userData === '') return this.goLogin()
 			this.userData = JSON.parse(userData)
 			this.avatar = this.userData.Avatar
-			this.vip = this.userData.Vip
+
 		}
 	}
 </script>

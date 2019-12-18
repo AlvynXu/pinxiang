@@ -19,7 +19,7 @@
 			</view>
 		</view>
 		<view class="vip-card">
-			<swiper class="swiper" previous-margin='60rpx' next-margin='60rpx' :circular="true" @change='changSwiper'>
+			<swiper class="swiper" previous-margin='60rpx' next-margin='60rpx' :circular="true" @change='changSwiper' :current="current">
 				<swiper-item class="swiper-card" v-for="(val,key) in VipData" :key="key">
 					<view class="swiper-card-item">
 						<view class="swiper-card-item-top">
@@ -34,10 +34,11 @@
 		</view>
 		<view class="vip-lists">
 			<view class="vip-tips" @click="goActive">
-				{{VipData[current].EndDate}}到期 品质养车，就在品象会员养车 VIP<text>续费</text><text>升级</text>>
-			</view>
-			<view class="vip-tips" @click="goActive">
-				品质养车，就在品象会员养车 VIP续费>
+				<text style="margin-right:10rpx" v-if="vipEndDate">{{vipEndDate}}到期</text>
+				品质养车，就在品象会员养车 VIP
+				<text v-if="buyType==='0'">购买</text>
+				<text v-if="buyType==='1'">续费</text>
+				<text v-if="buyType==='2'">升级</text>
 			</view>
 			<view class="vip-list" v-for="(val,key) in vipList" :key="key">
 				<view class="vip-icon">
@@ -100,7 +101,10 @@
 				vipList: [],
 				VipData:{},
 				endDate: '',
-				current:0 //swiper开始显示第几张
+				current:0 ,//swiper开始显示第几张,
+				
+				vipEndDate:'',
+				buyType:'1'
 			};
 		},
 		async onLoad(options) {
@@ -110,8 +114,8 @@
 			if (userData.length > 0) {
 				userData = JSON.parse(userData)
 				this.avatar = userData.Avatar,
-					this.nickname = userData.Nickname,
-					this.phone = userData.Phone
+				this.nickname = userData.Nickname,
+				this.phone = userData.Phone
 				this.isLogin = 1
 				if (userData.Vip === 1) this.vip = 1
 				getVip({}).then((res) => {
@@ -122,26 +126,49 @@
 				})
 			}
 			this.redirect = getApp().globalData.redirect
-			let benefits = await vipBenefits({})
-			if (benefits.Code == 200) {
-				this.VipData = benefits.Data.VipData;
-				console.log(this.VipData)
-				this.vipList = [{
-						name: "保养",
-						time: benefits.Data.Detail.Care.LastDate == '' ? '-' : benefits.Data.Detail.Care.LastDate,
-						distance: benefits.Data.Detail.Care.Km
-					},
-					{
-						name: "洗车",
-						time: benefits.Data.Detail.Wash.LastDatess == '' ? '-' : benefits.Data.Detail.Wash.LastDate,
-						total: benefits.Data.Detail.Wash.times
-					},
-				]
-			}
+			vipBenefits({}).then(benefits =>{
+				if (benefits.Code == 200) {
+					this.VipData = benefits.Data.VipData;
+					let keys = Object.keys(this.VipData)
+					if(this.VipData[keys[0]].IsBuy===1){
+						this.buyType = '1'
+					}
+					
+					if(this.VipData[keys[0]].IsBuy===0){
+						this.buyType = '0';
+					}
+					if(this.VipData[keys[0]].IsBuy===0 && parseInt(keys[0]) == 2 && this.VipData['3'].IsBuy==1){
+						this.buyType = '2'
+					}
+					this.vipList = [{
+							name: "保养",
+							time: benefits.Data.Detail.Care.LastDate == '' ? '-' : benefits.Data.Detail.Care.LastDate,
+							distance: benefits.Data.Detail.Care.Km
+						},
+						{
+							name: "洗车",
+							time: benefits.Data.Detail.Wash.LastDatess == '' ? '-' : benefits.Data.Detail.Wash.LastDate,
+							total: benefits.Data.Detail.Wash.Count
+						},
+					]
+				}	
+			})
 		},
 		methods: {
 			changSwiper(e){
-				console.log(e)
+				let keys = Object.keys(this.VipData)
+				this.vipEndDate = this.VipData[keys[e.detail.current]].EndDate
+				if(this.VipData[keys[e.detail.current]].IsBuy===1){
+					this.buyType = '1'
+				}
+				
+				if(this.VipData[keys[e.detail.current]].IsBuy===0){
+					this.buyType = '0';
+				}
+				if(this.VipData[keys[e.detail.current]].IsBuy===0 && parseInt(keys[e.detail.current]) == 2 && this.VipData['3'].IsBuy==1){
+					this.buyType = '2'
+				}
+				
 			},
 			goActive() {
 				let userData = uni.getStorageSync('user_data')
