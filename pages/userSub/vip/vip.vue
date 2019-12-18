@@ -130,6 +130,7 @@
 				if (benefits.Code == 200) {
 					this.VipData = benefits.Data.VipData;
 					let keys = Object.keys(this.VipData)
+					this.vipEndDate = this.VipData[keys[0]].EndDate
 					if(this.VipData[keys[0]].IsBuy===1){
 						this.buyType = '1'
 					}
