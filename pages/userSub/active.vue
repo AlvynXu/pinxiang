@@ -327,6 +327,9 @@
 			}
 		},
 		onLoad(options) {
+			if(options.tabTop!= undefined && options.tabTop != null){
+				this.tabTop = options.tabTop
+			}
 			if (options.to != undefined && options.to != null) {
 				this.to = options.to
 			}

@@ -2,10 +2,9 @@
 	<view class="store-v2">
 		<view class="store-box">
 			<view class="store-image-swiper-box">
-				<swiper class="store-image-swiper" v-if="store.Image"
-				:circular="store.Image.length === 1 ? false : true" 
-				:indicator-dots="store.Image.length === 1 ? false : true" 
-				:autoplay="store.Image.length === 1 ? false : true" indicator-active-color="#FE5100" indicator-color="#FFFFFF">
+				<swiper class="store-image-swiper" v-if="store.Image" :circular="store.Image.length === 1 ? false : true"
+				 :indicator-dots="store.Image.length === 1 ? false : true" :autoplay="store.Image.length === 1 ? false : true"
+				 indicator-active-color="#FE5100" indicator-color="#FFFFFF">
 					<swiper-item class="store-image-swiper-item" v-for="(image,key) in store.Image" :key="key">
 						<image class="store-image" mode="aspectFill" :src="image"></image>
 					</swiper-item>
@@ -27,17 +26,23 @@
 					</view>
 				</view>
 				<view class="store-address">
-					<view class="store-map"><view class="vant-icon" @click="getArea">&#xe68f;</view></view>
+					<view class="store-map">
+						<view class="vant-icon" @click="getArea">&#xe68f;</view>
+					</view>
 					<view class="store-address-info" @click="getArea">
 						<view class="area-rate">
 							<view class="area">{{store.Area}} <text v-if="store.TradingArea"> · {{store.TradingArea}}</text></view>
-							<view class="rate"><uni-rate class="store-rate" :value="store.Rate" size="12" :disabled="true"></uni-rate></view>
+							<view class="rate">
+								<uni-rate class="store-rate" :value="store.Rate" size="12" :disabled="true"></uni-rate>
+							</view>
 						</view>
 						<view class="address">
 							{{store.Address}}
 						</view>
 					</view>
-					<view class="store-phone"><view class="vant-icon" @click="tel">&#xe686;</view></view>
+					<view class="store-phone">
+						<view class="vant-icon" @click="tel">&#xe686;</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -60,7 +65,9 @@
 				<view class="store-detail-content-service" v-if="nav === 0">
 					<view class="store-detail-content-service-list-box" v-for="(value,key) in storeItem" :key="key">
 						<view class="store-detail-content-service-list" v-if="value.Type === 0">
-							<view class="store-detail-content-service-list-image" @click="openWashPopDown(value.ID)"><image mode="aspectFill" :src="value.Image"></image></view>
+							<view class="store-detail-content-service-list-image" @click="openWashPopDown(value.ID)">
+								<image mode="aspectFill" :src="value.Image"></image>
+							</view>
 							<view class="store-detail-content-service-list-info">
 								<view class="store-detail-content-service-list-info-top" @click="openWashPopDown(value.ID)">
 									<view class="store-detail-content-service-list-info-top-name">{{value.Name}}</view>
@@ -73,7 +80,9 @@
 							</view>
 						</view>
 						<view class="store-detail-content-service-list" v-if="value.Type === 1">
-							<view class="store-detail-content-service-list-image" @click="openCarePopDown(1,value.ID)"><image mode="aspectFill" :src="value.Image"></image></view>
+							<view class="store-detail-content-service-list-image" @click="openCarePopDown(1,value.ID)">
+								<image mode="aspectFill" :src="value.Image"></image>
+							</view>
 							<view class="store-detail-content-service-list-info">
 								<view class="store-detail-content-service-list-info-top" @click="openCarePopDown(1,value.ID)">
 									<view class="store-detail-content-service-list-info-top-name">{{value.Name}}·半合成</view>
@@ -86,7 +95,9 @@
 							</view>
 						</view>
 						<view class="store-detail-content-service-list" v-if="value.Type === 1">
-							<view class="store-detail-content-service-list-image" @click="openCarePopDown(2,value.ID)"><image mode="aspectFill" :src="value.Image"></image></view>
+							<view class="store-detail-content-service-list-image" @click="openCarePopDown(2,value.ID)">
+								<image mode="aspectFill" :src="value.Image"></image>
+							</view>
 							<view class="store-detail-content-service-list-info">
 								<view class="store-detail-content-service-list-info-top" @click="openCarePopDown(2,value.ID)">
 									<view class="store-detail-content-service-list-info-top-name">{{value.Name}}·全合成</view>
@@ -123,7 +134,7 @@
 							</view>
 						</view>
 					</view> -->
-					
+
 					<view class="store-detail-content-intro-list middle" v-for="(value, key) in store.ServicesZH" :key="key">
 						<view class="middle-title">
 							<text class="vant-icon middle-title-icon" v-show="key==='洗车服务'">&#xe6b0;</text>
@@ -139,7 +150,7 @@
 							</text>
 						</view>
 					</view>
-					
+
 					<view class="store-detail-content-intro-list large" v-if="store.Intro">
 						<view class="large-title">
 							<text class="vant-icon large-title-icon">&#xe684;</text>
@@ -156,13 +167,12 @@
 			</view>
 		</view>
 		<view class="store-button-box">
-			<button class="one-time" v-if="step===0 && vip===0" @click="oneTime">单次体验</button>
-			<button class="buy-vip" v-if="step===0 && vip===0" @click="buyVip">会员免费预约</button>
-			<button class="buy-vip"  v-if="step===0 && vip === 1" @click="oneTime">会员免费预约</button>
-			<button class="next-step"  v-if="formData.vip === 0 && step===1" @click="goChooseTime">下一步，预约服务时间</button>
-			<button class="next-step"  v-if="formData.vip === 1 && step===1" @click="goChooseTime">加入会员</button>
+			<button class="one-time" v-if="step===0" @click="oneTime">单次体验</button>
+			<button class="buy-vip" v-if="step===0" @click="buyVip">会员免费预约</button>
+			<button class="next-step" v-if="step===1" @click="goChooseTime">下一步，预约服务时间</button>
+			<button class="next-step" v-if="formData.vip === 1 && step===2" @click="goChooseTime">加入会员</button>
 		</view>
-		
+
 		<px-popdown :height="'971rpx'" ref="washPopDown" @close="closeWashPopDown">
 			<view class="wash-popdown-box" v-if="washService">
 				<view class="wash-popdown-title">
@@ -209,7 +219,7 @@
 						<view class="oil-content">
 							<view>{{val.Brand}}</view>
 							<view>{{val.SN}}</view>
-							<view>{{val.Type}}   {{val.Capacity}}L</view>
+							<view>{{val.Type}} {{val.Capacity}}L</view>
 							<view>适合{{val.Distance}}km/{{val.Time}}</view>
 						</view>
 					</view>
@@ -220,13 +230,16 @@
 		<px-popdown :height="'650rpx'" ref="chooseStoreItem" @close="closeChooseStoreItem">
 			<view class="next-step-box">
 				<view class='next-step-top'>
-					<view class="next-step-top-image"><image mode="aspectFill" :src="nextData.image"></image></view>
+					<view class="next-step-top-image">
+						<image mode="aspectFill" :src="nextData.image"></image>
+					</view>
 					<view class="next-step-top-info">
 						<text>{{nextData.name}}</text>
 						<label v-if="(formData.vip || vip) && formData.type===0">会员洗车单次低至19元</label>
 						<label v-if="(formData.vip || vip) && formData.type!==0">会员全年免费</label>
 						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && vip===0">单次体验价￥{{nextData.price}}</label>
-						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text> ￥{{nextData.activePrice}}</label>
+						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text>
+							￥{{nextData.activePrice}}</label>
 						<label v-if="formData.vip===0 && (formData.type===1 || formData.type===2) && vip===0">单次体验价￥{{nextData.price}}</label>
 					</view>
 				</view>
@@ -245,93 +258,116 @@
 </template>
 
 <script>
-	import {getStoreByID,getStoreItem,getStoreItemDetail} from "@/api/index.js"
+	import {
+		getStoreByID,
+		getStoreItem,
+		getStoreItemDetail,
+		vipBenefits
+	} from "@/api/index.js"
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
 	import pxPopdown from '@/components/px-popup/px-popdown.vue';
-	export default{
-		components:{uniRate,pxPopdown},
+	export default {
+		components: {
+			uniRate,
+			pxPopdown
+		},
 		data() {
 			return {
-				store:[],
-				storeItem:[],
-				nav:0,
-				washService:[],
-				careService:[],
-				nextData:[],
-				serviceLabels:[],
-				id:0,
-				step:0,
-				vip:0,
-				formData:{
-					vip:0,
-					type:0,
-					itemID:0,
-					storeID:0,
-					storeName:'',
-					price:''
-				}
+				store: [],
+				storeItem: [],
+				nav: 0,
+				washService: [],
+				careService: [],
+				nextData: [],
+				serviceLabels: [],
+				id: 0,
+				step: 0,
+				vip: 0,
+				VipData:{},
+				formData: {
+					vip: 0,
+					type: 0,
+					itemID: 0,
+					storeID: 0,
+					storeName: '',
+					price: ''
+				},
+				tabTop:0,//跳转购买会员默认选中的tab
 			}
 		},
 		onShareAppMessage(res) {
-		    if (res.from === 'button') {// 来自页面内分享按钮
-		      console.log(res.target)
-		    }
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
 			let referrer = uni.getStorageSync('ReferrerCode')
-		    return {
-		      title: this.storeName+"【品象养车】",
-		      imageUrl:this.cover,
-		      path: '/pages/store/storeV2?id='+this.id
-		    }
+			return {
+				title: this.storeName + "【品象养车】",
+				imageUrl: this.cover,
+				path: '/pages/store/storeV2?id=' + this.id
+			}
 		},
-		methods:{
-			oneTime(){
+		methods: {
+			oneTime() {
+				this.formData.vip = 0
 				this.step = 1
-				this.formData.vip=0
 				this.openChooseStoreItem()
 			},
-			buyVip(){
-				this.step = 1
-				this.formData.vip=1
+			buyVip() {
+				this.formData.vip = 0
+				this.step = 2
 				this.openChooseStoreItem()
-			},
-			goChooseTime(){
-				let price = 0
-				if(this.formData.type === 0) {
-					price = this.store.Active ? this.store.MarketWash/2 : this.store.MarketWash
+				if(this.serviceLabels[0].type==0){
+					if(this.VipData['4'].IsBuy==0){
+						this.formData.vip=1
+						this.tabTop = 1
+					}
+				}else if(this.serviceLabels[0].type==1){
+					if(this.VipData['3'].IsBuy==0){
+						this.formData.vip=1
+					}
+				}else{
+					if(this.VipData['2'].IsBuy==0){
+						this.formData.vip=1
+					}
 				}
-				if(this.formData.type === 1) price = this.store.MarketSemiSynthetic
-				if(this.formData.type === 2) price = this.store.MarketTotalSynthetic
-				if(this.vip) price = 0
+			},
+			goChooseTime() {
+				let price = 0
+				if (this.formData.type === 0) {
+					price = this.store.Active ? this.store.MarketWash / 2 : this.store.MarketWash
+				}
+				if (this.formData.type === 1) price = this.store.MarketSemiSynthetic
+				if (this.formData.type === 2) price = this.store.MarketTotalSynthetic
 				this.formData.price = price
 				getApp().globalData.formData = this.formData
-				if(this.formData.vip){
+				if (this.formData.vip&&this.step==2) {
 					uni.navigateTo({
-						url:'/pages/userSub/active?to=index'
+						url: '/pages/userSub/active?to=index'+'&tabTop='+this.tabTop
 					})
-				}else{
+				} else {
 					uni.switchTab({
-						url:'/pages/index/index'
+						url: '/pages/index/index'
 					})
 				}
-				
+
 			},
-			getArea(){
+			getArea() {
 				let that = this
 				let latitude = parseFloat(that.store.Lat);
 				let longitude = parseFloat(that.store.Lng);
-				   wx.openLocation({
-				     latitude,
-				     longitude,
-				     scale: 18,
-					 name:that.store.Name,
-					 address:that.store.Address
-				   })
+				wx.openLocation({
+					latitude,
+					longitude,
+					scale: 18,
+					name: that.store.Name,
+					address: that.store.Address
+				})
 			},
-			tel(){
+			tel() {
 				let phone = this.store.Phone
-				if(phone === ''){
+				if (phone === '') {
 					wx.showToast({
-						title:"该商户未录入手机号"
+						title: "该商户未录入手机号"
 					})
 					return false
 				}
@@ -339,92 +375,119 @@
 					phoneNumber: phone
 				})
 			},
-			changeNav(key){
+			changeNav(key) {
 				this.nav = key
 			},
-			async openWashPopDown(id){
+			async openWashPopDown(id) {
 				let itemDetail = await getStoreItemDetail(id)
-				if(itemDetail.Code === 200){
+				if (itemDetail.Code === 200) {
 					this.washService = itemDetail.Data
 					this.$refs.washPopDown.open()
 				}
 			},
-			closeWashPopDown(){
-				
+			closeWashPopDown() {
+
 			},
-			async openCarePopDown(type,id){
+			async openCarePopDown(type, id) {
 				let itemDetail = await getStoreItemDetail(id)
-				if(itemDetail.Code === 200){
+				if (itemDetail.Code === 200) {
 					this.careService = itemDetail.Data
 					this.$refs.carePopDown.open()
 				}
 				// this.$refs.carePopDown.open()
 			},
-			closeCarePopDown(){
-				
+			closeCarePopDown() {
+
 			},
-			openChooseStoreItem(){
+			openChooseStoreItem() {
 				this.nextData = this.serviceLabels[0]
-				this.formData.type=this.serviceLabels[0].type
+				this.formData.type = this.serviceLabels[0].type
 				this.formData.itemID = this.serviceLabels[0].itemID
 				this.$refs.carePopDown.close()
 				this.$refs.washPopDown.close()
 				this.$refs.chooseStoreItem.open()
 			},
-			chooseType(key){
-				this.formData.type=this.serviceLabels[key].type
+			chooseType(key) {
+				this.formData.type = this.serviceLabels[key].type
 				this.formData.itemID = this.serviceLabels[key].itemID
 				this.nextData = this.serviceLabels[key]
-				console.log(this.nextData)
+				this.formData.vip = 0
+				if(this.formData.type==0){
+					if(this.VipData['4'].IsBuy==0){
+						this.formData.vip=1
+						this.tabTop = 1
+					}
+				}else if(this.formData.type==1){
+					if(this.VipData['3'].IsBuy==0){
+						this.formData.vip=1
+					}
+				}else{
+					if(this.VipData['2'].IsBuy==0){
+						this.formData.vip=1
+					}
+				}
 			},
-			closeChooseStoreItem(){
-				this.step=0
+			closeChooseStoreItem() {
+				this.step = 0
 			}
-			
+
 		},
 		onLoad(options) {
 			let that = this
+			vipBenefits({}).then(benefits => {
+				if (benefits.Code == 200) {
+					this.VipData = benefits.Data.VipData;
+				}
+			})
 			let geo = JSON.parse(uni.getStorageSync('geo'))
 			let id = options.id
 			this.id = id
 			let userData = uni.getStorageSync('user_data')
-			if(userData === null || userData.length === 0){
-				
-			}else{
+			if (userData === null || userData.length === 0) {
+
+			} else {
 				userData = JSON.parse(userData)
-				this.vip = userData.Vip
 			}
-			getStoreByID(id,{Lat:geo.lat,Lng:geo.lng}).then(store => {
-				if(store.Code === 200){
+			getStoreByID(id, {
+				Lat: geo.lat,
+				Lng: geo.lng
+			}).then(store => {
+				if (store.Code === 200) {
 					that.store = store.Data[0]
 					that.formData.storeName = store.Data[0].Name
 					that.formData.storeID = store.Data[0].ID
 					getStoreItem(store.Data[0].ID).then(storeItem => {
-						if(storeItem.Code === 200){
+						if (storeItem.Code === 200) {
 							that.storeItem = storeItem.Data
-							for(let i=0;i<storeItem.Data.length;i++){
-								if(storeItem.Data[i].Type === 0){
+							for (let i = 0; i < storeItem.Data.length; i++) {
+								if (storeItem.Data[i].Type === 0) {
 									that.washService = storeItem.Data[i],
-									that.serviceLabels.push({
-										type:0,
-										itemID:storeItem.Data[i].ID,
-										name:'洗车服务',
-										image:storeItem.Data[i].Image,
-										price:store.Data[0].MarketWash,
-										activePrice:(store.Data[0].Active ? store.Data[0].MarketWash/2 : store.Data[0].MarketWash),
-										active:store.Data[0].Active
-									})
+										that.serviceLabels.push({
+											type: 0,
+											itemID: storeItem.Data[i].ID,
+											name: '洗车服务',
+											image: storeItem.Data[i].Image,
+											price: store.Data[0].MarketWash,
+											activePrice: (store.Data[0].Active ? store.Data[0].MarketWash / 2 : store.Data[0].MarketWash),
+											active: store.Data[0].Active
+										})
 								}
-								if(storeItem.Data[i].Type === 1){
+								if (storeItem.Data[i].Type === 1) {
 									that.careService = storeItem.Data[i]
 									that.serviceLabels.push({
-										type:1,
-										itemID:storeItem.Data[i].ID,
-										name:'半合成保养',
-										image:storeItem.Data[i].Image,
-										price:store.Data[0].MarketSemiSynthetic
+										type: 1,
+										itemID: storeItem.Data[i].ID,
+										name: '半合成保养',
+										image: storeItem.Data[i].Image,
+										price: store.Data[0].MarketSemiSynthetic
 									})
-									that.serviceLabels.push({type:2,itemID:storeItem.Data[i].ID,name:'全合成保养',image:storeItem.Data[i].Image,price:store.Data[0].MarketTotalSynthetic})
+									that.serviceLabels.push({
+										type: 2,
+										itemID: storeItem.Data[i].ID,
+										name: '全合成保养',
+										image: storeItem.Data[i].Image,
+										price: store.Data[0].MarketTotalSynthetic
+									})
 								}
 							}
 						}
@@ -440,693 +503,813 @@
 	$width:750upx;
 	$content-width:667upx;
 	$main-color:#FE5100;
-	$orange:rgba(254,140,0,1);
+	$orange:rgba(254, 140, 0, 1);
 	$black: #333333;
 	$darkGray: #868686;
 	$gray: #A4A4A4;
-	$border: 1upx solid rgba(164,164,164,0.1);
-	
-	
-	.store-v2{
+	$border: 1upx solid rgba(164, 164, 164, 0.1);
+
+
+	.store-v2 {
 		width: $width;
-		background-color:#F3F3F3;
+		background-color: #F3F3F3;
 		position: relative;
 	}
-	.store-box{
+
+	.store-box {
 		width: $content-width;
-		padding:14upx 41.5upx;
-		background:$white;
-		.store-image-swiper-box{
-			width:$content-width;
-			height:457upx;
-			.store-image-swiper{
-				width:100%;
-				height:100%;
-				.store-image-swiper-item{
+		padding: 14upx 41.5upx;
+		background: $white;
+
+		.store-image-swiper-box {
+			width: $content-width;
+			height: 457upx;
+
+			.store-image-swiper {
+				width: 100%;
+				height: 100%;
+
+				.store-image-swiper-item {
 					width: 100%;
 					height: 100%;
-					.store-image{
+
+					.store-image {
 						width: 100%;
 						height: 100%;
 					}
 				}
 			}
 		}
-		.store-info-box{
+
+		.store-info-box {
 			width: 100%;
-			margin-top:18upx;
-			.store-info{
+			margin-top: 18upx;
+
+			.store-info {
 				width: 100%;
-				border-bottom:1upx solid rgba(0,0,0,0.1);
-				.store-name-km{
+				border-bottom: 1upx solid rgba(0, 0, 0, 0.1);
+
+				.store-name-km {
 					width: 100%;
-					display:inline-flex;
+					display: inline-flex;
 					justify-content: space-between;
-					.store-name{
+
+					.store-name {
 						width: 100%;
 						flex-shrink: 1;
-						font-size:33upx;
-						font-weight:500;
-						color:$black;
-						line-height:45upx;
+						font-size: 33upx;
+						font-weight: 500;
+						color: $black;
+						line-height: 45upx;
 					}
-					.store-km{
+
+					.store-km {
 						flex-shrink: 0;
-						font-size:29upx;
-						font-weight:400;
-						color:$gray;
-						line-height:45upx;
+						font-size: 29upx;
+						font-weight: 400;
+						color: $gray;
+						line-height: 45upx;
 					}
 				}
-				.store-label-share{
+
+				.store-label-share {
 					width: 100%;
-					display:inline-flex;
+					display: inline-flex;
 					justify-content: space-between;
-					margin-top:18upx;
-					margin-bottom:18upx;
-					.store-label{
+					margin-top: 18upx;
+					margin-bottom: 18upx;
+
+					.store-label {
 						width: 100%;
 						flex-shrink: 1;
-						display:flex;
+						display: flex;
 						justify-content: flex-start;
 						flex-wrap: wrap-reverse;
-						label{
-							color:$orange;
-							height:40upx;
-							border-radius:40upx;
-							border:2upx solid $orange;
-							font-size:25upx;
-							font-weight:500;
-							color:rgba(254,140,0,1);
-							line-height:40upx;
+
+						label {
+							color: $orange;
+							height: 40upx;
+							border-radius: 40upx;
+							border: 2upx solid $orange;
+							font-size: 25upx;
+							font-weight: 500;
+							color: rgba(254, 140, 0, 1);
+							line-height: 40upx;
 							padding: 2upx 20upx;
-							margin-right:5upx;
+							margin-right: 5upx;
 						}
 					}
-					.store-share{
+
+					.store-share {
 						flex-shrink: 0;
-						height:44upx;
+						height: 44upx;
 						line-height: 44upx;
-						border:none;
-						padding:0;
-						.vant-icon{
+						border: none;
+						padding: 0;
+
+						.vant-icon {
 							font-size: 44upx;
-							color:$orange;
-							margin-right:0;
+							color: $orange;
+							margin-right: 0;
 						}
 					}
 				}
 			}
-			.store-address{
-				margin-bottom:18upx;
-				height:76upx;
+
+			.store-address {
+				margin-bottom: 18upx;
+				height: 76upx;
 				width: 100%;
-				display:inline-flex;
+				display: inline-flex;
 				justify-content: space-between;
-				margin-top:9upx;
-				.store-map{
+				margin-top: 9upx;
+
+				.store-map {
 					flex-shrink: 0;
-					color:$main-color;
-					height:76upx;
-					margin-top:8upx;
-					.vant-icon{
+					color: $main-color;
+					height: 76upx;
+					margin-top: 8upx;
+
+					.vant-icon {
 						font-size: 70upx;
-						padding:0;
-						margin-right:0;
+						padding: 0;
+						margin-right: 0;
 						line-height: 76upx;
 					}
 				}
-				&-info{
+
+				&-info {
 					width: 100%;
 					flex-shrink: 1;
-					.area-rate{
+
+					.area-rate {
 						width: 100%;
-						display:inline-flex;
+						display: inline-flex;
 						justify-content: flex-start;
 						vertical-align: middle;
-						height:36upx;
-						.area{
+						height: 36upx;
+
+						.area {
 							flex-shrink: 1;
-							font-size:25upx;
-							font-weight:500;
-							color:$black;
+							font-size: 25upx;
+							font-weight: 500;
+							color: $black;
 							vertical-align: middle;
-							height:36upx;
+							height: 36upx;
 							line-height: 36upx;
 						}
-						.rate{
+
+						.rate {
 							flex-shrink: 0;
-							margin-left:25upx;
+							margin-left: 25upx;
 							vertical-align: middle;
 							margin-top: 9upx;
 						}
 					}
-					.address{
-						font-size:22upx;
-						font-weight:400;
-						color:$gray;
-						line-height:31upx;
-						margin-top:9upx;
+
+					.address {
+						font-size: 22upx;
+						font-weight: 400;
+						color: $gray;
+						line-height: 31upx;
+						margin-top: 9upx;
 					}
 				}
-				.store-phone{
-					color:$main-color;
+
+				.store-phone {
+					color: $main-color;
 					flex-shrink: 0;
-					.vant-icon{
-						margin-top:20upx;
+
+					.vant-icon {
+						margin-top: 20upx;
 						font-size: 50upx;
-						padding:0;
-						margin-right:0;
-						padding-left:34upx;
-						border-left: 1px solid rgba(0,0,0,.1);
+						padding: 0;
+						margin-right: 0;
+						padding-left: 34upx;
+						border-left: 1px solid rgba(0, 0, 0, .1);
 					}
 				}
 			}
 		}
 	}
-	
-	.store-detail-box{
+
+	.store-detail-box {
 		width: $content-width;
-		padding:14upx 41.5upx;
-		margin-top:18upx;
-		background:$white;
-		.store-detail-nav{
+		padding: 14upx 41.5upx;
+		margin-top: 18upx;
+		background: $white;
+
+		.store-detail-nav {
 			width: 100%;
 			border-bottom: $border;
-			display:inline-flex;
+			display: inline-flex;
 			justify-content: space-between;
-			.store-detail-nav-list{
+
+			.store-detail-nav-list {
 				width: 100%;
 				text-align: center;
 				position: relative;
-				padding-bottom:29upx;
-				text{
-					font-size:29upx;
-					font-weight:400;
-					color:$black;
-					line-height:40upx;
+				padding-bottom: 29upx;
+
+				text {
+					font-size: 29upx;
+					font-weight: 400;
+					color: $black;
+					line-height: 40upx;
 				}
-				&-line{
+
+				&-line {
 					position: absolute;
 					width: 54upx;
 					height: 4upx;
 					background: $main-color;
-					left:50%; margin-left:-27upx;
-					bottom:11upx;
+					left: 50%;
+					margin-left: -27upx;
+					bottom: 11upx;
 				}
 			}
 		}
-		.store-detail-content{
+
+		.store-detail-content {
 			width: 100%;
-			padding-bottom:94upx;
-			&-service{
+			padding-bottom: 94upx;
+
+			&-service {
 				width: 100%;
-				.store-detail-content-service-list-box{
+
+				.store-detail-content-service-list-box {
 					width: 100%;
-					
-					.store-detail-content-service-list{
+
+					.store-detail-content-service-list {
 						width: 100%;
-						display:inline-flex;
+						display: inline-flex;
 						justify-content: space-between;
-						padding-top:18upx;
-						padding-bottom:18upx;
-						border-bottom:$border;
-						&-image{
-							width:132upx;
-							height:123upx;
-							border-radius:4upx;
+						padding-top: 18upx;
+						padding-bottom: 18upx;
+						border-bottom: $border;
+
+						&-image {
+							width: 132upx;
+							height: 123upx;
+							border-radius: 4upx;
 							flex-shrink: 0;
-							image{
+
+							image {
 								width: 100%;
 								height: 100%;
 							}
 						}
-						&-info{
+
+						&-info {
 							width: 100%;
-							height:123upx;
+							height: 123upx;
 							flex-shrink: 1;
-							margin-left:18upx;
-							display:block;
-							&-top{
+							margin-left: 18upx;
+							display: block;
+
+							&-top {
 								width: 100%;
-								display:inline-flex;
+								display: inline-flex;
 								justify-content: space-between;
-								&-name{
+
+								&-name {
 									width: 100%;
-									font-size:29upx;
-									font-weight:400;
-									color:$black;
-									line-height:40upx;
+									font-size: 29upx;
+									font-weight: 400;
+									color: $black;
+									line-height: 40upx;
 									flex-shrink: 1;
 								}
-								&-appointment{
+
+								&-appointment {
 									width: auto;
 									text-align: right;
 									flex-shrink: 0;
-									font-size:25upx;
-									font-weight:400;
-									color:$gray;
-									line-height:40upx;
+									font-size: 25upx;
+									font-weight: 400;
+									color: $gray;
+									line-height: 40upx;
 								}
 							}
-							&-bottom{
+
+							&-bottom {
 								width: 100%;
-								display:inline-flex;
+								display: inline-flex;
 								justify-content: space-between;
-								margin-top:30upx;
-								label{
-									height:36upx;
-									border-radius:36upx;
-									border:1upx solid $orange;
-									font-size:24upx;
-									font-weight:400;
-									color:rgba(254,140,0,1);
-									line-height:36upx;
-									padding:0 11upx;
+								margin-top: 30upx;
+
+								label {
+									height: 36upx;
+									border-radius: 36upx;
+									border: 1upx solid $orange;
+									font-size: 24upx;
+									font-weight: 400;
+									color: rgba(254, 140, 0, 1);
+									line-height: 36upx;
+									padding: 0 11upx;
 								}
-								view{
-									font-size:27upx;
-									font-weight:400;
-									color:$main-color;
-									line-height:36upx;
+
+								view {
+									font-size: 27upx;
+									font-weight: 400;
+									color: $main-color;
+									line-height: 36upx;
 								}
 							}
 						}
 					}
-					
+
 				}
 			}
-			&-intro{
+
+			&-intro {
 				width: 100%;
-				padding-top:18upx;
-				padding-bottom:18upx;
-				&-list{
+				padding-top: 18upx;
+				padding-bottom: 18upx;
+
+				&-list {
 					width: 100%;
 					padding: 18upx 0;
-					border-bottom:$border;
+					border-bottom: $border;
 				}
-				.large{
-					&-title{
+
+				.large {
+					&-title {
 						width: 100%;
-						&-icon{
+
+						&-icon {
 							font-size: 47upx;
-							color:$black;
+							color: $black;
 							vertical-align: middle;
 						}
-						&-text{
-							font-size:29upx;
-							font-weight:400;
-							color:$black;
-							line-height:47upx;
-							vertical-align: middle;
-						}
-					}
-					&-tag{
-						width: 100%;
-						margin-top:18upx;
-						&-text{
-							font-size:25upx;
-							font-weight:400;
-							color:$gray;
-							line-height:36upx;
-							
-						}
-						&-iconText{
-							display:inline-flex;
-							justify-content: flex-start;
-							margin-right:22upx;
-							&-icon{
-								font-size: 36upx;
-								color:$main-color;
-								vertical-align: middle;
-							}
-							&-name{
-								font-size:22upx;
-								font-weight:400;
-								color:$black;
-								line-height:36upx;
-								vertical-align: middle;
-							}
-						}
-					}
-				}
-				.large:last-of-type{
-					border-bottom:0;
-				}
-				.middle{
-					width: 100%;
-					&-title{
-						width: 100%;
-						&-icon{
+
+						&-text {
 							font-size: 29upx;
-							color:$black;
-							vertical-align: middle;
-						}
-						&-text{
-							font-size:29upx;
-							font-weight:400;
-							color:$black;
-							line-height:29upx;
+							font-weight: 400;
+							color: $black;
+							line-height: 47upx;
 							vertical-align: middle;
 						}
 					}
-					&-tag{
+
+					&-tag {
 						width: 100%;
-						margin-top:18upx;
-						display:flex;
+						margin-top: 18upx;
+
+						&-text {
+							font-size: 25upx;
+							font-weight: 400;
+							color: $gray;
+							line-height: 36upx;
+
+						}
+
+						&-iconText {
+							display: inline-flex;
+							justify-content: flex-start;
+							margin-right: 22upx;
+
+							&-icon {
+								font-size: 36upx;
+								color: $main-color;
+								vertical-align: middle;
+							}
+
+							&-name {
+								font-size: 22upx;
+								font-weight: 400;
+								color: $black;
+								line-height: 36upx;
+								vertical-align: middle;
+							}
+						}
+					}
+				}
+
+				.large:last-of-type {
+					border-bottom: 0;
+				}
+
+				.middle {
+					width: 100%;
+
+					&-title {
+						width: 100%;
+
+						&-icon {
+							font-size: 29upx;
+							color: $black;
+							vertical-align: middle;
+						}
+
+						&-text {
+							font-size: 29upx;
+							font-weight: 400;
+							color: $black;
+							line-height: 29upx;
+							vertical-align: middle;
+						}
+					}
+
+					&-tag {
+						width: 100%;
+						margin-top: 18upx;
+						display: flex;
 						flex-wrap: wrap;
 						justify-content: flex-start;
-						&-text{
+
+						&-text {
 							display: block;
 							min-width: 147upx;
-							margin-right:20upx;
-							margin-bottom:18upx;
-							font-size:25upx;
-							font-weight:400;
-							color:$darkGray;
-							line-height:36upx;
+							margin-right: 20upx;
+							margin-bottom: 18upx;
+							font-size: 25upx;
+							font-weight: 400;
+							color: $darkGray;
+							line-height: 36upx;
 						}
-						&-text:nth-of-type(4),&-text:nth-of-type(8),&-text:nth-of-type(12),&-text:nth-of-type(16){
-							margin-right:0
+
+						&-text:nth-of-type(4),
+						&-text:nth-of-type(8),
+						&-text:nth-of-type(12),
+						&-text:nth-of-type(16) {
+							margin-right: 0
 						}
 					}
 				}
 			}
-			&-hint{
-				width:750upx;
-				height:1395.2781upx;
-				margin-left:-41.5upx;
-				image{
-					width:750upx;
-					height:1395.2781upx;
+
+			&-hint {
+				width: 750upx;
+				height: 1395.2781upx;
+				margin-left: -41.5upx;
+
+				image {
+					width: 750upx;
+					height: 1395.2781upx;
 				}
 			}
 		}
 	}
-	
-	.store-button-box{
+
+	.store-button-box {
 		width: $width;
-		display:inline-flex;
+		display: inline-flex;
 		justify-content: space-between;
 		position: fixed;
-		bottom:0;
+		bottom: 0;
 		z-index: 1000000;
-		button{
-			color:$white;
-			font-size:29upx;
-			font-weight:500;
-			line-height:40upx;
-			border:none;
+
+		button {
+			color: $white;
+			font-size: 29upx;
+			font-weight: 500;
+			line-height: 40upx;
+			border: none;
 			border-radius: 0;
-			height:98upx;
+			height: 98upx;
 			line-height: 98upx;
 		}
-		button::after{
+
+		button::after {
 			border: 0 solid $white;
 		}
-		.one-time{
+
+		.one-time {
 			width: 50%;
-			background:$orange;
+			background: $orange;
 		}
-		.buy-vip{
+
+		.buy-vip {
 			width: 100%;
-			
-			background:$main-color;
-			
+
+			background: $main-color;
+
 		}
-		.next-step{
+
+		.next-step {
 			width: 100%;
-			background:$main-color;
+			background: $main-color;
 		}
 	}
-	
-	.wash-popdown-box{
+
+	.wash-popdown-box {
 		width: 667upx;
 		padding: 16upx 41.5upx;
-		.wash-popdown-title{
+
+		.wash-popdown-title {
 			width: 100%;
-			&-text{
+
+			&-text {
 				text-align: left;
-				font-size:33upx;
-				font-weight:400;
-				color:rgba(51,51,51,1);
-				line-height:45upx;
+				font-size: 33upx;
+				font-weight: 400;
+				color: rgba(51, 51, 51, 1);
+				line-height: 45upx;
 			}
-			&-line{
-				height:4upx;
-				background:$main-color;
-				margin-top:5upx;
+
+			&-line {
+				height: 4upx;
+				background: $main-color;
+				margin-top: 5upx;
 			}
-			.large{
-				width:288upx;
+
+			.large {
+				width: 288upx;
 			}
-			.middle{
+
+			.middle {
 				width: 130upx;
 			}
-			&-hint{
-				font-size:25upx;
-				font-weight:400;
-				color:$gray;
-				line-height:36upx;
-				margin-top:7upx;
+
+			&-hint {
+				font-size: 25upx;
+				font-weight: 400;
+				color: $gray;
+				line-height: 36upx;
+				margin-top: 7upx;
 			}
 		}
-		.service-content{
-			margin-top:18upx;
+
+		.service-content {
+			margin-top: 18upx;
 		}
-		.wash-popdown-image{
-			width:667upx;
-			height:399upx;
-			margin-top:22upx;
+
+		.wash-popdown-image {
+			width: 667upx;
+			height: 399upx;
+			margin-top: 22upx;
 			overflow: hidden;
-			border-radius:11upx;
-			image{
+			border-radius: 11upx;
+
+			image {
 				width: 100%;
 				height: 100%;
 			}
 		}
-		.wash-popdown-tag{
+
+		.wash-popdown-tag {
 			width: 100%;
-			display:flex;
+			display: flex;
 			flex-wrap: wrap;
 			justify-content: flex-start;
-			margin-top:36upx;
-			label{
-				width:145upx;
+			margin-top: 36upx;
+
+			label {
+				width: 145upx;
 				text-align: center;
-				margin-right:18upx;
-				margin-bottom:18upx;
-				font-size:25upx;
-				font-weight:400;
-				color:$black;
-				line-height:36upx;
-				padding:4upx 0;
-				border-radius:11px;
-				border:2px solid rgba(231,231,231,1);
+				margin-right: 18upx;
+				margin-bottom: 18upx;
+				font-size: 25upx;
+				font-weight: 400;
+				color: $black;
+				line-height: 36upx;
+				padding: 4upx 0;
+				border-radius: 11px;
+				border: 2px solid rgba(231, 231, 231, 1);
 			}
-			label:nth-of-type(4),label:nth-of-type(8),label:nth-of-type(12),label:nth-of-type(16){
-				margin-right:0;
+
+			label:nth-of-type(4),
+			label:nth-of-type(8),
+			label:nth-of-type(12),
+			label:nth-of-type(16) {
+				margin-right: 0;
 			}
 		}
 	}
-	
-	.care-popdown-box{
+
+	.care-popdown-box {
 		width: 667upx;
 		padding: 16upx 41.5upx;
 		position: relative;
-		.care-popdown-title{
+
+		.care-popdown-title {
 			width: 100%;
-			&-text{
+
+			&-text {
 				text-align: left;
-				font-size:33upx;
-				font-weight:400;
-				color:rgba(51,51,51,1);
-				line-height:45upx;
+				font-size: 33upx;
+				font-weight: 400;
+				color: rgba(51, 51, 51, 1);
+				line-height: 45upx;
 			}
-			&-line{
-				height:4upx;
-				background:$main-color;
-				margin-top:5upx;
+
+			&-line {
+				height: 4upx;
+				background: $main-color;
+				margin-top: 5upx;
 			}
-			.large{
-				width:288upx;
+
+			.large {
+				width: 288upx;
 			}
-			.middle{
+
+			.middle {
 				width: 130upx;
 			}
-			&-hint{
-				font-size:25upx;
-				font-weight:400;
-				color:$gray;
-				line-height:36upx;
-				margin-top:7upx;
+
+			&-hint {
+				font-size: 25upx;
+				font-weight: 400;
+				color: $gray;
+				line-height: 36upx;
+				margin-top: 7upx;
 			}
 		}
-		.service-content{
-			margin-top:18upx;
+
+		.service-content {
+			margin-top: 18upx;
 		}
-		.care-popdown-image{
-			width:667upx;
-			height:399upx;
-			margin-top:22upx;
+
+		.care-popdown-image {
+			width: 667upx;
+			height: 399upx;
+			margin-top: 22upx;
 			overflow: hidden;
-			border-radius:11upx;
-			image{
+			border-radius: 11upx;
+
+			image {
 				width: 100%;
 				height: 100%;
 			}
 		}
-		.care-popdown-tag{
+
+		.care-popdown-tag {
 			width: 100%;
-			display:flex;
+			display: flex;
 			flex-wrap: wrap;
 			justify-content: flex-start;
-			margin-top:36upx;
-			label{
-				width:145upx;
+			margin-top: 36upx;
+
+			label {
+				width: 145upx;
 				text-align: center;
-				margin-right:18upx;
-				margin-bottom:18upx;
-				font-size:25upx;
-				font-weight:400;
-				color:$black;
-				line-height:36upx;
-				padding:4upx 0;
-				border-radius:11px;
-				border:2px solid rgba(231,231,231,1);
+				margin-right: 18upx;
+				margin-bottom: 18upx;
+				font-size: 25upx;
+				font-weight: 400;
+				color: $black;
+				line-height: 36upx;
+				padding: 4upx 0;
+				border-radius: 11px;
+				border: 2px solid rgba(231, 231, 231, 1);
 			}
-			label:nth-of-type(4),label:nth-of-type(8),label:nth-of-type(12),label:nth-of-type(16){
-				margin-right:0;
+
+			label:nth-of-type(4),
+			label:nth-of-type(8),
+			label:nth-of-type(12),
+			label:nth-of-type(16) {
+				margin-right: 0;
 			}
 		}
-		.care-oil-box{
+
+		.care-oil-box {
 			width: 100%;
-			.care-oil-list{
+
+			.care-oil-list {
 				width: 100%;
-				display:inline-flex;
+				display: inline-flex;
 				justify-content: space-between;
 				margin: 18upx 0;
-				.oil-img{
-					width:234upx;
-					height:217upx;
-					border-radius:14upx;
+
+				.oil-img {
+					width: 234upx;
+					height: 217upx;
+					border-radius: 14upx;
 					flex-shrink: 0;
-					display:block;
-					margin-right:34upx;
+					display: block;
+					margin-right: 34upx;
 				}
-				.oil-content{
+
+				.oil-content {
 					width: 100%;
-					height:217upx;
+					height: 217upx;
 					flex-shrink: 1;
 					text-align: left;
-					border-left:4upx solid #FE8C00;
-					padding-left:34upx;
-					font-weight:400;
-					color:rgba(51,51,51,1);
-					line-height:38upx;
+					border-left: 4upx solid #FE8C00;
+					padding-left: 34upx;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
+					line-height: 38upx;
 					font-size: 27upx;
 				}
 			}
-			.oil-hint{
+
+			.oil-hint {
 				width: 667upx;
-				height:1092.4399upx;
+				height: 1092.4399upx;
 			}
 		}
 	}
-	.next-step-box{
+
+	.next-step-box {
 		width: 100%;
-		.next-step-top{
+
+		.next-step-top {
 			width: 678upx;
-			padding:38upx 36upx;
+			padding: 38upx 36upx;
 			border: $border;
-			display:inline-flex;
-			&-image{
-				width:145upx;
-				height:145upx;
+			display: inline-flex;
+
+			&-image {
+				width: 145upx;
+				height: 145upx;
 				flex-shrink: 0;
-				image{
+
+				image {
 					width: 100%;
 					height: 100%;
 				}
 			}
-			&-info{
+
+			&-info {
 				width: 100%;
-				height:145upx;
+				height: 145upx;
 				flex-shrink: 1;
-				margin-left:24upx;
-				text{
-					font-size:33upx;
-					font-weight:400;
-					color:rgba(51,51,51,1);
-					line-height:45upx;
-					display:block;
+				margin-left: 24upx;
+
+				text {
+					font-size: 33upx;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
+					line-height: 45upx;
+					display: block;
 				}
-				label{
-					display:block;
+
+				label {
+					display: block;
 					text-align: center;
-					min-width:199upx;
+					min-width: 199upx;
 					max-width: 259upx;
-					height:36upx;
-					border-radius:18px;
-					border:2upx solid rgba(254,140,0,1);
-					font-size:24upx;
-					font-weight:400;
-					color:rgba(254,140,0,1);
-					line-height:36upx;
-					margin-top:40upx;
-					text{
+					height: 36upx;
+					border-radius: 18px;
+					border: 2upx solid rgba(254, 140, 0, 1);
+					font-size: 24upx;
+					font-weight: 400;
+					color: rgba(254, 140, 0, 1);
+					line-height: 36upx;
+					margin-top: 40upx;
+
+					text {
 						display: initial;
-						font-size:24upx;
-						font-weight:400;
-						color:rgba(254,140,0,1);
-						line-height:36upx;
+						font-size: 24upx;
+						font-weight: 400;
+						color: rgba(254, 140, 0, 1);
+						line-height: 36upx;
 					}
 				}
 			}
 		}
-		.next-step-bottom{
+
+		.next-step-bottom {
 			width: 678upx;
-			padding:38upx 36upx;
-			&-title{
+			padding: 38upx 36upx;
+
+			&-title {
 				width: 100%;
-				font-size:25upx;
-				font-weight:400;
-				color:rgba(164,164,164,1);
-				line-height:36upx;
+				font-size: 25upx;
+				font-weight: 400;
+				color: rgba(164, 164, 164, 1);
+				line-height: 36upx;
 			}
-			&-labels{
-				margin-top:18upx;
+
+			&-labels {
+				margin-top: 18upx;
 				width: 100%;
-				display:inline-flex;
+				display: inline-flex;
 				justify-content: flex-start;
-				.next-step-label{
-					border-radius:4upx;
-					margin-right:36upx;
-					text{
-						border:2upx solid rgba(51,51,51,1);
-						padding:10upx 12upx;
+
+				.next-step-label {
+					border-radius: 4upx;
+					margin-right: 36upx;
+
+					text {
+						border: 2upx solid rgba(51, 51, 51, 1);
+						padding: 10upx 12upx;
 						width: 100%;
-						height:100%;
-						font-size:29upx;
-						font-weight:400;
-						color:rgba(51,51,51,1);
-						line-height:40upx;
+						height: 100%;
+						font-size: 29upx;
+						font-weight: 400;
+						color: rgba(51, 51, 51, 1);
+						line-height: 40upx;
 					}
-					.label-choose{
-						background:rgba(254,81,0,1);
-						border:2upx solid rgba(254,81,0,1);
-						border-radius:4px;
-						color:white;
+
+					.label-choose {
+						background: rgba(254, 81, 0, 1);
+						border: 2upx solid rgba(254, 81, 0, 1);
+						border-radius: 4px;
+						color: white;
 					}
 				}
 			}
-			.next-step-hint{
-				font-size:24upx;
-				font-weight:400;
-				color:rgba(254,81,0,1);
-				line-height:33upx;
-				margin-top:40upx;
-				margin-bottom:60upx;
+
+			.next-step-hint {
+				font-size: 24upx;
+				font-weight: 400;
+				color: rgba(254, 81, 0, 1);
+				line-height: 33upx;
+				margin-top: 40upx;
+				margin-bottom: 60upx;
 			}
 		}
 	}
