@@ -130,16 +130,13 @@
 				if (benefits.Code == 200) {
 					this.VipData = benefits.Data.VipData;
 					let keys = Object.keys(this.VipData)
-					this.vipEndDate = this.VipData[keys[0]].EndDate
-					if(this.VipData[keys[0]].IsBuy===1){
-						this.buyType = '1'
-					}
-					
-					if(this.VipData[keys[0]].IsBuy===0){
-						this.buyType = '0';
-					}
-					if(this.VipData[keys[0]].IsBuy===0 && parseInt(keys[0]) == 2 && this.VipData['3'].IsBuy==1){
-						this.buyType = '2'
+					for(let i=0;i<keys.length;i++){
+						if(that.VipData[keys[i]].IsBuy===1){
+							that.buyType = '1'
+							that.current = i;
+							that.vipEndDate = that.VipData[keys[i]].EndDate
+							break;
+						}
 					}
 					this.vipList = [{
 							name: "保养",
@@ -190,6 +187,7 @@
 	.vip-box {
 		width: 750upx;
 		height: 100vh;
+		overflow-x: hidden;
 		background: #F3F3F3;
 
 		.vip-user {
@@ -245,6 +243,8 @@
 		}
 
 		.vip-card {
+			width: 750upx;
+			overflow: hidden;
 			height: 366upx;
 			background-color: #F3F3F3;
 			padding-top: 30upx;

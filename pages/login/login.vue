@@ -74,6 +74,11 @@
 				console.log(userData)
 				let that = this
 				let openID = uni.getStorageSync('wxOpenID')
+				uni.getUserInfo({
+					success:(obj)=>{
+						console.log(obj)
+					}
+				})
 				login({
 					'Type':'WECHAT',
 					'OpenID': openID,

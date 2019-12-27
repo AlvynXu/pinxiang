@@ -55,8 +55,8 @@
 						<view class="appointment-input-icon vant-icon" style="color:#6DD400">&#xe6c0;</view>
 						<view class="appointment-input-cpn">
 							<text v-if="!joinVip">单次体验会员</text>
-							<text v-if="joinVip&&formData.type==0&&formData.storeID===73">高频洗车会员</text>
-							<text v-if="joinVip&&formData.type==0&&formData.storeID!==73">中频洗车会员</text>
+							<text v-if="joinVip&&formData.type==0&&formData.storeID===73">欧式洗车会员</text>
+							<text v-if="joinVip&&formData.type==0&&formData.storeID!==73">普通洗车会员</text>
 							<text v-if="joinVip&&formData.type==1">半合成版会员</text>
 							<text v-if="joinVip&&formData.type==2">全合成版会员</text>
 						</view>
@@ -238,6 +238,16 @@
 					price: ''
 				}
 			}
+		},
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+			let referrer = uni.getStorageSync('ReferrerCode')
+		    return {
+		      title: "品象养车",
+		      path: '/pages/index/index'
+		    }
 		},
 		methods: {
 			//切换购买会员的类型
@@ -626,15 +636,30 @@
 		onShow() {
 			let that = this
 			this.resetData()
-			let formData = getApp().globalData.formData;
-			if(formData.length!=0){
-				this.formData.type = formData.type
-				this.formData.storeID = formData.storeID
-				this.formData.storeName = formData.storeName
-				this.formData.price = formData.price
+			let tmpFormData = uni.getStorageSync('tmpFormData')
+			if(tmpFormData != ''){
+				let formData = JSON.parse(tmpFormData)
+				if(formData.length!=0){
+					this.formData.type = formData.type
+					this.formData.storeID = formData.storeID
+					this.formData.storeName = formData.storeName
+					this.formData.price = formData.price
+					this.vip = formData.vip
+					this.priceArr = formData.priceArr
+					if(formData.storeID!==0){
+						if(that.formData.time==''){
+							that.selectAppointmentDate()
+						}
+					}
+					// getApp().globalData.formData = []
+					this.$nextTick(function(){
+						setTimeout(()=>{
+							uni.setStorageSync('tmpFormData','[]')
+						},1000)
+					})
+					// uni.setStorageSync('tmpFormData','[]')
+				}	
 			}
-			getApp().globalData.formData = []
-			
 		},
 		onLoad(option) {
 			let that = this

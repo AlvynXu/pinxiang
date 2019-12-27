@@ -162,9 +162,9 @@
 			let referrer = userData['SerialCode']
 			this.buiedVip = false
 			return {
-			  title: '【25元红包】加入会员，全年不限次数免费保养',
-			  imageUrl:'https://cdn.doudouxiongglobal.com/pinxiang/image/share/lALPDgQ9rBP3f8PNAyDNA-g_1000_800.png_620x10000q90g.jpg',
-			  path: '/pages/userSub/share?code='+referrer
+			  title: '加入会员，全年不限次数免费保养',
+			  imageUrl:'https://cdn.doudouxiongglobal.com/v1.21/vipbg.png',
+			  path: '/pages/index/index?code='+referrer
 			}
 		},
 		methods: {

@@ -169,8 +169,8 @@
 		<view class="store-button-box">
 			<button class="one-time" v-if="step===0" @click="oneTime">单次体验</button>
 			<button class="buy-vip" v-if="step===0" @click="buyVip">会员免费预约</button>
-			<button class="next-step" v-if="step===1||formData.vip === 0 && step===2" @click="goChooseTime">下一步，预约服务时间</button>
-			<button class="next-step" v-if="formData.vip === 1 && step===2" @click="goChooseTime">加入会员</button>
+			<button class="next-step" v-if="step===1||(formData.vip === 1 && step===2)" @click="goChooseTime">下一步，预约服务时间</button>
+			<button class="next-step" v-if="formData.vip === 0 && step===2" @click="goChooseTime">加入会员</button>
 		</view>
 
 		<px-popdown :height="'971rpx'" ref="washPopDown" @close="closeWashPopDown">
@@ -235,12 +235,13 @@
 					</view>
 					<view class="next-step-top-info">
 						<text>{{nextData.name}}</text>
-						<label v-if="(formData.vip || vip || step==2) && formData.type===0">会员洗车单次低至19元</label>
-						<label v-if="(formData.vip || vip || step==2) && formData.type!==0">会员全年免费</label>
-						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && vip===0">单次体验价￥{{nextData.price}}</label>
-						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && vip===0">活动体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text>
+						<label v-if="(formData.vip || step==2) && formData.type===0 && id!==73">会员洗车单次低至19元</label>
+						<label v-if="(formData.vip || step==2) && formData.type===0 && id===73">会员洗车单次低至34元</label>
+						<label v-if="(formData.vip || step==2) && formData.type!==0">会员全年免费</label>
+						<label v-if="formData.vip===0 && formData.type!==0 && step==1">单次体验价￥{{nextData.price}}</label>
+						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===0 && step==1">单次体验价￥{{nextData.price}}</label>
+						<label v-if="formData.vip===0 && formData.type===0 && nextData.active===1 && step==1 ">首次体验价<text style="text-decoration: line-through;">￥{{nextData.price}}</text>
 							￥{{nextData.activePrice}}</label>
-						<label v-if="formData.vip===0 && (formData.type===1 || formData.type===2) && vip===0">单次体验价￥{{nextData.price}}</label>
 					</view>
 				</view>
 				<view class="next-step-bottom">
@@ -262,7 +263,8 @@
 		getStoreByID,
 		getStoreItem,
 		getStoreItemDetail,
-		vipBenefits
+		vipBenefits,
+		vipByType
 	} from "@/api/index.js"
 	import uniRate from "@/components/uni-rate/uni-rate.vue"
 	import pxPopdown from '@/components/px-popup/px-popdown.vue';
@@ -315,20 +317,20 @@
 			buyVip() {
 				this.step = 2
 				this.openChooseStoreItem()
-				if(this.serviceLabels[0].type==0){
-					if(this.VipData['4'].IsBuy==0){
-						this.formData.vip=1
-						this.tabTop = 1
-					}
-				}else if(this.serviceLabels[0].type==1){
-					if(this.VipData['3'].IsBuy==0){
-						this.formData.vip=1
-					}
-				}else{
-					if(this.VipData['2'].IsBuy==0){
-						this.formData.vip=1
-					}
-				}
+				// if(this.serviceLabels[0].type==0){
+				// 	if(this.VipData['4'].IsBuy==0){
+				// 		this.formData.vip=1
+				// 		this.tabTop = 1
+				// 	}
+				// }else if(this.serviceLabels[0].type==1){
+				// 	if(this.VipData['3'].IsBuy==0){
+				// 		this.formData.vip=1
+				// 	}
+				// }else{
+				// 	if(this.VipData['2'].IsBuy==0){
+				// 		this.formData.vip=1
+				// 	}
+				// }
 			},
 			goChooseTime() {
 				let price = 0
@@ -338,9 +340,11 @@
 				if (this.formData.type === 1) price = this.store.MarketSemiSynthetic
 				if (this.formData.type === 2) price = this.store.MarketTotalSynthetic
 				this.formData.price = price
+				this.formData.priceArr = [this.store.MarketWash,this.store.MarketSemiSynthetic,this.store.MarketTotalSynthetic]
 				getApp().globalData.formData = this.formData
+				uni.setStorageSync('tmpFormData',JSON.stringify(this.formData))
 				console.log(this.formData,'formData')
-				if (this.formData.vip&&this.step==2) {
+				if (!this.formData.vip&&this.step==2) {
 					uni.navigateTo({
 						url: '/pages/userSub/active?to=index'+'&tabTop='+this.tabTop
 					})
@@ -400,40 +404,46 @@
 
 			},
 			openChooseStoreItem() {
+				let that = this
 				this.nextData = this.serviceLabels[0]
 				this.formData.type = this.serviceLabels[0].type
 				this.formData.itemID = this.serviceLabels[0].itemID
+				vipByType(this.serviceLabels[0].type,{StoreID:this.id}).then(res=>{
+					if(res.Code === 200){
+						if(that.formData.type==0){
+							that.formData.vip=res.Data
+							that.tabTop = 1
+						}else if(that.formData.type==1){
+							that.formData.vip=res.Data
+						}else{
+							that.formData.vip=res.Data
+						}
+					}
+				})
+				
 				this.$refs.carePopDown.close()
 				this.$refs.washPopDown.close()
 				this.$refs.chooseStoreItem.open()
 			},
 			chooseType(key) {
+				let that = this
 				this.formData.type = this.serviceLabels[key].type
 				this.formData.itemID = this.serviceLabels[key].itemID
 				this.nextData = this.serviceLabels[key]
 				this.formData.vip = 0
-				this.vip = 0
-				if(this.formData.type==0){
-					if(this.VipData['4'].IsBuy==0){
-						this.formData.vip=1
-						this.tabTop = 1
-					}else{
-						this.vip = 1
+				vipByType(this.formData.type,{StoreID:this.id}).then(res=>{
+					if(res.Code === 200){
+						if(that.formData.type==0){
+							that.formData.vip=res.Data
+							that.tabTop = 1
+						}else if(that.formData.type==1){
+							that.formData.vip=res.Data
+						}else{
+							that.formData.vip=res.Data
+						}
 					}
-				}else if(this.formData.type==1){
-					if(this.VipData['2'].IsBuy==0){
-						this.formData.vip=1
-					}else{
-						this.vip = 1
-					}
-				}else{
-					if(this.VipData['3'].IsBuy==0){
-						this.formData.vip=1
-					}else{
-						this.vip = 1
-					}
-				}
-				console.log(this.formData.vip,this.vip,this.step)
+				})
+				
 			},
 			closeChooseStoreItem() {
 				this.step = 0

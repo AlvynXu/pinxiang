@@ -27,16 +27,20 @@
 			<img style="height:625upx;width: 100%;margin-top:11upx;" src="https://cdn.doudouxiongglobal.com/store/vip/tip.png" />
 		</view>
 		<view class="active-img-box" v-if='tabTop==1'>
-			<img class="active-img" style="height:1438upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/v1.21/vip-bg2.png" />
+			<img class="active-img" style="height:1607.7898upx;" src="https://cdn.doudouxiongglobal.com/pinxiang/v1.21/vip-bg2.png" />
 		</view>
 		<view class="active-join" v-if="tabTop==0">
 			<view class="active-join-top">
 				<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
-					全合成机油 <text class="active-amount">799</text>元/年
+					<view style="display: table-cell;vertical-align:middle;text-align:center;">
+						全合成机油 <text class="active-amount">799</text>元/年
+					</view>
 					<view v-if="vipSelected==0" class="selected-icon vant-icon">&#xe6b2;</view>
 				</view>
 				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
-					半合成机油 <text class="active-amount">599</text>元/年
+					<view style="display: table-cell;vertical-align:middle;text-align:center;">
+						半合成机油 <text class="active-amount">599</text>元/年
+					</view>
 					<view v-if="vipSelected==1" class="selected-icon vant-icon">&#xe6b2;</view>
 				</view>
 			</view>
@@ -58,20 +62,33 @@
 		<view class="active-join" v-if="tabTop==1">
 			<view class="active-join-top">
 				<view class="active-join-price" :class="{'selected':vipSelected==0}" @click="selectVipCard(0)">
-					中频洗车专享 <text class="active-amount">99/5</text>次
+					<view style="display: table-cell;vertical-align:middle;text-align:center;">
+						普通洗车 <text class="active-amount">99/5</text>次<br/>
+						<text style="font-size:24upx;">(富阳地区除外)</text>
+					</view>
 					<view v-if="vipSelected==0" class="selected-icon vant-icon">&#xe6b2;</view>
 				</view>
 				<view class="active-join-price2" :class="{'selected':vipSelected==1}" @click="selectVipCard(1)">
-					高频洗车尊享 <text class="active-amount">680/20</text>次
+					<view style="display: table-cell;vertical-align:middle;text-align:center;">
+						欧式洗车 <text class="active-amount">680/20</text>次<br/>
+						<text style="font-size:24upx;">(仅限富阳地区)</text>
+					</view>
 					<view v-if="vipSelected==1" class="selected-icon vant-icon">&#xe6b2;</view>
+				</view>
+			</view>
+			<view class="active-join-agree">
+				<view class="agree-box" @click="agreementRadio">
+					<radio class="agree-check" :checked="agreementChecked" color="#FE5100"></radio>
+					<text>开通会员即表示同意</text>
+					<text class="agree-color" @click="agreement">《会员协议》</text>
 				</view>
 			</view>
 			<view class="active-button">
 				<button v-if="phone==''" class="active-join-button" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
-					立即开通，洗车低至15元/次
+					立即开通
 				</button>
 				<button v-if="phone!=''" class="active-join-button" @click="buyVIP">
-					立即开通，洗车低至15元/次
+					立即开通
 				</button>
 			</view>
 		</view>
@@ -102,6 +119,20 @@
 				type: '',
 				to: '',
 				VipType: 0
+			}
+		},
+		onShareAppMessage(res) {
+		    if (res.from === 'button') {// 来自页面内分享按钮
+		      console.log(res.target)
+		    }
+			let userData = uni.getStorageSync('user_data')
+			userData = JSON.parse(userData)
+			let referrer = userData['SerialCode']
+			this.buiedVip = false
+			return {
+			  title: '加入会员，全年不限次数免费保养',
+			  imageUrl:'https://cdn.doudouxiongglobal.com/v1.21/vipbg.png',
+			  path: '/pages/index/index?code='+referrer
 			}
 		},
 		methods: {
@@ -416,7 +447,7 @@
 		}
 
 		.active-button {
-			padding-top: 18upx;
+			// padding-top: 18upx;
 		}
 
 		.active-img-box {
@@ -496,12 +527,11 @@
 				.active-join-price {
 					width: 344upx;
 					height: 91upx;
-					line-height: 91upx;
+					display:table;
 					// background:rgba(254,81,0,0.15);
 					text-align: center;
 					border-radius: 14upx;
 					border: 4upx solid rgba(254, 81, 0, 1);
-					font-size: 25upx;
 					font-size: 27upx;
 					font-weight: 500;
 					color: rgba(254, 81, 0, 1);
@@ -515,7 +545,7 @@
 
 					.selected-icon {
 						position: absolute;
-						top: -30upx;
+						top: -4upx;
 						left: -2upx;
 						font-size: 36upx;
 					}
@@ -524,9 +554,9 @@
 				.active-join-price2 {
 					width: 344upx;
 					height: 91upx;
-					line-height: 91upx;
 					// background:rgba(254,81,0,0.15);
 					text-align: center;
+					display:table;
 					border-radius: 14upx;
 					border: 4upx solid rgba(254, 81, 0, 1);
 					font-size: 27upx;
@@ -541,7 +571,7 @@
 
 					.selected-icon {
 						position: absolute;
-						top: -30upx;
+						top: -4upx;
 						left: -2upx;
 						font-size: 36upx;
 					}
